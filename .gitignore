@@ -1,0 +1,27 @@
+#
+# GIT Ignore
+#
+# * Template version: 1.3.0
+#
+
+#
+# Main
+#
+
+/build/*
+/lib/*
+/logs/*
+/tmp/*
+/vault/*
+
+/.local
+/.secrets
+
+#
+# Project specific exclusions
+#
+
+/.vscode
+
+# Keep placeholder for empty directories
+!/**/.gitkeep
