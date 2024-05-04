@@ -1,0 +1,133 @@
+#!/usr/bin/env bash
+# Template: 1.0.0
+#######################################
+# GitHub / Repo / Setting / Show
+#
+# Version: 1.0.0
+#
+#######################################
+# Copyright [2024] [serdigital64@gmail.com]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+declare SYSOP64_PATH_ROOT="${SYSOP64_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_PATH_ROOT}/github/github-lib" || { echo "Error: unable to load bashlib64" && exit 1; }
+
+#
+# Globals
+#
+
+#
+# Functions
+#
+
+function github_repo_show() {
+  bl64_dbg_app_show_function
+  local owner="$1"
+  local repository="$2"
+  local api_prefix="repos/${owner}/${repository}"
+
+  bl64_msg_show_info 'branch protection'
+  github_lib_cli_run api "${api_prefix}"
+}
+
+#######################################
+# Initialize environment
+#
+# Arguments:
+#   None
+# Outputs:
+#   Initializacion progress messages
+# Returns:
+#   0: initialization ok
+#   >: failed to initialize
+#######################################
+function github_repo_initialize() {
+  bl64_dbg_app_show_function "@"
+  # shellcheck disable=SC2034
+  local command="$1"
+  local owner="$2"
+  local repository="$3"
+
+  bl64_check_parameter 'owner' &&
+    bl64_check_parameter 'repository' &&
+    bl64_check_parameter 'command' ||
+    { github_repo_help && return 1; }
+
+  return 0
+}
+
+#######################################
+# Show script usage description
+#
+# Arguments:
+#   None
+# Outputs:
+#   Command line format and description
+# Returns:
+#   0
+#######################################
+function github_repo_help() {
+  bl64_msg_show_usage \
+    '-s -o Owner -r Repository [-V Verbose] [-D Debug] [-h]' \
+    '' \
+    '
+    -s           : Show repository settings
+    ' '
+    -h           : Show help
+    ' '
+    -o Owner     : user or organization
+    -r Repository: repository name
+    -V Verbose   : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+    -D Debug     : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
+    '
+}
+
+#
+# Main
+#
+
+declare github_repo_command="$BL64_VAR_NULL"
+declare github_repo_debug="$BL64_DBG_TARGET_NONE"
+declare github_repo_option=''
+declare github_repo_verbose="$BL64_MSG_VERBOSE_APP"
+declare github_repo_owner=''
+declare github_repo_repository=''
+
+(($# == 0)) && github_repo_help && exit 1
+while getopts ':so:r:V:D:h' github_repo_option; do
+  case "$github_repo_option" in
+  s) github_repo_command='show' ;;
+  o) github_repo_owner="$OPTARG" ;;
+  r) github_repo_repository="$OPTARG" ;;
+  V) github_repo_verbose="$OPTARG" ;;
+  D) github_repo_debug="$OPTARG" ;;
+  h) github_repo_help && exit 0 ;;
+  *) github_repo_help && exit 1 ;;
+  esac
+done
+bl64_dbg_set_level "$github_repo_debug" && bl64_msg_set_level "$github_repo_verbose" || exit $?
+github_repo_initialize "$github_repo_command" "$github_repo_owner" "$github_repo_repository" || exit $?
+
+bl64_msg_show_batch_start "$github_repo_command"
+case "$github_repo_command" in
+'show') github_repo_show "$github_repo_owner" "$github_repo_repository" ;;
+*) bl64_check_alert_parameter_invalid "$github_repo_command" ;;
+esac
+bl64_msg_show_batch_finish $? "$github_repo_command"
