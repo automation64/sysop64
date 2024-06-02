@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #######################################
-# Dev / Lab / Project / Open sandbox environment
+# Dev / Lib / Project / Prepare dev resources
 #
 # * Version: 1.0.0
 #
@@ -29,45 +29,41 @@ source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2
 # shellcheck source-path=bin
 source ./bin/dev-env-project || exit 1
 # shellcheck source-path=lib/bl64
-source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-cnt.bash" &&
+source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
 
 #
 # Functions
 #
 
-function dev_lab_open() {
-  bl64_dbg_app_show_function "$@"
-  local dev_lab_image="$1"
-  local dev_lab_entrypoint='bash'
-
-  bl64_msg_show_task "open sanbox environment (${dev_lab_image})"
-  bl64_cnt_run_interactive \
-    --network host \
-    --entrypoint="$dev_lab_entrypoint" \
-    --workdir="$DEV_ENV_PROJECT_CONTAINER_PATH_ROOT" \
-    --env="SYSOP64_PATH_BL64=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT}/lib/bl64" \
-    --env="SYSOP64_PATH_ROOT=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT}/${DEV_BASE_SRC}" \
-    --mount "type=bind,source=${DEV_PATH_SRC},target=${DEV_ENV_PROJECT_CONTAINER_PATH_SRC},readonly" \
-    --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT},readonly" \
-    "${DEV_ENV_PROJECT_REGISTRY}/${dev_lab_image}"
+function dev_lib_project() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_task 'Fix repository permissions for container access'
+  bl64_fs_fix_permissions '0755' '0755' \
+    "$DEV_PATH_BIN" \
+    "$DEV_PATH_SRC" \
+    "$DEV_PATH_TEST" \
+    "$DEV_BASE_DOT_LOCAL" \
+    "$DEV_BASE_LOCAL" \
+    "$DEV_BASE_DOT_SECRETS" \
+    "$DEV_BASE_SECRETS" \
+    "$DEV_BASE_ENV"
 }
 
-function dev_lab_initialize() {
+function dev_lib_initialize() {
   bl64_dbg_app_show_function
-  bl64_cnt_setup
 }
 
 #
 # Main
 #
 
-declare dev_lab_image="${1:-${DEV_LAB_PROJECT_CONTAINER}}"
-
 [[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
-bl64_msg_all_enable_verbose
 
-bl64_msg_show_batch_start 'dev-lab-project'
-dev_lab_initialize &&
-  dev_lab_open "$dev_lab_image"
-bl64_msg_show_batch_finish $? 'dev-lab-project'
+bl64_msg_all_enable_verbose
+bl64_msg_show_batch_start 'dev-lib-project'
+dev_lib_initialize &&
+  dev_lib_project
+bl64_msg_show_batch_finish $? 'dev-lib-project'
