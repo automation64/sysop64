@@ -3,7 +3,7 @@
 #######################################
 # GitHub / Lib
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -22,18 +22,10 @@
 #######################################
 
 #
-# Imports
-#
-
-declare SYSOP64_PATH_BL64="${SYSOP64_PATH_BL64:-/opt/bl64}"
-# shellcheck source-path=lib/bl64
-source "${SYSOP64_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
-
-#
 # Globals
 #
 
-declare GITHUB_PATH_CLI="${GITHUB_PATH_CLI:-/usr/bin/gh}"
+declare SYSOP64_GITHUB_PATH_CLI="${SYSOP64_GITHUB_PATH_CLI:-/usr/bin/gh}"
 
 #
 # Functions
@@ -57,12 +49,12 @@ function github_lib_cli_run() {
   bl64_dbg_lib_show_function "$@"
 
   bl64_check_parameters_none "$#" &&
-    bl64_check_command "$GITHUB_PATH_CLI" ||
+    bl64_check_command "$SYSOP64_GITHUB_PATH_CLI" ||
     return $?
 
   bl64_dbg_lib_trace_start
   # shellcheck disable=SC2086
-  "$GITHUB_PATH_CLI" \
+  "$SYSOP64_GITHUB_PATH_CLI" \
     "$@"
   bl64_dbg_lib_trace_stop
 }

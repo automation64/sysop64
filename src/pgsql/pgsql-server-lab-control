@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Template: 1.0.0
 #######################################
-# K8S / Pod / Run
+# PGSQL / Server / Lab / Control
 #
 # Version: 1.0.0
 #
@@ -29,35 +29,40 @@ declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPT_PATH
 source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck source-path=lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-cnt.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/pgsql/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
 #
 
-function shell_run() {
-  bl64_dbg_app_show_function "@"
-  local namespace="$1"
-  local image="$2"
-  local entrypoint="$3"
-  local pod_name='sysop64-shell'
+function start() {
+  bl64_dbg_app_show_function
+  local container_port='5432'
+  bl64_msg_show_task 'start Postgresql Server in container mode'
+  bl64_cnt_run \
+    --name "$SYSOP64_PGSQL_SERVER_LAB_NAME" \
+    --env POSTGRES_PASSWORD="$SYSOP64_PGSQL_SERVER_LAB_PASSWORD" \
+    --detach \
+    --publish "$container_port:$container_port" \
+    postgres &&
+    bl64_msg_show_info "Starded container information
+Container Name: ${SYSOP64_PGSQL_SERVER_LAB_NAME}
+Password: ${SYSOP64_PGSQL_SERVER_LAB_PASSWORD}
+Port: ${container_port}"
+}
 
-  [[ "$entrypoint" == "$BL64_VAR_DEFAULT" ]] && entrypoint='sh'
-  [[ "$image" == "$BL64_VAR_DEFAULT" ]] && image='alpine'
-
-  bl64_msg_show_task "Run interactive shell (${namespace}/${pod_name} -> ${image})"
-  # shellcheck disable=SC2086,SC2046
-  bl64_k8s_run_kubectl \
-    "$BL64_VAR_DEFAULT" \
-    run \
-    "$pod_name" \
-    --namespace "$namespace" \
-    --image="$image" \
-    --attach --rm --tty --stdin --restart=Never \
-    -- "$entrypoint"
+function stop() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_task 'stop Postgresql Server running in container mode'
+  bl64_cnt_cli \
+    stop \
+    "$SYSOP64_PGSQL_SERVER_LAB_NAME" &&
+    bl64_cnt_cli \
+      rm \
+      "$SYSOP64_PGSQL_SERVER_LAB_NAME"
 }
 
 #######################################
@@ -79,7 +84,8 @@ function initialize() {
   bl64_check_parameter 'command' ||
     { help && return 1; }
 
-  bl64_k8s_setup
+  bl64_cnt_check_not_in_container &&
+    bl64_cnt_setup
 }
 
 #######################################
@@ -94,18 +100,16 @@ function initialize() {
 #######################################
 function help() {
   bl64_msg_show_usage \
-    '[-s] [-i Image] [-e EntryPoint] [-n NameSpace] [-V Verbose] [-D Debug] [-h]' \
-    'K8S / Pod / Run' \
+    '-s|-o [-V Verbose] [-D Debug] [-h]' \
+    'PGSQL / Server / Lab / Control' \
     '
-    -s           : Run interactive shell (Default)
+    -s         : Start container and detach
+    -o         : Stop detached container
     ' '
-    -h           : Show help
+    -h         : Show help
     ' '
-    -i Image     : Full image path for the container. Default: alpine
-    -e EntryPoint: Command to run in the container. Default: sh
-    -n NameSpace : K8S namespace where the pod will run. Default: default
-    -V Verbose   : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug     : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
+    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
     '
 }
 
@@ -113,17 +117,16 @@ function help() {
 # Main
 #
 
-declare command='shell_run'
+declare command="$BL64_VAR_NULL"
 declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
 declare verbose="$BL64_MSG_VERBOSE_APP"
-declare namespace='default'
-declare image="$BL64_VAR_DEFAULT"
-declare entrypoint="$BL64_VAR_DEFAULT"
 
-while getopts ':sV:D:h' option; do
+(($# == 0)) && help && exit 1
+while getopts ':soV:D:h' option; do
   case "$option" in
-  s) command='shell_run' ;;
+  s) command='start' ;;
+  o) command='stop' ;;
   V) verbose="$OPTARG" ;;
   D) debug="$OPTARG" ;;
   h) help && exit 0 ;;
@@ -134,5 +137,5 @@ bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize "$command" || exit $?
 
 bl64_msg_show_batch_start "$command"
-"${command}" "$namespace" "$image" "$entrypoint"
+"${command}"
 bl64_msg_show_batch_finish $? "$command"

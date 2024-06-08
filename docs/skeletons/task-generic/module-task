@@ -25,9 +25,12 @@
 # Imports
 #
 
-SYSOP64_PATH_BL64="${SYSOP64_PATH_BL64:-/opt/bl64}"
+declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck source-path=lib/bl64
-source "${SYSOP64_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+  { echo "Error: unable to load bashlib64" && exit 1; }
 
 #
 # Globals
@@ -73,7 +76,7 @@ function initialize() {
 function help() {
   bl64_msg_show_usage \
     '-x [-V Verbose] [-D Debug] [-h]' \
-    'X_APP_INFO_X' \
+    'X_MODULE_X / [X_SUBMODULE_X /] X_APP_NAME_X' \
     '
     -x         : X_COMMAND_INFO_X
     ' '

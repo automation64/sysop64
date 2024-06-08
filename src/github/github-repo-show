@@ -3,7 +3,7 @@
 #######################################
 # GitHub / Repo / Show
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -25,9 +25,11 @@
 # Imports
 #
 
-declare SYSOP64_PATH_ROOT="${SYSOP64_PATH_ROOT:-/opt/sysop64}"
+declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=lib/bl64
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPT_PATH
-source "${SYSOP64_PATH_ROOT}/github/github-lib" || { echo "Error: unable to load bashlib64" && exit 1; }
+source "${SYSOP64_CORE_PATH_ROOT}/github/github-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Globals
