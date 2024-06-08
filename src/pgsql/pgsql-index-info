@@ -1,0 +1,181 @@
+#!/usr/bin/env bash
+# Template: 1.0.0
+#######################################
+# PGSQL / Index / Info
+#
+# Version: 1.0.0
+#
+#######################################
+# Copyright [2024] [serdigital64@gmail.com]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck source-path=lib/bl64
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/pgsql/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
+
+#
+# Globals
+#
+
+export PGPASSWORD
+export PSQL_PAGER=''
+
+#
+# Functions
+#
+
+function list() {
+  bl64_dbg_app_show_function "$@"
+  local index="$1"
+  "$SYSOP64_PGSQL_CLI_PATH" \
+    --host="$SYSOP64_PGSQL_SERVER_HOST" \
+    --port="$SYSOP64_PGSQL_SERVER_PORT" \
+    --dbname="$SYSOP64_PGSQL_DB_NAME" \
+    --username="$SYSOP64_PGSQL_SERVER_USER" \
+    --command="\\di"
+}
+
+function describe() {
+  bl64_dbg_app_show_function "$@"
+  local index="$1"
+  "$SYSOP64_PGSQL_CLI_PATH" \
+    --host="$SYSOP64_PGSQL_SERVER_HOST" \
+    --port="$SYSOP64_PGSQL_SERVER_PORT" \
+    --dbname="$SYSOP64_PGSQL_DB_NAME" \
+    --username="$SYSOP64_PGSQL_SERVER_USER" \
+    --command="\\d $index"
+}
+
+function check() {
+  bl64_dbg_app_show_function "$@"
+  local index="$1"
+  printf '
+SELECT
+  *
+FROM
+  pg_stat_progress_create_index
+;' |
+    "$SYSOP64_PGSQL_CLI_PATH" \
+      --host="$SYSOP64_PGSQL_SERVER_HOST" \
+      --port="$SYSOP64_PGSQL_SERVER_PORT" \
+      --dbname="$SYSOP64_PGSQL_DB_NAME" \
+      --username="$SYSOP64_PGSQL_SERVER_USER" \
+      --file='-'
+}
+
+#######################################
+# Initialize environment
+#
+# Arguments:
+#   None
+# Outputs:
+#   Initializacion progress messages
+# Returns:
+#   0: initialization ok
+#   >: failed to initialize
+#######################################
+function initialize() {
+  bl64_dbg_app_show_function "$@"
+  # shellcheck disable=SC2034
+  local command="$1"
+  local index="$2"
+
+  bl64_check_parameter 'command' ||
+    { help && return 1; }
+
+  bl64_check_command "$SYSOP64_PGSQL_CLI_PATH" &&
+    bl64_check_export 'SYSOP64_PGSQL_SERVER_PASSWORD' ||
+    return $?
+
+  if [[ "$command" == 'describe' ]]; then
+    bl64_check_parameter 'index' ||
+      return $?
+  fi
+
+  PGPASSWORD="$SYSOP64_PGSQL_SERVER_PASSWORD"
+}
+
+#######################################
+# Show script usage description
+#
+# Arguments:
+#   None
+# Outputs:
+#   Command line format and description
+# Returns:
+#   0
+#######################################
+function help() {
+  bl64_msg_show_usage \
+    '-l|-e|-k [-o Host] [-p Port] [-u User] [-b DB] [-x Index] [-V Verbose] [-D Debug] [-h]' \
+    'PGSQL / Index / Info' \
+    '
+    -l         : List indexes
+    -e         : Describe index
+    -k         : Check index status
+    ' '
+    -o Host    : Host FQDN. Alternative shell-env: SYSOP64_PGSQL_SERVER_HOST  
+    -p Port    : DB Port. Alternative shell-ehv: SYSOP64_PGSQL_SERVER_PORT 
+    -u User    : DB User. Alternative shell-ehv: SYSOP64_PGSQL_SERVER_USER 
+    -b DB      : DB Name. Alternative shell-ehv: SYSOP64_PGSQL_DB_NAME
+    -x Index   : DB Table.
+    -h         : Show help
+    ' '
+    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
+    '
+}
+
+#
+# Main
+#
+
+declare command="$BL64_VAR_NULL"
+declare debug="$BL64_DBG_TARGET_NONE"
+declare option=''
+declare verbose="$BL64_MSG_VERBOSE_APP"
+declare index="$BL64_VAR_DEFAULT"
+
+(($# == 0)) && help && exit 1
+while getopts ':leko:p:u:b:x:V:D:h' option; do
+  case "$option" in
+  l) command='list' ;;
+  e) command='describe' ;;
+  k) command='check' ;;
+  o) SYSOP64_PGSQL_SERVER_HOST="$OPTARG" ;;
+  p) SYSOP64_PGSQL_SERVER_PORT="$OPTARG" ;;
+  u) SYSOP64_PGSQL_SERVER_USER="$OPTARG" ;;
+  b) SYSOP64_PGSQL_DB_NAME="$OPTARG" ;;
+  x) index="$OPTARG" ;;
+  V) verbose="$OPTARG" ;;
+  D) debug="$OPTARG" ;;
+  h) help && exit 0 ;;
+  *) help && exit 1 ;;
+  esac
+done
+bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
+initialize "$command" "$index" || exit $?
+
+bl64_msg_show_batch_start "$command"
+"${command}" "$index"
+bl64_msg_show_batch_finish $? "$command"
