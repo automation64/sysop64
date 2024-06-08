@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Modules:
   - PGSQL
-  - AWS-EKS
   - Core
 
 ## [0.1.0]
