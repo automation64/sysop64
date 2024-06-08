@@ -61,7 +61,7 @@ function show() {
 #   >: failed to initialize
 #######################################
 function initialize() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   # shellcheck disable=SC2034
   local command="$1"
   local owner="$2"

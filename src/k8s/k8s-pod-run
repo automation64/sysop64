@@ -39,7 +39,7 @@ source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
 #
 
 function shell_run() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   local namespace="$1"
   local image="$2"
   local entrypoint="$3"
@@ -72,7 +72,7 @@ function shell_run() {
 #   >: failed to initialize
 #######################################
 function initialize() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   # shellcheck disable=SC2034
   local command="$1"
 
