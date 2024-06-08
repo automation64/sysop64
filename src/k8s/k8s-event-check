@@ -25,16 +25,14 @@
 # Imports
 #
 
-SYSOP64_PATH_BL64="${SYSOP64_PATH_BL64:-/opt/bl64}"
-# shellcheck source-path=lib/bl64 disable=SC2015
-source "${SYSOP64_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${SYSOP64_PATH_BL64}/bashlib64-module-k8s.bash" &&
-  source "${SYSOP64_PATH_BL64}/bashlib64-core.bash" ||
+declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck source-path=lib/bl64
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
-
-#
-# Globals
-#
 
 #
 # Functions
