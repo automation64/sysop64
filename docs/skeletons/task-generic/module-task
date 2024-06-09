@@ -41,17 +41,6 @@ source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
 # Functions
 #
 
-#######################################
-# Initialize environment
-#
-# Arguments:
-#   None
-# Outputs:
-#   Initializacion progress messages
-# Returns:
-#   0: initialization ok
-#   >: failed to initialize
-#######################################
 function initialize() {
   bl64_dbg_app_show_function "$@"
   # shellcheck disable=SC2034
