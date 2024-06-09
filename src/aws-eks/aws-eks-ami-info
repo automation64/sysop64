@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+# Template: 1.0.0
+#######################################
+# AWS EKS / AMI / Info
+#
+# Version: 1.0.0
+#
+#######################################
+# Copyright [2024] [serdigital64@gmail.com]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck source-path=lib/bl64
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-aws.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/aws/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
+
+#
+# Functions
+#
+
+function show_recommended() {
+  bl64_dbg_app_show_function "$@"
+  local ami_family="$1"
+  local k8s_version="$2"
+  local endpoint=''
+
+  if [[ "$ami_family" == 'AL2' ]]; then
+    endpoint="$SYSOP64_AWS_API_EKS_AMI_AL2"
+  elif [[ "$ami_family" == 'AL2023' ]]; then
+    endpoint="$SYSOP64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD"
+  fi
+
+  bl64_aws_run_aws \
+    ssm get-parameter \
+    --name "/aws/service/eks/optimized-ami/${k8s_version}/${endpoint}/recommended/image_id" \
+    --query 'Parameter.Value'
+}
+
+function initialize() {
+  bl64_dbg_app_show_function "$@"
+  # shellcheck disable=SC2034
+  local command="$1"
+
+  bl64_check_parameter 'command' ||
+    { help && return 1; }
+
+  bl64_aws_setup &&
+    aws_cli_access_check
+}
+
+function help() {
+  bl64_msg_show_usage \
+    '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]' \
+    'AWS EKS / AMI / Info' \
+    '
+    -l         : Show recommended AMI for EKS version
+    ' '
+    -h         : Show help
+    ' '
+    -a Family  : AMI Family. Format: AL2|AL2023
+    -r Version : K8S version for the AMI. Format: X.Y
+    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
+    '
+}
+
+#
+# Main
+#
+
+declare command="$BL64_VAR_NULL"
+declare debug="$BL64_DBG_TARGET_NONE"
+declare option=''
+declare verbose="$BL64_MSG_VERBOSE_ALL"
+declare ami_family='AL2023'
+declare k8s_version='1.29'
+
+(($# == 0)) && help && exit 1
+while getopts ':la:r:V:D:h' option; do
+  case "$option" in
+  l) command='show_recommended' ;;
+  a) ami_family="$OPTARG" ;;
+  r) k8s_version="$OPTARG" ;;
+  V) verbose="$OPTARG" ;;
+  D) debug="$OPTARG" ;;
+  h) help && exit 0 ;;
+  *) help && exit 1 ;;
+  esac
+done
+bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
+initialize "$command" || exit $?
+
+bl64_msg_show_batch_start "$command"
+"${command}" "$ami_family" "$k8s_version"
+bl64_msg_show_batch_finish $? "$command"
