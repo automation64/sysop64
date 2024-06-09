@@ -39,7 +39,7 @@ source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
 #
 
 function shell_run() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   local namespace="$1"
   local image="$2"
   local entrypoint="$3"
@@ -60,19 +60,8 @@ function shell_run() {
     -- "$entrypoint"
 }
 
-#######################################
-# Initialize environment
-#
-# Arguments:
-#   None
-# Outputs:
-#   Initializacion progress messages
-# Returns:
-#   0: initialization ok
-#   >: failed to initialize
-#######################################
 function initialize() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   # shellcheck disable=SC2034
   local command="$1"
 
@@ -82,16 +71,6 @@ function initialize() {
   bl64_k8s_setup
 }
 
-#######################################
-# Show script usage description
-#
-# Arguments:
-#   None
-# Outputs:
-#   Command line format and description
-# Returns:
-#   0
-#######################################
 function help() {
   bl64_msg_show_usage \
     '[-s] [-i Image] [-e EntryPoint] [-n NameSpace] [-V Verbose] [-D Debug] [-h]' \
@@ -116,7 +95,7 @@ function help() {
 declare command='shell_run'
 declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
-declare verbose="$BL64_MSG_VERBOSE_APP"
+declare verbose="$BL64_MSG_VERBOSE_ALL"
 declare namespace='default'
 declare image="$BL64_VAR_DEFAULT"
 declare entrypoint="$BL64_VAR_DEFAULT"

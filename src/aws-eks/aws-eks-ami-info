@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Template: 1.0.0
 #######################################
-# PGSQL / Server / Lab / Control
+# AWS EKS / AMI / Info
 #
 # Version: 1.0.0
 #
@@ -29,40 +29,34 @@ declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPT_PATH
 source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck source-path=lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-cnt.bash" &&
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-aws.bash" &&
   source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPT_PATH
-source "${SYSOP64_CORE_PATH_ROOT}/pgsql/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${SYSOP64_CORE_PATH_ROOT}/aws/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
 #
 
-function start() {
-  bl64_dbg_app_show_function
-  local container_port='5432'
-  bl64_msg_show_task 'start Postgresql Server in container mode'
-  bl64_cnt_run \
-    --name "$SYSOP64_PGSQL_SERVER_LAB_NAME" \
-    --env POSTGRES_PASSWORD="$SYSOP64_PGSQL_SERVER_LAB_PASSWORD" \
-    --detach \
-    --publish "$container_port:$container_port" \
-    postgres &&
-    bl64_msg_show_info "Starded container information
-Container Name: ${SYSOP64_PGSQL_SERVER_LAB_NAME}
-Password: ${SYSOP64_PGSQL_SERVER_LAB_PASSWORD}
-Port: ${container_port}"
-}
+function show_recommended() {
+  bl64_dbg_app_show_function "$@"
+  local ami_family="$1"
+  local k8s_version="$2"
+  local endpoint=''
 
-function stop() {
-  bl64_dbg_app_show_function
-  bl64_msg_show_task 'stop Postgresql Server running in container mode'
-  bl64_cnt_cli \
-    stop \
-    "$SYSOP64_PGSQL_SERVER_LAB_NAME" &&
-    bl64_cnt_cli \
-      rm \
-      "$SYSOP64_PGSQL_SERVER_LAB_NAME"
+  if [[ "$ami_family" == 'AL2' ]]; then
+    endpoint="$SYSOP64_AWS_API_EKS_AMI_AL2"
+  elif [[ "$ami_family" == 'AL2023' ]]; then
+    endpoint="$SYSOP64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD"
+  fi
+
+  bl64_aws_run_aws \
+    ssm get-parameter \
+    --name "/aws/service/eks/optimized-ami/${k8s_version}/${endpoint}/recommended/image_id" \
+    --query 'Parameter.Value'
 }
 
 function initialize() {
@@ -73,20 +67,21 @@ function initialize() {
   bl64_check_parameter 'command' ||
     { help && return 1; }
 
-  bl64_cnt_check_not_in_container &&
-    bl64_cnt_setup
+  bl64_aws_setup &&
+    aws_cli_access_check
 }
 
 function help() {
   bl64_msg_show_usage \
-    '-s|-o [-V Verbose] [-D Debug] [-h]' \
-    'PGSQL / Server / Lab / Control' \
+    '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]' \
+    'AWS EKS / AMI / Info' \
     '
-    -s         : Start container and detach
-    -o         : Stop detached container
+    -l         : Show recommended AMI for EKS version
     ' '
     -h         : Show help
     ' '
+    -a Family  : AMI Family. Format: AL2|AL2023
+    -r Version : K8S version for the AMI. Format: X.Y
     -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
     -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
     '
@@ -100,12 +95,15 @@ declare command="$BL64_VAR_NULL"
 declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
 declare verbose="$BL64_MSG_VERBOSE_ALL"
+declare ami_family='AL2023'
+declare k8s_version='1.29'
 
 (($# == 0)) && help && exit 1
-while getopts ':soV:D:h' option; do
+while getopts ':la:r:V:D:h' option; do
   case "$option" in
-  s) command='start' ;;
-  o) command='stop' ;;
+  l) command='show_recommended' ;;
+  a) ami_family="$OPTARG" ;;
+  r) k8s_version="$OPTARG" ;;
   V) verbose="$OPTARG" ;;
   D) debug="$OPTARG" ;;
   h) help && exit 0 ;;
@@ -116,5 +114,5 @@ bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize "$command" || exit $?
 
 bl64_msg_show_batch_start "$command"
-"${command}"
+"${command}" "$ami_family" "$k8s_version"
 bl64_msg_show_batch_finish $? "$command"

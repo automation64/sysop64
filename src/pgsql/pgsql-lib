@@ -3,7 +3,7 @@
 #######################################
 # PGSQL / Lib
 #
-# Version: 1.0.0
+# Version: 1.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -22,12 +22,15 @@
 #######################################
 
 #
-# Imports
-#
-
-#
 # Globals
 #
 
 declare SYSOP64_PGSQL_SERVER_LAB_NAME="${SYSOP64_PGSQL_SERVER_LAB_NAME:-pgsql-lab}"
 declare SYSOP64_PGSQL_SERVER_LAB_PASSWORD="${SYSOP64_PGSQL_SERVER_LAB_PASSWORD:-Random-Password.${RANDOM}}"
+declare SYSOP64_PGSQL_CLI_PATH="${SYSOP64_PGSQL_CLI_PATH:-/usr/bin/psql}"
+
+declare SYSOP64_PGSQL_SERVER_HOST="${SYSOP64_PGSQL_SERVER_HOST:-localhost}"
+declare SYSOP64_PGSQL_SERVER_USER="${SYSOP64_PGSQL_SERVER_USER:-postgres}"
+declare SYSOP64_PGSQL_SERVER_PORT="${SYSOP64_PGSQL_SERVER_PORT:-5432}"
+declare SYSOP64_PGSQL_SERVER_PASSWORD="${SYSOP64_PGSQL_SERVER_PASSWORD:-}"
+declare SYSOP64_PGSQL_DB_NAME="${SYSOP64_PGSQL_DB_NAME:-postgres}"

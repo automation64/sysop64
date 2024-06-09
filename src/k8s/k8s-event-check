@@ -39,7 +39,7 @@ source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
 #
 
 function k8s_cli_set_ns() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   local namespace="$1"
   if [[ "$namespace" == "$BL64_VAR_DEFAULT" ]]; then
     printf -- '--all-namespaces'
@@ -49,7 +49,7 @@ function k8s_cli_set_ns() {
 }
 
 function k8s_cli_set_expand() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   local expand="$1"
   case "$expand" in
   "$BL64_VAR_DEFAULT") printf -- '' ;;
@@ -59,7 +59,7 @@ function k8s_cli_set_expand() {
 }
 
 function all_check() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   local namespace="$1"
   local expand="$2"
 
@@ -75,7 +75,7 @@ function all_check() {
 }
 
 function pod_check() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   local namespace="$1"
   local expand="$2"
 
@@ -92,19 +92,8 @@ function pod_check() {
     --sort-by='lastTimestamp'
 }
 
-#######################################
-# Initialize environment
-#
-# Arguments:
-#   None
-# Outputs:
-#   Initializacion progress messages
-# Returns:
-#   0: initialization ok
-#   >: failed to initialize
-#######################################
 function initialize() {
-  bl64_dbg_app_show_function "@"
+  bl64_dbg_app_show_function "$@"
   # shellcheck disable=SC2034
   local command="$1"
 
@@ -114,16 +103,6 @@ function initialize() {
   bl64_k8s_setup
 }
 
-#######################################
-# Show script usage description
-#
-# Arguments:
-#   None
-# Outputs:
-#   Command line format and description
-# Returns:
-#   0
-#######################################
 function help() {
 
   bl64_msg_show_usage \
@@ -151,7 +130,7 @@ declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
 declare expand="$BL64_VAR_DEFAULT"
 declare namespace="$BL64_VAR_DEFAULT"
-declare verbose="$BL64_MSG_VERBOSE_APP"
+declare verbose="$BL64_MSG_VERBOSE_ALL"
 
 while getopts ':apjn:V:D:h' option; do
   case "$option" in

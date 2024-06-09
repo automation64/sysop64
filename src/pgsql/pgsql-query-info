@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Template: 1.0.0
 #######################################
-# GitHub / Repo / Show
+# PGSQL / Query / Info
 #
-# Version: 1.0.1
+# Version: 1.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -31,54 +31,80 @@ source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to loa
 # shellcheck source-path=lib/bl64
 source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPT_PATH
-source "${SYSOP64_CORE_PATH_ROOT}/github/github-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${SYSOP64_CORE_PATH_ROOT}/pgsql/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Globals
 #
 
+export PGPASSWORD
+export PSQL_PAGER=''
+
 #
 # Functions
 #
 
-function show() {
+function show_active() {
   bl64_dbg_app_show_function
-  local owner="$1"
-  local repository="$2"
-  local api_prefix="repos/${owner}/${repository}"
-
-  bl64_msg_show_info 'branch protection'
-  github_lib_cli_run api "${api_prefix}"
+  printf "
+    SELECT
+      datname,
+      usename,
+      backend_type,
+      query_id,
+      query_start,
+      now(),
+      now() - query_start as elapsed,
+      query
+    FROM
+      pg_stat_activity
+    WHERE
+      state = 'active'
+    ORDER BY
+      datname,
+      usename,
+      backend_type,
+      query_id,
+      query_start;
+  " |
+  "$SYSOP64_PGSQL_CLI_PATH" \
+    --host="$SYSOP64_PGSQL_SERVER_HOST" \
+    --port="$SYSOP64_PGSQL_SERVER_PORT" \
+    --dbname="$SYSOP64_PGSQL_DB_NAME" \
+    --username="$SYSOP64_PGSQL_SERVER_USER" \
+    --file='-'
 }
 
 function initialize() {
   bl64_dbg_app_show_function "$@"
   # shellcheck disable=SC2034
   local command="$1"
-  local owner="$2"
-  local repository="$3"
 
-  bl64_check_parameter 'owner' &&
-    bl64_check_parameter 'repository' &&
-    bl64_check_parameter 'command' ||
+  bl64_check_parameter 'command' ||
     { help && return 1; }
 
-  return 0
+  bl64_check_command "$SYSOP64_PGSQL_CLI_PATH" &&
+    bl64_check_export 'SYSOP64_PGSQL_SERVER_PASSWORD' ||
+    return $?
+
+  PGPASSWORD="$SYSOP64_PGSQL_SERVER_PASSWORD"
 }
 
 function help() {
   bl64_msg_show_usage \
-    '-s -o Owner -r Repository [-V Verbose] [-D Debug] [-h]' \
-    'GitHub / Repo / Show' \
+    '-a [-o Host] [-p Port] [-u User] [-b DB] [-V Verbose] [-D Debug] [-h]' \
+    'PGSQL / Query / Info' \
     '
-    -s           : Show repository settings
+    -a         : Show active
     ' '
-    -h           : Show help
+    -o Host    : Host FQDN. Alternative shell-env: SYSOP64_PGSQL_SERVER_HOST  
+    -p Port    : DB Port. Alternative shell-ehv: SYSOP64_PGSQL_SERVER_PORT 
+    -u User    : DB User. Alternative shell-ehv: SYSOP64_PGSQL_SERVER_USER 
+    -b DB      : DB Name. Alternative shell-ehv: SYSOP64_PGSQL_DB_NAME
+    -h         : Show help
     ' '
-    -o Owner     : user or organization
-    -r Repository: repository name
-    -V Verbose   : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug     : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
+    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
     '
 }
 
@@ -90,15 +116,15 @@ declare command="$BL64_VAR_NULL"
 declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
 declare verbose="$BL64_MSG_VERBOSE_ALL"
-declare owner=''
-declare repository=''
 
 (($# == 0)) && help && exit 1
-while getopts ':so:r:V:D:h' option; do
+while getopts ':ao:p:u:b:V:D:h' option; do
   case "$option" in
-  s) command='show' ;;
-  o) owner="$OPTARG" ;;
-  r) repository="$OPTARG" ;;
+  a) command='show_active' ;;
+  o) SYSOP64_PGSQL_SERVER_HOST="$OPTARG" ;;
+  p) SYSOP64_PGSQL_SERVER_PORT="$OPTARG" ;;
+  u) SYSOP64_PGSQL_SERVER_USER="$OPTARG" ;;
+  b) SYSOP64_PGSQL_DB_NAME="$OPTARG" ;;
   V) verbose="$OPTARG" ;;
   D) debug="$OPTARG" ;;
   h) help && exit 0 ;;
@@ -106,8 +132,8 @@ while getopts ':so:r:V:D:h' option; do
   esac
 done
 bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
-initialize "$command" "$owner" "$repository" || exit $?
+initialize "$command" || exit $?
 
 bl64_msg_show_batch_start "$command"
-"$command" "$owner" "$repository" ;;
+"${command}"
 bl64_msg_show_batch_finish $? "$command"
