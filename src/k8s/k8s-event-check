@@ -114,16 +114,6 @@ function initialize() {
   bl64_k8s_setup
 }
 
-#######################################
-# Show script usage description
-#
-# Arguments:
-#   None
-# Outputs:
-#   Command line format and description
-# Returns:
-#   0
-#######################################
 function help() {
 
   bl64_msg_show_usage \
@@ -151,7 +141,7 @@ declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
 declare expand="$BL64_VAR_DEFAULT"
 declare namespace="$BL64_VAR_DEFAULT"
-declare verbose="$BL64_MSG_VERBOSE_APP"
+declare verbose="$BL64_MSG_VERBOSE_ALL"
 
 while getopts ':apjn:V:D:h' option; do
   case "$option" in

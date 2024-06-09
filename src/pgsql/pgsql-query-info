@@ -101,16 +101,6 @@ function initialize() {
   PGPASSWORD="$SYSOP64_PGSQL_SERVER_PASSWORD"
 }
 
-#######################################
-# Show script usage description
-#
-# Arguments:
-#   None
-# Outputs:
-#   Command line format and description
-# Returns:
-#   0
-#######################################
 function help() {
   bl64_msg_show_usage \
     '-a [-o Host] [-p Port] [-u User] [-b DB] [-V Verbose] [-D Debug] [-h]' \
@@ -136,7 +126,7 @@ function help() {
 declare command="$BL64_VAR_NULL"
 declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
-declare verbose="$BL64_MSG_VERBOSE_APP"
+declare verbose="$BL64_MSG_VERBOSE_ALL"
 
 (($# == 0)) && help && exit 1
 while getopts ':ao:p:u:b:V:D:h' option; do

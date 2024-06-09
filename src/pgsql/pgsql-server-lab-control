@@ -88,16 +88,6 @@ function initialize() {
     bl64_cnt_setup
 }
 
-#######################################
-# Show script usage description
-#
-# Arguments:
-#   None
-# Outputs:
-#   Command line format and description
-# Returns:
-#   0
-#######################################
 function help() {
   bl64_msg_show_usage \
     '-s|-o [-V Verbose] [-D Debug] [-h]' \
@@ -120,7 +110,7 @@ function help() {
 declare command="$BL64_VAR_NULL"
 declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
-declare verbose="$BL64_MSG_VERBOSE_APP"
+declare verbose="$BL64_MSG_VERBOSE_ALL"
 
 (($# == 0)) && help && exit 1
 while getopts ':soV:D:h' option; do

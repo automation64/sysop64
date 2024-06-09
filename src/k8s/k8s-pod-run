@@ -82,16 +82,6 @@ function initialize() {
   bl64_k8s_setup
 }
 
-#######################################
-# Show script usage description
-#
-# Arguments:
-#   None
-# Outputs:
-#   Command line format and description
-# Returns:
-#   0
-#######################################
 function help() {
   bl64_msg_show_usage \
     '[-s] [-i Image] [-e EntryPoint] [-n NameSpace] [-V Verbose] [-D Debug] [-h]' \
@@ -116,7 +106,7 @@ function help() {
 declare command='shell_run'
 declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
-declare verbose="$BL64_MSG_VERBOSE_APP"
+declare verbose="$BL64_MSG_VERBOSE_ALL"
 declare namespace='default'
 declare image="$BL64_VAR_DEFAULT"
 declare entrypoint="$BL64_VAR_DEFAULT"
