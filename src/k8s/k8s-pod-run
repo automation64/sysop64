@@ -3,7 +3,7 @@
 #######################################
 # K8S / Pod / Run
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -26,9 +26,9 @@
 #
 
 declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
-# shellcheck source-path=SCRIPT_PATH
+# shellcheck source-path=SCRIPTDIR/../core
 source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck source-path=lib/bl64
+# shellcheck source-path=SCRIPTDIR/../lib/bl64
 source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" &&
   source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
@@ -100,9 +100,12 @@ declare namespace='default'
 declare image="$BL64_VAR_DEFAULT"
 declare entrypoint="$BL64_VAR_DEFAULT"
 
-while getopts ':sV:D:h' option; do
+while getopts ':si:n:e:V:D:h' option; do
   case "$option" in
   s) command='shell_run' ;;
+  n) namespace="$OPTARG" ;;
+  i) image="$OPTARG" ;;
+  e) entrypoint="$OPTARG" ;;
   V) verbose="$OPTARG" ;;
   D) debug="$OPTARG" ;;
   h) help && exit 0 ;;
