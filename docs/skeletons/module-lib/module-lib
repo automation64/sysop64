@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # template: 1.0.0
-# template-import: 1.0.0
 #######################################
-# X_MODULE_X / [X_SUBMODULE_X /] X_APP_NAME_X
+# X_MODULE_X / Lib
 #
 # Version: 1.0.0
 #
@@ -23,31 +22,13 @@
 #######################################
 
 #
-# Imports
+# Globals
 #
 
-# X_IMPORTS_PLACEHOLDER_X
+# X_GLOBALS_PLACEHOLDER_X
 
 #
 # Functions
 #
 
-function initialize() {
-  bl64_dbg_app_show_function
-  # X_INIT_PLACEHOLDER_X
-}
-
-#
-# Main
-#
-
-declare command='X_COMMAND_X'
-declare debug="$BL64_DBG_TARGET_NONE"
-declare verbose="$BL64_MSG_VERBOSE_ALL"
-
-bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
-initialize || exit $?
-
-bl64_msg_show_batch_start "$command"
-# X_COMMAND_PLACEHOLDER_X
-bl64_msg_show_batch_finish $? "$command"
+# X_FUNCTIONS_PLACEHOLDER_X
