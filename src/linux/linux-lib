@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # template: 1.0.0
-# template-import: 1.0.0
 #######################################
-# X_MODULE_X / [X_SUBMODULE_X /] X_APP_NAME_X
+# Linux / Lib
 #
 # Version: 1.0.0
 #
@@ -23,31 +22,33 @@
 #######################################
 
 #
-# Imports
+# Globals
 #
 
-# X_IMPORTS_PLACEHOLDER_X
+declare SYSOP64_LINUX_PATH_CLI_CRYPTSETUP=''
+declare SYSOP64_LINUX_PATH_CLI_LSBLK=''
 
 #
 # Functions
 #
 
-function initialize() {
+function linux_lib_setup() {
   bl64_dbg_app_show_function
-  # X_INIT_PLACEHOLDER_X
+  SYSOP64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+  SYSOP64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
 }
 
-#
-# Main
-#
+function linux_lib_run_cryptsetup() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_privilege_root &&
+    bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP"
+  "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" \
+    "$@"
+}
 
-declare command='X_COMMAND_X'
-declare debug="$BL64_DBG_TARGET_NONE"
-declare verbose="$BL64_MSG_VERBOSE_ALL"
-
-bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
-initialize || exit $?
-
-bl64_msg_show_batch_start "$command"
-# X_COMMAND_PLACEHOLDER_X
-bl64_msg_show_batch_finish $? "$command"
+function linux_lib_run_lsblk() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP"
+  "$SYSOP64_LINUX_PATH_CLI_LSBLK" \
+    "$@"
+}

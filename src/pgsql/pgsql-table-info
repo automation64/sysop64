@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Template: 1.0.0
+# template: 1.0.0
 #######################################
 # PGSQL / Table / Info
 #
@@ -47,7 +47,7 @@ export PSQL_PAGER=''
 function list() {
   bl64_dbg_app_show_function "$@"
   local table="$1"
-  "$SYSOP64_PGSQL_CLI_PATH" \
+  psql_lib_run_psql \
     --host="$SYSOP64_PGSQL_SERVER_HOST" \
     --port="$SYSOP64_PGSQL_SERVER_PORT" \
     --dbname="$SYSOP64_PGSQL_DB_NAME" \
@@ -58,7 +58,7 @@ function list() {
 function describe() {
   bl64_dbg_app_show_function "$@"
   local table="$1"
-  "$SYSOP64_PGSQL_CLI_PATH" \
+  psql_lib_run_psql \
     --host="$SYSOP64_PGSQL_SERVER_HOST" \
     --port="$SYSOP64_PGSQL_SERVER_PORT" \
     --dbname="$SYSOP64_PGSQL_DB_NAME" \
@@ -75,7 +75,7 @@ function initialize() {
   bl64_check_parameter 'command' ||
     { help && return 1; }
 
-  bl64_check_command "$SYSOP64_PGSQL_CLI_PATH" &&
+  psql_lib_setup &&
     bl64_check_export 'SYSOP64_PGSQL_SERVER_PASSWORD' ||
     return $?
 

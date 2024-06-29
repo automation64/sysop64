@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Template: 1.0.0
+# template: 1.0.0
 #######################################
 # AWS EKS / AMI / Info
 #
@@ -68,7 +68,7 @@ function initialize() {
     { help && return 1; }
 
   bl64_aws_setup &&
-    aws_cli_access_check
+    aws_lib_access_check
 }
 
 function help() {
