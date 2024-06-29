@@ -10,13 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Modules:
-  - Linux
   - Linux-LUKS
-
-### Changed
-
-- Github
-  - Updated to use github-lib
+  - RSync
+  - Restic
 
 ## [0.5.0]
 
