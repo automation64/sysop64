@@ -3,7 +3,7 @@
 #######################################
 # AWS / Lib
 #
-# Version: 1.1.0
+# Version: 1.1.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -41,7 +41,7 @@ declare SYSOP64_AWS_API_EKS_AMI_AL2='amazon-linux-2'
 # Functions
 #
 
-function aws_cli_access_check() {
+function aws_lib_access_check() {
   bl64_dbg_app_show_function "$@"
   if [[ -n "$SYSOP64_AWS_ACCESS_REGION" ]]; then
     bl64_aws_set_region "$SYSOP64_AWS_ACCESS_REGION"
