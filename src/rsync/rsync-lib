@@ -54,6 +54,8 @@ function rsync_lib_setup() {
 
 function rsync_lib_run_rsync() {
   bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
   "$SYSOP64_RSYNC_PATH_CLI" \
     "$@"
+  bl64_dbg_app_trace_stop
 }

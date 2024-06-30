@@ -53,9 +53,9 @@ function github_lib_setup() {
 }
 
 function github_lib_run_gh() {
-  bl64_dbg_lib_show_function "$@"
-  bl64_dbg_lib_trace_start
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
   "$SYSOP64_GITHUB_PATH_CLI" \
     "$@"
-  bl64_dbg_lib_trace_stop
+  bl64_dbg_app_trace_stop
 }
