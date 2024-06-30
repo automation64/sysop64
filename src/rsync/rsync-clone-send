@@ -30,7 +30,8 @@ declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/../core
 source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPT_PATH/../rsync
 source "${SYSOP64_CORE_PATH_ROOT}/rsync/rsync-lib" || { echo "Error: unable to load module library" && exit 1; }
@@ -42,8 +43,10 @@ source "${SYSOP64_CORE_PATH_ROOT}/rsync/rsync-lib" || { echo "Error: unable to l
 function initialize() {
   bl64_dbg_app_show_function
   rsync_lib_setup &&
-  bl64_check_parameter 'rsync_clone_from' &&
-  bl64_check_parameter 'rsync_clone_to' 
+    bl64_check_parameter 'rsync_clone_from' &&
+    bl64_check_parameter 'rsync_clone_to' &&
+    bl64_check_directory "$rsync_clone_from" &&
+    bl64_check_directory "$rsync_clone_to"
 }
 
 #
@@ -60,18 +63,18 @@ bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-rsync_lib_run_rsync \
-  --dry-run \
-  --one-file-system \
-  --human-readable \
-  --progress \
-  --stats \
-  --recursive \
-  --checksum \
-  --links \
-  --perms \
-  --delete \
-  --verbose \
-  "$rsync_clone_from" \
-  "$rsync_clone_to"
+bl64_ui_ask_confirmation "Warning: destination content will be replaced (${rsync_clone_from} -> ${rsync_clone_to})" &&
+  rsync_lib_run_rsync \
+    --one-file-system \
+    --human-readable \
+    --progress \
+    --stats \
+    --recursive \
+    --checksum \
+    --links \
+    --perms \
+    --delete \
+    --verbose \
+    "$rsync_clone_from" \
+    "$rsync_clone_to"
 bl64_msg_show_batch_finish $? "$command"
