@@ -41,14 +41,20 @@ function linux_lib_setup() {
 function linux_lib_run_cryptsetup() {
   bl64_dbg_app_show_function "$@"
   bl64_check_privilege_root &&
-    bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP"
+    bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" ||
+    return $?
+  bl64_dbg_app_trace_start
   "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" \
     "$@"
+  bl64_dbg_app_trace_stop
 }
 
 function linux_lib_run_lsblk() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP"
+  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" ||
+    return $?
+  bl64_dbg_app_trace_start
   "$SYSOP64_LINUX_PATH_CLI_LSBLK" \
     "$@"
+  bl64_dbg_app_trace_stop
 }

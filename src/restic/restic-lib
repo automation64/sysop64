@@ -63,6 +63,8 @@ function restic_lib_run_restic() {
   bl64_dbg_app_show_function "$@"
   RESTIC_REPOSITORY="$SYSOP64_RESTIC_REPOSITORY"
   RESTIC_PASSWORD="$SYSOP64_RESTIC_PASSWORD"
+  bl64_dbg_app_trace_start
   "$SYSOP64_RESTIC_PATH_CLI" \
     "$@"
+  bl64_dbg_app_trace_stop
 }
