@@ -3,7 +3,7 @@
 #######################################
 # K8S / Event / Check
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -33,30 +33,12 @@ source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" &&
   source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/k8s/k8s-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
 #
-
-function k8s_cli_set_ns() {
-  bl64_dbg_app_show_function "$@"
-  local namespace="$1"
-  if [[ "$namespace" == "$BL64_VAR_DEFAULT" ]]; then
-    printf -- '--all-namespaces'
-  else
-    printf -- '--namespace %s' "${namespace}"
-  fi
-}
-
-function k8s_cli_set_expand() {
-  bl64_dbg_app_show_function "$@"
-  local expand="$1"
-  case "$expand" in
-  "$BL64_VAR_DEFAULT") printf -- '' ;;
-  'json') printf -- '--output json' ;;
-  *) printf -- '' ;;
-  esac
-}
 
 function all_check() {
   bl64_dbg_app_show_function "$@"
@@ -68,8 +50,8 @@ function all_check() {
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \
     get events \
-    $(k8s_cli_set_ns "$namespace") \
-    $(k8s_cli_set_expand "$expand") \
+    $(k8s_lib_cli_set_ns "$namespace") \
+    $(k8s_lib_cli_set_output "$expand") \
     --field-selector='type=Warning' \
     --sort-by='lastTimestamp'
 }
@@ -84,8 +66,8 @@ function pod_check() {
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \
     get events \
-    $(k8s_cli_set_ns "$namespace") \
-    $(k8s_cli_set_expand "$expand") \
+    $(k8s_lib_cli_set_ns "$namespace") \
+    $(k8s_lib_cli_set_output "$expand") \
     --field-selector='type=Warning' \
     --field-selector='involvedObject.ind=Pod' \
     --field-selector='reason=BackOff' \

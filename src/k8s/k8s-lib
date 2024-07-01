@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# template: 1.0.0
+#######################################
+# K8S / Lib
+#
+# Version: 1.0.0
+#
+#######################################
+# Copyright [2024] [serdigital64@gmail.com]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Functions
+#
+
+function k8s_lib_cli_set_ns() {
+  bl64_dbg_app_show_function "$@"
+  local namespace="$1"
+  if [[ "$namespace" == "$BL64_VAR_DEFAULT" ]]; then
+    printf -- '--all-namespaces'
+  else
+    printf -- '--namespace %s' "${namespace}"
+  fi
+}
+
+function k8s_lib_cli_set_output() {
+  bl64_dbg_app_show_function "$@"
+  local expand="$1"
+  case "$expand" in
+  "$BL64_VAR_DEFAULT") printf -- '' ;;
+  'json') printf -- '--output json' ;;
+  *) printf -- '' ;;
+  esac
+}

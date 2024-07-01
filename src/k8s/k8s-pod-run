@@ -3,7 +3,7 @@
 #######################################
 # K8S / Pod / Run
 #
-# Version: 1.0.1
+# Version: 1.0.2
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -33,6 +33,8 @@ source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" &&
   source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck source-path=SCRIPT_PATH
+source "${SYSOP64_CORE_PATH_ROOT}/k8s/k8s-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
