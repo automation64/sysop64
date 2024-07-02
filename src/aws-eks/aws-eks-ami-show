@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # template: 1.0.0
 #######################################
-# AWS EKS / AMI / Info
+# AWS EKS / AMI / Show
 #
 # Version: 1.0.1
 #
