@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # template: 1.0.0
 #######################################
-# Linux / Dev / Crypt / Show
+# Linux / Dev / RAID / Scan
 #
 # Version: 1.0.0
 #
@@ -49,7 +49,7 @@ function initialize() {
 # Main
 #
 
-declare command='show'
+declare command='scan'
 declare debug="$BL64_DBG_TARGET_NONE"
 declare verbose="$BL64_MSG_VERBOSE_ALL"
 declare volume_path="${1:-}"
@@ -58,7 +58,7 @@ bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-linux_lib_run_cryptsetup \
-  status \
+linux_lib_run_mdadm \
+  --scan \
   "$volume_path"
 bl64_msg_show_batch_finish $? "$command"

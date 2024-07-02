@@ -50,13 +50,16 @@ function luks_open() {
 function fs_check() {
   bl64_dbg_app_show_function
   bl64_msg_show_task "check filesystem (${volumne_name})"
-  linux_lib_run_fsck "/dev/mapper/${volumne_name}"
+  linux_lib_run_fsck \
+    "/dev/mapper/${volumne_name}"
 }
 
 function fs_mount() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task "mount filesystem (${volumne_name} -> ${$mount_point})"
-  linux_lib_run_mount "/dev/mapper/${volumne_name}" "$mount_point"
+  bl64_msg_show_task "mount filesystem (${volumne_name} -> ${mount_point})"
+  linux_lib_run_mount \
+    "/dev/mapper/${volumne_name}" \
+    "$mount_point"
 }
 
 function initialize() {

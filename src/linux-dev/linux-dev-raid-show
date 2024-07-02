@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # template: 1.0.0
 #######################################
-# Linux / Dev / Crypt / Show
+# Linux / Dev / RAID / Show
 #
 # Version: 1.0.0
 #
@@ -58,7 +58,7 @@ bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-linux_lib_run_cryptsetup \
-  status \
+linux_lib_run_mdadm \
+  --detail \
   "$volume_path"
 bl64_msg_show_batch_finish $? "$command"
