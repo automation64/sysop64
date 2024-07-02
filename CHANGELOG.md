@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modules:
   - Linux-Dev
   - Linux-FS
+  - Linux-Kernel
+
+### Changed
+
+- Linux-DMCrypt: moved to Linux-Dev
 
 ## [0.6.1]
 
