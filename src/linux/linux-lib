@@ -40,12 +40,22 @@ function linux_lib_setup() {
   SYSOP64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
   SYSOP64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
   SYSOP64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+  SYSOP64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
+}
+
+function linux_lib_run_blkid() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_BLKID" ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$SYSOP64_LINUX_PATH_CLI_BLKID" \
+    "$@"
+  bl64_dbg_app_trace_stop
 }
 
 function linux_lib_run_cryptsetup() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_privilege_root &&
-    bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" ||
+  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" ||
     return $?
   bl64_dbg_app_trace_start
   "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" \
@@ -77,8 +87,7 @@ function linux_lib_run_mount() {
 
 function linux_lib_run_fsck() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_privilege_root &&
-    bl64_check_command "$SYSOP64_LINUX_PATH_CLI_FSCK" ||
+  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_FSCK" ||
     return $?
   bl64_dbg_app_trace_start
   "$SYSOP64_LINUX_PATH_CLI_FSCK" \
