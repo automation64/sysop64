@@ -25,7 +25,10 @@
 # Globals
 #
 
-# X_GLOBALS_PLACEHOLDER_X
+# shellcheck disable=SC2034
+{
+  # X_GLOBALS_PLACEHOLDER_X
+}
 
 #
 # Functions

@@ -25,7 +25,10 @@
 # Globals
 #
 
-declare SYSOP64_GITHUB_PATH_CLI="${SYSOP64_GITHUB_PATH_CLI:-}"
+# shellcheck disable=SC2034
+{
+  declare SYSOP64_GITHUB_PATH_CLI="${SYSOP64_GITHUB_PATH_CLI:-}"
+}
 
 #
 # Functions

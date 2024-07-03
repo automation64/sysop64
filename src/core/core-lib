@@ -25,5 +25,8 @@
 # Globals
 #
 
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
-declare SYSOP64_CORE_PATH_BL64="${SYSOP64_CORE_PATH_BL64:-/opt/bl64}"
+# shellcheck disable=SC2034
+{
+    declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+    declare SYSOP64_CORE_PATH_BL64="${SYSOP64_CORE_PATH_BL64:-/opt/bl64}"
+}
