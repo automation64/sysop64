@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Linux-Dev
   - Linux-FS
   - Linux-Kernel
+  - Linux-Distro
 
 ### Changed
 
