@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # template: 1.0.0
+# template-import: 1.0.0
 #######################################
-# Linux / Dev / RAID / Scan
+# Linux / LVM / PV / List
 #
 # Version: 1.0.0
 #
@@ -17,7 +18,7 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specific language governing permissions andsrc/linux-lvm/linux-lvm-vg-list
 # limitations under the License.
 #######################################
 
@@ -41,7 +42,6 @@ source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to l
 function initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
-    bl64_check_parameter 'volume_path' &&
     linux_lib_setup
 }
 
@@ -49,16 +49,17 @@ function initialize() {
 # Main
 #
 
-declare command='scan'
+declare command='list'
 declare debug="$BL64_DBG_TARGET_NONE"
 declare verbose="$BL64_MSG_VERBOSE_ALL"
-declare volume_path="${1:-}"
+declare fields='pv_name,vg_name,pv_fmt,pv_uuid,pv_size,dev_size,pv_attr,pv_pe_count,pv_pe_alloc_count'
 
 bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-linux_lib_run_mdadm \
-  --examine \
-  "$volume_path"
+linux_lib_run_pvs \
+  --nosuffix \
+  --units M \
+  --options "$fields"
 bl64_msg_show_batch_finish $? "$command"

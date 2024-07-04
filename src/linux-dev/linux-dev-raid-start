@@ -41,7 +41,6 @@ source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to l
 function initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
-    bl64_check_parameter 'volume_path' &&
     linux_lib_setup
 }
 
@@ -52,14 +51,12 @@ function initialize() {
 declare command='start'
 declare debug="$BL64_DBG_TARGET_NONE"
 declare verbose="$BL64_MSG_VERBOSE_ALL"
-declare volume_path="${1:-}"
 
 bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
 linux_lib_run_mdadm \
-  --scan \
   --assemble \
-  "$volume_path"
+  --scan
 bl64_msg_show_batch_finish $? "$command"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # template: 1.0.0
 #######################################
-# Linux / Dev / Block / List
+# Linux / Dev / Block / List / Tree
 #
 # Version: 1.0.0
 #
@@ -58,8 +58,8 @@ initialize || exit $?
 bl64_msg_show_batch_start "$command"
 linux_lib_run_lsblk \
   --all \
-  --nodeps \
+  --shell \
+  --ascii \
   --paths \
-  --list \
-  --shell
+  --tree
 bl64_msg_show_batch_finish $? "$command"

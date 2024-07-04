@@ -33,8 +33,11 @@
   declare SYSOP64_LINUX_PATH_CLI_FSCK=''
   declare SYSOP64_LINUX_PATH_CLI_JOURNALCTL=''
   declare SYSOP64_LINUX_PATH_CLI_LSBLK=''
+  declare SYSOP64_LINUX_PATH_CLI_LVS=''
   declare SYSOP64_LINUX_PATH_CLI_MDADM=''
   declare SYSOP64_LINUX_PATH_CLI_MOUNT=''
+  declare SYSOP64_LINUX_PATH_CLI_PVS=''
+  declare SYSOP64_LINUX_PATH_CLI_VGS=''
 }
 
 #
@@ -51,8 +54,11 @@ function linux_lib_setup() {
     SYSOP64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     SYSOP64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
     SYSOP64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
+    SYSOP64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
     SYSOP64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
     SYSOP64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+    SYSOP64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+    SYSOP64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
     ;;
   *) bl64_check_alert_unsupported ;;
   esac
@@ -139,6 +145,36 @@ function linux_lib_run_mdadm() {
   bl64_dbg_app_trace_start
   "$SYSOP64_LINUX_PATH_CLI_MDADM" \
     --verbose \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function linux_lib_run_vgs() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_VGS" ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$SYSOP64_LINUX_PATH_CLI_VGS" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function linux_lib_run_lvs() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_LVS" ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$SYSOP64_LINUX_PATH_CLI_LVS" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function linux_lib_run_pvs() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_PVS" ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$SYSOP64_LINUX_PATH_CLI_PVS" \
     "$@"
   bl64_dbg_app_trace_stop
 }
