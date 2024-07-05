@@ -62,8 +62,8 @@ bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-# shellcheck disable=SC2086
 bl64_msg_show_task "Show delta between source and destination (${rsync_clone_from} -> ${rsync_clone_to})"
+# shellcheck disable=SC2086
 rsync_lib_run_rsync \
   $SYSOP64_RSYNC_OPTIONS_COMMON \
   --dry-run \

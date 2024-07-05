@@ -28,6 +28,7 @@
 function k8s_lib_cli_set_ns() {
   bl64_dbg_app_show_function "$@"
   local namespace="$1"
+  # shellcheck disable=SC2154
   if [[ "$namespace" == "$BL64_VAR_DEFAULT" ]]; then
     printf -- '--all-namespaces'
   else
@@ -38,6 +39,7 @@ function k8s_lib_cli_set_ns() {
 function k8s_lib_cli_set_output() {
   bl64_dbg_app_show_function "$@"
   local expand="$1"
+  # shellcheck disable=SC2154
   case "$expand" in
   "$BL64_VAR_DEFAULT") printf -- '' ;;
   'json') printf -- '--output json' ;;

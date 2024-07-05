@@ -46,6 +46,7 @@
 
 function linux_lib_setup() {
   bl64_dbg_app_show_function
+  # shellcheck disable=SC2154
   case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_DEBIAN")
     SYSOP64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'

@@ -44,9 +44,7 @@ function initialize() {
   bl64_dbg_app_show_function
   restic_lib_setup &&
     bl64_check_parameter 'backup_tag' &&
-    bl64_check_parameter 'backup_destination' &&
-    bl64_check_path_absolute "$backup_source" &&
-    bl64_check_path "$backup_source"
+    bl64_check_parameter 'destination'
 }
 
 #
