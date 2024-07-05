@@ -2,7 +2,7 @@
 # template: 1.0.0
 # template-import: 1.0.0
 #######################################
-# RSync / Clone / Send / User
+# RSync / Clone / Dir / Send / User
 #
 # Version: 1.0.0
 #
@@ -45,15 +45,14 @@ function initialize() {
   rsync_lib_setup &&
     bl64_check_parameter 'rsync_clone_from' &&
     bl64_check_parameter 'rsync_clone_to' &&
-    bl64_check_directory "$rsync_clone_from" &&
-    bl64_check_directory "$rsync_clone_to"
+    bl64_check_directory "$rsync_clone_from"
 }
 
 #
 # Main
 #
 
-declare command='clone-send'
+declare command='send'
 declare debug="$BL64_DBG_TARGET_NONE"
 declare verbose="$BL64_MSG_VERBOSE_ALL"
 declare rsync_clone_from="${1:-}"
@@ -63,18 +62,10 @@ bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
+# shellcheck disable=SC2086
 bl64_ui_ask_confirmation "Warning: destination content will be replaced (${rsync_clone_from} -> ${rsync_clone_to})" &&
   rsync_lib_run_rsync \
-    --one-file-system \
-    --human-readable \
-    --progress \
-    --stats \
-    --recursive \
-    --checksum \
-    --links \
-    --perms \
-    --delete \
-    --verbose \
+    $SYSOP64_RSYNC_OPTIONS_COMMON \
     "$rsync_clone_from" \
     "$rsync_clone_to"
 bl64_msg_show_batch_finish $? "$command"
