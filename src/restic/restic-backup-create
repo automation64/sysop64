@@ -62,8 +62,13 @@ bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
+bl64_msg_show_info "
+repository: ${SYSOP64_RESTIC_PATH_REPOSITORY}
+source    : ${backup_source}
+tag       : ${backup_tag}"
+
+bl64_msg_show_task 'create backup'
 restic_lib_run_restic \
-  --verbose \
   --tag "$backup_tag" \
   backup \
   "$backup_source"

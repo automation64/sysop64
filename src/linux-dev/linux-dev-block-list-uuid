@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # template: 1.0.0
 #######################################
-# Linux / Dev / Crypt / Mount
+# Linux / Dev / Block / List / Path
 #
 # Version: 1.0.0
 #
@@ -38,40 +38,9 @@ source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to l
 # Functions
 #
 
-function luks_open() {
-  bl64_dbg_app_show_function "$@"
-  local device_path="${1:-}"
-  local volume_name="${2:-}"
-  bl64_msg_show_task "open luks device (${device_path} -> ${volume_name})"
-  linux_lib_run_cryptsetup \
-    luksOpen \
-    "$device_path" \
-    "$volume_name"
-}
-
-function fs_check() {
-  bl64_dbg_app_show_function "$@"
-  local volume_name="${1:-}"
-  bl64_msg_show_task "check filesystem (${volume_name})"
-  linux_lib_run_fsck \
-    "/dev/mapper/${volume_name}"
-}
-
-function fs_mount() {
-  bl64_dbg_app_show_function "$@"
-  local mount_point="${1:-}"
-  local volume_name="${2:-}"
-  bl64_msg_show_task "mount filesystem (${volume_name} -> ${mount_point})"
-  linux_lib_run_mount \
-    "/dev/mapper/${volume_name}" \
-    "$mount_point"
-}
-
 function initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
-    bl64_check_parameter 'device_path' &&
-    bl64_check_parameter 'mount_point' &&
     linux_lib_setup
 }
 
@@ -79,18 +48,18 @@ function initialize() {
 # Main
 #
 
-declare command='show'
+declare command='list'
 declare debug="$BL64_DBG_TARGET_NONE"
 declare verbose="$BL64_MSG_VERBOSE_ALL"
-declare device_path="${1:-}"
-declare mount_point="${2:-}"
-declare volume_name="${3:-}"
 
 bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-luks_open "$device_path" "$volume_name" &&
-  fs_check "$volume_name" &&
-  fs_mount "$mount_point" "$volume_name"
+linux_lib_run_lsblk \
+  --all \
+  --list \
+  --paths \
+  --shell \
+  --fs
 bl64_msg_show_batch_finish $? "$command"

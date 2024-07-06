@@ -28,7 +28,7 @@
 # shellcheck disable=SC2034
 {
   declare SYSOP64_RESTIC_PATH_CLI="${SYSOP64_RESTIC_PATH_CLI:-}"
-  declare SYSOP64_RESTIC_REPOSITORY="${SYSOP64_RESTIC_REPOSITORY:-}"
+  declare SYSOP64_RESTIC_PATH_REPOSITORY="${SYSOP64_RESTIC_PATH_REPOSITORY:-}"
   declare SYSOP64_RESTIC_PASSWORD="${SYSOP64_RESTIC_PASSWORD:-}"
   export RESTIC_REPOSITORY=''
   export RESTIC_PASSWORD=''
@@ -58,16 +58,17 @@ function restic_lib_setup() {
       return $?
   fi
   bl64_check_privilege_root &&
-    bl64_check_export 'SYSOP64_RESTIC_REPOSITORY' &&
+    bl64_check_export 'SYSOP64_RESTIC_PATH_REPOSITORY' &&
     bl64_check_export 'SYSOP64_RESTIC_PASSWORD'
 }
 
 function restic_lib_run_restic() {
   bl64_dbg_app_show_function "$@"
-  RESTIC_REPOSITORY="$SYSOP64_RESTIC_REPOSITORY"
+  RESTIC_REPOSITORY="$SYSOP64_RESTIC_PATH_REPOSITORY"
   RESTIC_PASSWORD="$SYSOP64_RESTIC_PASSWORD"
   bl64_dbg_app_trace_start
   "$SYSOP64_RESTIC_PATH_CLI" \
+    --verbose \
     "$@"
   bl64_dbg_app_trace_stop
 }
