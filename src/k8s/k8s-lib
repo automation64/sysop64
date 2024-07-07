@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # template: 1.0.0
 #######################################
-# Core / Lib
+# K8S / Lib
 #
 # Version: 1.0.0
 #
@@ -22,11 +22,27 @@
 #######################################
 
 #
-# Globals
+# Functions
 #
 
-# shellcheck disable=SC2034
-{
-    declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
-    declare SYSOP64_CORE_PATH_BL64="${SYSOP64_CORE_PATH_BL64:-/opt/bl64}"
+function k8s_lib_cli_set_ns() {
+  bl64_dbg_app_show_function "$@"
+  local namespace="$1"
+  # shellcheck disable=SC2154
+  if [[ "$namespace" == "$BL64_VAR_DEFAULT" ]]; then
+    printf -- '--all-namespaces'
+  else
+    printf -- '--namespace %s' "${namespace}"
+  fi
+}
+
+function k8s_lib_cli_set_output() {
+  bl64_dbg_app_show_function "$@"
+  local expand="$1"
+  # shellcheck disable=SC2154
+  case "$expand" in
+  "$BL64_VAR_DEFAULT") printf -- '' ;;
+  'json') printf -- '--output json' ;;
+  *) printf -- '' ;;
+  esac
 }

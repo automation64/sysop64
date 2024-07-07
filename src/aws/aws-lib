@@ -3,7 +3,7 @@
 #######################################
 # AWS / Lib
 #
-# Version: 1.1.1
+# Version: 1.2.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -25,24 +25,33 @@
 # Globals
 #
 
-# Access mode credentials
-declare SYSOP64_AWS_ACCESS_KEY_ID="${SYSOP64_AWS_ACCESS_KEY_ID:-}"
-declare SYSOP64_AWS_ACCESS_KEY_SECRET="${SYSOP64_AWS_ACCESS_KEY_SECRET:-}"
-declare SYSOP64_AWS_ACCESS_PROFILE="${SYSOP64_AWS_ACCESS_PROFILE:-}"
-declare SYSOP64_AWS_ACCESS_TOKEN="${SYSOP64_AWS_ACCESS_TOKEN:-}"
-declare SYSOP64_AWS_ACCESS_REGION="${SYSOP64_AWS_ACCESS_REGION:-}"
-declare SYSOP64_AWS_ACCESS_MODE="${SYSOP64_AWS_ACCESS_MODE:-$BL64_AWS_ACCESS_MODE_KEY}"
+# shellcheck disable=SC2034
+{
+  # Access mode credentials
+  declare SYSOP64_AWS_ACCESS_KEY_ID="${SYSOP64_AWS_ACCESS_KEY_ID:-}"
+  declare SYSOP64_AWS_ACCESS_KEY_SECRET="${SYSOP64_AWS_ACCESS_KEY_SECRET:-}"
+  declare SYSOP64_AWS_ACCESS_PROFILE="${SYSOP64_AWS_ACCESS_PROFILE:-}"
+  declare SYSOP64_AWS_ACCESS_TOKEN="${SYSOP64_AWS_ACCESS_TOKEN:-}"
+  declare SYSOP64_AWS_ACCESS_REGION="${SYSOP64_AWS_ACCESS_REGION:-}"
+  declare SYSOP64_AWS_ACCESS_MODE="${SYSOP64_AWS_ACCESS_MODE:-$BL64_AWS_ACCESS_MODE_KEY}"
 
-# API Endpoints
-declare SYSOP64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD='amazon-linux-2023/x86_64/standard'
-declare SYSOP64_AWS_API_EKS_AMI_AL2='amazon-linux-2'
+  # API Endpoints
+  declare SYSOP64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD='amazon-linux-2023/x86_64/standard'
+  declare SYSOP64_AWS_API_EKS_AMI_AL2='amazon-linux-2'
+}
 
 #
 # Functions
 #
 
+function aws_lib_setup() {
+  bl64_aws_setup &&
+    aws_lib_access_check
+}
+
+# shellcheck disable=SC2154
 function aws_lib_access_check() {
-  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_show_function
   if [[ -n "$SYSOP64_AWS_ACCESS_REGION" ]]; then
     bl64_aws_set_region "$SYSOP64_AWS_ACCESS_REGION"
   fi

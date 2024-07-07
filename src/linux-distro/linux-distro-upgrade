@@ -1,0 +1,165 @@
+#!/usr/bin/env bash
+# template: 1.0.0
+# template-import: 1.0.0
+#######################################
+# Linux / Distro / Upgrade
+#
+# Version: 1.0.0
+#
+#######################################
+# Copyright [2024] [serdigital64@gmail.com]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#module-task
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=SCRIPTDIR/..
+source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
+  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+  { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck source-path=SCRIPTDIR/..
+source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
+
+#
+# Globals
+#
+
+# Distro dependant upgrade command
+declare _SYSOP64_LINUX_PATH_CLI_UPGRADE=''
+
+#
+# Functions
+#
+
+function prepare_ubuntu() {
+  bl64_dbg_app_show_function
+  bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' &&
+    bl64_msg_show_task 'auto-remove unused packages' &&
+    bl64_pkg_run_apt autoremove "$BL64_PKG_SET_ASSUME_YES" &&
+    bl64_msg_show_task 'prepare for upgrade' &&
+    bl64_pkg_prepare &&
+    bl64_msg_show_task 'upgrade all packages' &&
+    bl64_pkg_run_apt upgrade \
+      --with-new-pkgs \
+      --show-progress \
+      "$BL64_PKG_SET_ASSUME_YES"
+}
+
+function upgrade_ubuntu() {
+  bl64_dbg_app_show_function
+  bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' &&
+    "$_SYSOP64_LINUX_PATH_CLI_UPGRADE" \
+      --allow-third-party \
+      --frontend=DistUpgradeViewNonInteractive
+}
+
+function prepare() {
+  bl64_dbg_app_show_function
+  case "$BL64_OS_DISTRO" in
+  ${BL64_OS_UB}-*) prepare_ubuntu ;;
+  *) bl64_check_alert_unsupported ;;
+  esac
+}
+
+function upgrade() {
+  bl64_dbg_app_show_function "$@"
+  local release="$1"
+
+  case "$BL64_OS_DISTRO" in
+  ${BL64_OS_UB}-*) upgrade_ubuntu ;;
+  *) bl64_check_alert_unsupported ;;
+  esac
+}
+
+function initialize() {
+  bl64_dbg_app_show_function "$@"
+  # shellcheck disable=SC2034
+  local command="$1"
+
+  bl64_check_parameter 'command' ||
+    { help && return 1; }
+
+  bl64_check_privilege_root &&
+    bl64_os_check_compatibility \
+      "${BL64_OS_UB}-23" ||
+    return $?
+
+  if [[ "$command" == 'upgrade' ]]; then
+    case "$BL64_OS_DISTRO" in
+    ${BL64_OS_UB}-*)
+      _SYSOP64_LINUX_PATH_CLI_UPGRADE='/bin/do-release-upgrade'
+      bl64_check_command "$_SYSOP64_LINUX_PATH_CLI_UPGRADE"
+      ;;
+    *) : ;;
+    esac
+  fi
+}
+
+function help() {
+  bl64_msg_show_usage \
+    '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]' \
+    'Linux / Distro / Upgrade' \
+    '
+    -p         : Prepare for Distro upgrade
+    -u         : Perform for Distro upgrade
+    ' '
+    -h         : Show help
+    ' '
+    -r Release : Target release
+    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
+    '
+}
+
+#
+# Main
+#
+
+declare command="$BL64_VAR_NULL"
+declare debug="$BL64_DBG_TARGET_NONE"
+declare option=''
+declare verbose="$BL64_MSG_VERBOSE_ALL"
+declare release="$BL64_VAR_NULL"
+
+(($# == 0)) && help && exit 1
+while getopts ':pur:V:D:h' option; do
+  case "$option" in
+  p) command='prepare' ;;
+  u) command='upgrade' ;;
+  r) release="$OPTARG" ;;
+  V) verbose="$OPTARG" ;;
+  D) debug="$OPTARG" ;;
+  h) help && exit 0 ;;
+  *) help && exit 1 ;;
+  esac
+done
+bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
+initialize "$command" || exit $?
+
+bl64_msg_show_batch_start "$command"
+"${command}" "$release"
+bl64_msg_show_batch_finish $? "$command"
