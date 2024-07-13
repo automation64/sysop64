@@ -2,7 +2,7 @@
 #######################################
 # Dev / Lib / Project / Prepare dev resources
 #
-# * Version: 1.1.1
+# * Version: 1.1.2
 # * Template: 2.0.0
 #
 #######################################
@@ -46,17 +46,24 @@ function dev_lib_download() {
 function dev_lib_normalize() {
   bl64_dbg_app_show_function
   bl64_msg_show_task 'Fix repository permissions for container access'
+  if [[ -f "$DEV_BASE_LOCAL" ]]; then
+    bl64_fs_path_permission_set \
+      '0755' '0755' \
+      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_ON" \
+      "$DEV_BASE_LOCAL"
+  fi
+  if [[ -f "$DEV_BASE_SECRETS" ]]; then
+    bl64_fs_path_permission_set \
+      '0755' '0755' \
+      "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_ON" \
+      "$DEV_BASE_SECRETS"
+  fi
   bl64_fs_path_permission_set \
     '0755' '0755' \
-    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" \
-    "$BL64_VAR_ON" \
+    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_ON" \
     "$DEV_PATH_BIN" \
     "$DEV_PATH_SRC" \
     "$DEV_PATH_TEST" \
-    "$DEV_BASE_DOT_LOCAL" \
-    "$DEV_BASE_LOCAL" \
-    "$DEV_BASE_DOT_SECRETS" \
-    "$DEV_BASE_SECRETS" \
     "$DEV_BASE_ENV" \
     "${DEV_PATH_ROOT}/.shellcheckrc"
 }
