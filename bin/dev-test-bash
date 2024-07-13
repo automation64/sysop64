@@ -55,7 +55,7 @@ function dev_test_run() {
   local test_file="$2"
 
   bl64_dbg_app_show_comments 'silently ignore .gitkeep file as its not a test script'
-  [[ "$test_file" == "$DEV_BASE_GITKEEP" ]] && return 0
+  [[ "$test_file" =~ "$DEV_BASE_GITKEEP" ]] && return 0
 
   bl64_msg_show_phase "run test target: ${test_file}"
   # shellcheck disable=SC2086
