@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-#
-# Development environment / GitHub Local variables
-#
-# * Use to set local variables when running inside a GitHub Actions VM
-# * Do not include variables that are intended to be modified by the operator. Use GitHub CICD variables instead
-# * Do not include secrets. Use GitHub secrets instead
-# * Version: 1.0.0
-#
