@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Linux-Dev
   - linux-dev-crypt-mount: add missing parameter
+- Restic
+  - restic-backup-restore: add missing parameter
 
 ## [0.7.1]
 
