@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Linux-Lib
   - Added Fedora support
+- Linux-Distro
+  - Added Fedora support
 
 ## [0.7.1]
 
