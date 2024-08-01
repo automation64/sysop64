@@ -72,6 +72,7 @@ function initialize() {
   bl64_check_privilege_root &&
     bl64_check_parameter 'device_path' &&
     bl64_check_parameter 'mount_point' &&
+    bl64_check_parameter 'volume_name' &&
     linux_lib_setup
 }
 
