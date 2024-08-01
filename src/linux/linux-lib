@@ -3,7 +3,7 @@
 #######################################
 # Linux / Lib
 #
-# Version: 1.1.0
+# Version: 1.2.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -60,6 +60,20 @@ function linux_lib_setup() {
     SYSOP64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
     SYSOP64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
     SYSOP64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+    SYSOP64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+    SYSOP64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
+    ;;
+  "$BL64_OS_FLAVOR_FEDORA")
+    SYSOP64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
+    SYSOP64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
+    SYSOP64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    SYSOP64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+    SYSOP64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+    SYSOP64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
+    SYSOP64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
+    SYSOP64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
+    SYSOP64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+    SYSOP64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
     SYSOP64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
     SYSOP64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
     ;;
