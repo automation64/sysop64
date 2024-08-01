@@ -77,7 +77,7 @@ function upgrade_fedora() {
   bl64_dbg_app_show_function "$@"
   local release="$1"
   bl64_pkg_run_dnf \
-    system-upgrade download &&
+    system-upgrade download --releasever="$release" &&
     bl64_pkg_run_dnf \
       system-upgrade reboot
 }
@@ -97,8 +97,7 @@ function prepare_ubuntu() {
 }
 
 function upgrade_ubuntu() {
-  bl64_dbg_app_show_function "$@"
-  local release="$1"
+  bl64_dbg_app_show_function
   "$_SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE" \
     --allow-third-party \
     --frontend=DistUpgradeViewNonInteractive
@@ -121,7 +120,7 @@ function upgrade() {
   bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
-  ${BL64_OS_UB}-*) upgrade_ubuntu "$release" ;;
+  ${BL64_OS_UB}-*) upgrade_ubuntu;;
   ${BL64_OS_FD}-*) upgrade_fedora "$release" ;;
   *) bl64_check_alert_unsupported ;;
   esac
