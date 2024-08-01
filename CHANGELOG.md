@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Linux-Package
   - Added Fedora support
 
+### Fixed
+
+- Linux-Dev
+  - linux-dev-crypt-mount: add missing parameter
+
 ## [0.7.1]
 
 ### Added
