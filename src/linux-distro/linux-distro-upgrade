@@ -4,7 +4,7 @@
 #######################################
 # Linux / Distro / Upgrade
 #
-# Version: 1.0.1
+# Version: 1.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -14,7 +14,7 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
-#module-task
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,16 +51,41 @@ source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to l
 #
 
 # Distro dependant upgrade command
-declare _SYSOP64_LINUX_PATH_CLI_UPGRADE=''
+declare _SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE=''
 
 #
 # Functions
 #
 
+function prepare_fedora() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_task 'install OS upgrade tools'
+  bl64_pkg_install \
+    dnf-utils \
+    dnf-plugin-system-upgrade &&
+    bl64_msg_show_task 'auto-remove unused packages' &&
+    bl64_pkg_cleanup &&
+    bl64_pkg_run_dnf \
+      $BL64_PKG_SET_ASSUME_YES \
+      autoremove &&
+    bl64_msg_show_task 'upgrade all packages' &&
+    bl64_pkg_upgrade
+
+}
+
+function upgrade_fedora() {
+  bl64_dbg_app_show_function "$@"
+  local release="$1"
+  bl64_pkg_run_dnf \
+    system-upgrade download --releasever="$release" &&
+    bl64_pkg_run_dnf \
+      system-upgrade reboot
+}
+
 function prepare_ubuntu() {
   bl64_dbg_app_show_function
-  bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' &&
-    bl64_msg_show_task 'auto-remove unused packages' &&
+  bl64_msg_show_task 'auto-remove unused packages'
+  bl64_pkg_cleanup &&
     bl64_pkg_run_apt autoremove "$BL64_PKG_SET_ASSUME_YES" &&
     bl64_msg_show_task 'prepare for upgrade' &&
     bl64_pkg_prepare &&
@@ -73,16 +98,18 @@ function prepare_ubuntu() {
 
 function upgrade_ubuntu() {
   bl64_dbg_app_show_function
-  bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' &&
-    "$_SYSOP64_LINUX_PATH_CLI_UPGRADE" \
-      --allow-third-party \
-      --frontend=DistUpgradeViewNonInteractive
+  "$_SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE" \
+    --allow-third-party \
+    --frontend=DistUpgradeViewNonInteractive
 }
 
 function prepare() {
   bl64_dbg_app_show_function
+  bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
+    return $?
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_UB}-*) prepare_ubuntu ;;
+  ${BL64_OS_FD}-*) prepare_fedora ;;
   *) bl64_check_alert_unsupported ;;
   esac
 }
@@ -90,9 +117,11 @@ function prepare() {
 function upgrade() {
   bl64_dbg_app_show_function "$@"
   local release="$1"
-
+  bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
+    return $?
   case "$BL64_OS_DISTRO" in
-  ${BL64_OS_UB}-*) upgrade_ubuntu ;;
+  ${BL64_OS_UB}-*) upgrade_ubuntu;;
+  ${BL64_OS_FD}-*) upgrade_fedora "$release" ;;
   *) bl64_check_alert_unsupported ;;
   esac
 }
@@ -107,14 +136,15 @@ function initialize() {
 
   bl64_check_privilege_root &&
     bl64_os_check_compatibility \
-      "${BL64_OS_UB}-23" ||
+      "${BL64_OS_UB}-23" \
+      "${BL64_OS_FD}-39" ||
     return $?
 
   if [[ "$command" == 'upgrade' ]]; then
     case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*)
-      _SYSOP64_LINUX_PATH_CLI_UPGRADE='/bin/do-release-upgrade'
-      bl64_check_command "$_SYSOP64_LINUX_PATH_CLI_UPGRADE"
+      _SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE='/bin/do-release-upgrade'
+      bl64_check_command "$_SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE"
       ;;
     *) : ;;
     esac
@@ -159,7 +189,7 @@ while getopts ':pur:V:D:h' option; do
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
+bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
 initialize "$command" || exit $?
 
 bl64_msg_show_batch_start "$command"

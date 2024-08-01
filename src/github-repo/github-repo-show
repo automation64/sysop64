@@ -105,7 +105,7 @@ while getopts ':so:r:V:D:h' option; do
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
+bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
 initialize "$command" "$owner" "$repository" || exit $?
 
 bl64_msg_show_batch_start "$command"

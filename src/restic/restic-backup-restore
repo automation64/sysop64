@@ -4,7 +4,7 @@
 #######################################
 # Restic / Backup / Restore
 #
-# Version: 1.0.0
+# Version: 2.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -52,19 +52,27 @@ function initialize() {
 #
 
 declare command='restore'
-declare debug="$BL64_DBG_TARGET_NONE"
-declare verbose="$BL64_MSG_VERBOSE_ALL"
 declare backup_tag="${1:-}"
 declare destination="${2:-}"
+declare backup_id="${3:-latest}"
+declare backup_host="${4:-}"
 
-bl64_dbg_set_level "$debug" && bl64_msg_set_level "$verbose" || exit $?
+bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-bl64_ui_ask_confirmation "Warning: destination content will be replaced (${destination})" &&
+bl64_msg_show_info "
+Backup Tag : ${backup_tag}
+Backup ID  : ${backup_id}
+Backup Host: ${backup_host}
+Destination: ${destination}"
+
+bl64_ui_ask_confirmation 'Warning: destination content will be replaced using absolute paths from backup' &&
   restic_lib_run_restic \
     --verbose \
     --target "$destination" \
+    --tag "$backup_tag" \
+    ${backup_host:+--host "$backup_host"} \
     restore \
-    "$backup_tag"
+    "$backup_id"
 bl64_msg_show_batch_finish $? "$command"

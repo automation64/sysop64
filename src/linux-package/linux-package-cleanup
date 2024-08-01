@@ -4,7 +4,7 @@
 #######################################
 # Linux / Package / Upgrade
 #
-# Version: 1.1.0
+# Version: 1.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -50,28 +50,29 @@ source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to l
 # Functions
 #
 
-function upgrade_ubuntu() {
+function cleanup_ubuntu() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task 'prepare for upgrade'
-  bl64_pkg_prepare &&
-    bl64_msg_show_task 'upgrade all packages' &&
-    bl64_pkg_run_apt upgrade \
-      --with-new-pkgs \
-      --show-progress \
-      "$BL64_PKG_SET_ASSUME_YES"
+  bl64_msg_show_task 'auto-remove unused packages'
+  bl64_pkg_cleanup &&
+    bl64_pkg_run_apt autoremove "$BL64_PKG_SET_ASSUME_YES"
 }
 
-function upgrade_fedora() {
+function cleanup_fedora() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task 'upgrade all packages'
-  bl64_pkg_upgrade
+  bl64_msg_show_task 'auto-remove unused packages'
+  bl64_pkg_cleanup &&
+    bl64_pkg_run_dnf \
+      $BL64_PKG_SET_ASSUME_YES \
+      autoremove
 }
 
-function upgrade() {
+function cleanup() {
   bl64_dbg_app_show_function
+  bl64_ui_ask_confirmation 'Warning: the task will auto-cleanup packages' ||
+    return $?
   case "$BL64_OS_DISTRO" in
-  ${BL64_OS_UB}-*) upgrade_ubuntu ;;
-  ${BL64_OS_FD}-*) upgrade_fedora ;;
+  ${BL64_OS_UB}-*) cleanup_ubuntu ;;
+  ${BL64_OS_FD}-*) cleanup_fedora ;;
   *) bl64_check_alert_unsupported ;;
   esac
 }
@@ -88,11 +89,11 @@ function initialize() {
 # Main
 #
 
-declare command='upgrade'
+declare command='cleanup'
 
 bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-upgrade
+cleanup
 bl64_msg_show_batch_finish $? "$command"
