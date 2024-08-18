@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Module
   - GIT
 
+- AWS-EKS
+  - Show addons
+
 ## [0.8.0]
 
 ### Added
