@@ -3,7 +3,7 @@
 #######################################
 # AWS EKS / AMI / Show
 #
-# Version: 1.0.1
+# Version: 1.0.2
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -90,9 +90,7 @@ function help() {
 #
 
 declare command="$BL64_VAR_NULL"
-declare debug="$BL64_DBG_TARGET_NONE"
 declare option=''
-declare verbose="$BL64_MSG_VERBOSE_ALL"
 declare ami_family='AL2023'
 declare k8s_version='1.29'
 
@@ -102,8 +100,8 @@ while getopts ':la:r:V:D:h' option; do
   l) command='show_recommended' ;;
   a) ami_family="$OPTARG" ;;
   r) k8s_version="$OPTARG" ;;
-  V) verbose="$OPTARG" ;;
-  D) debug="$OPTARG" ;;
+  V) SYSOP64_CORE_SET_VERBOSE="$OPTARG" ;;
+  D) SYSOP64_CORE_SET_DEBUG="$OPTARG" ;;
   h) help && exit 0 ;;
   *) help && exit 1 ;;
   esac

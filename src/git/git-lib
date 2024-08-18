@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # template: 1.0.0
 #######################################
-# Core / Lib
+# GIT / Lib
 #
-# Version: 1.2.0
+# Version: 1.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -27,16 +27,9 @@
 
 # shellcheck disable=SC2034
 {
-    # Default SysOp64 install path
-    declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
-    # Default BL64 install path
-    declare SYSOP64_CORE_PATH_BL64="${SYSOP64_CORE_PATH_BL64:-/opt/bl64}"
-
-    # Default debut level
-    declare SYSOP64_CORE_SET_DEBUG="${SYSOP64_CORE_SET_DEBUG:-NONE}"
-    # Default verbose level
-    declare SYSOP64_CORE_SET_VERBOSE="${SYSOP64_CORE_SET_VERBOSE:-ALL}"
-
-    # Default JQuery tool path
-    declare SYSOP64_CORE_PATH_JQ="${SYSOP64_CORE_PATH_JQ:-/usr/bin/jq}"
+  :
 }
+
+#
+# Functions
+#
