@@ -25,17 +25,17 @@
 # Imports
 #
 
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-aws.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-aws.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/aws/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/aws/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
@@ -48,9 +48,9 @@ function show_recommended() {
   local endpoint=''
 
   if [[ "$ami_family" == 'AL2' ]]; then
-    endpoint="$SYSOP64_AWS_API_EKS_AMI_AL2"
+    endpoint="$S64_AWS_API_EKS_AMI_AL2"
   elif [[ "$ami_family" == 'AL2023' ]]; then
-    endpoint="$SYSOP64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD"
+    endpoint="$S64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD"
   fi
 
   bl64_aws_run_aws \
@@ -66,7 +66,7 @@ function initialize() {
 
   bl64_check_parameter 'command' ||
     { help && return 1; }
-  aws_lib_setup
+  s64_aws_lib_setup
 }
 
 function help() {
@@ -100,13 +100,13 @@ while getopts ':la:r:V:D:h' option; do
   l) command='show_recommended' ;;
   a) ami_family="$OPTARG" ;;
   r) k8s_version="$OPTARG" ;;
-  V) SYSOP64_CORE_SET_VERBOSE="$OPTARG" ;;
-  D) SYSOP64_CORE_SET_DEBUG="$OPTARG" ;;
+  V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
+  D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) help && exit 0 ;;
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize "$command" || exit $?
 
 bl64_msg_show_batch_start "$command"

@@ -25,13 +25,13 @@
 # Imports
 #
 
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/pgsql/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/pgsql/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Globals
@@ -67,11 +67,11 @@ function show_active() {
       query_id,
       query_start;
   " |
-  psql_lib_run_psql \
-    --host="$SYSOP64_PGSQL_SERVER_HOST" \
-    --port="$SYSOP64_PGSQL_SERVER_PORT" \
-    --dbname="$SYSOP64_PGSQL_DB_NAME" \
-    --username="$SYSOP64_PGSQL_SERVER_USER" \
+  s64_psql_lib_run_psql \
+    --host="$S64_PGSQL_SERVER_HOST" \
+    --port="$S64_PGSQL_SERVER_PORT" \
+    --dbname="$S64_PGSQL_DB_NAME" \
+    --username="$S64_PGSQL_SERVER_USER" \
     --file='-'
 }
 
@@ -83,11 +83,11 @@ function initialize() {
   bl64_check_parameter 'command' ||
     { help && return 1; }
 
-  psql_lib_setup &&
-    bl64_check_export 'SYSOP64_PGSQL_SERVER_PASSWORD' ||
+  s64_psql_lib_setup &&
+    bl64_check_export 'S64_PGSQL_SERVER_PASSWORD' ||
     return $?
 
-  PGPASSWORD="$SYSOP64_PGSQL_SERVER_PASSWORD"
+  PGPASSWORD="$S64_PGSQL_SERVER_PASSWORD"
 }
 
 function help() {
@@ -97,10 +97,10 @@ function help() {
     '
     -a         : Show active
     ' '
-    -o Host    : Host FQDN. Alternative shell-env: SYSOP64_PGSQL_SERVER_HOST  
-    -p Port    : DB Port. Alternative shell-ehv: SYSOP64_PGSQL_SERVER_PORT 
-    -u User    : DB User. Alternative shell-ehv: SYSOP64_PGSQL_SERVER_USER 
-    -b DB      : DB Name. Alternative shell-ehv: SYSOP64_PGSQL_DB_NAME
+    -o Host    : Host FQDN. Alternative shell-env: S64_PGSQL_SERVER_HOST  
+    -p Port    : DB Port. Alternative shell-ehv: S64_PGSQL_SERVER_PORT 
+    -u User    : DB User. Alternative shell-ehv: S64_PGSQL_SERVER_USER 
+    -b DB      : DB Name. Alternative shell-ehv: S64_PGSQL_DB_NAME
     -h         : Show help
     ' '
     -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
@@ -121,17 +121,17 @@ declare verbose="$BL64_MSG_VERBOSE_ALL"
 while getopts ':ao:p:u:b:V:D:h' option; do
   case "$option" in
   a) command='show_active' ;;
-  o) SYSOP64_PGSQL_SERVER_HOST="$OPTARG" ;;
-  p) SYSOP64_PGSQL_SERVER_PORT="$OPTARG" ;;
-  u) SYSOP64_PGSQL_SERVER_USER="$OPTARG" ;;
-  b) SYSOP64_PGSQL_DB_NAME="$OPTARG" ;;
+  o) S64_PGSQL_SERVER_HOST="$OPTARG" ;;
+  p) S64_PGSQL_SERVER_PORT="$OPTARG" ;;
+  u) S64_PGSQL_SERVER_USER="$OPTARG" ;;
+  b) S64_PGSQL_DB_NAME="$OPTARG" ;;
   V) verbose="$OPTARG" ;;
   D) debug="$OPTARG" ;;
   h) help && exit 0 ;;
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize "$command" || exit $?
 
 bl64_msg_show_batch_start "$command"

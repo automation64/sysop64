@@ -26,14 +26,14 @@
 # Imports
 #
 
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
@@ -42,7 +42,7 @@ source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to l
 function initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
-    linux_lib_setup
+    s64_linux_lib_setup
 }
 
 #
@@ -52,11 +52,11 @@ function initialize() {
 declare command='list'
 declare fields='vg_name,vg_uuid,vg_fmt,vg_attr,vg_extent_size,vg_extent_count,vg_free_count,max_lv,max_pv'
 
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
-linux_lib_run_vgs \
+s64_linux_lib_run_vgs \
   --nosuffix \
   --units M \
   --options "$fields"

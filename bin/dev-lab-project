@@ -52,8 +52,8 @@ function dev_lab_open() {
     --network host \
     --entrypoint="$dev_lab_entrypoint" \
     --workdir="$DEV_ENV_PROJECT_CONTAINER_PATH_ROOT" \
-    --env="SYSOP64_CORE_PATH_BL64=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT}/lib/bl64" \
-    --env="SYSOP64_CORE_PATH_ROOT=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT}/${DEV_BASE_SRC}" \
+    --env="S64_CORE_PATH_BL64=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT}/lib/bl64" \
+    --env="S64_CORE_PATH_ROOT=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT}/${DEV_BASE_SRC}" \
     --mount "type=bind,source=${DEV_PATH_SRC},target=${DEV_ENV_PROJECT_CONTAINER_PATH_SRC},readonly" \
     --mount "type=bind,source=${DEV_PATH_ROOT},target=${DEV_ENV_PROJECT_CONTAINER_PATH_ROOT},readonly" \
     "${DEV_ENV_PROJECT_REGISTRY}/${dev_lab_image}"

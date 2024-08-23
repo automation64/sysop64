@@ -27,52 +27,52 @@
 
 # shellcheck disable=SC2034
 {
-  declare SYSOP64_RSYNC_PATH_CLI="${SYSOP64_RSYNC_PATH_CLI:-}"
-  declare SYSOP64_RSYNC_OPTIONS_COMMON=''
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --one-file-system'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --human-readable'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --progress'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --stats'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --recursive'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --checksum'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --links'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --delete'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --mkpath'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --verbose'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --perms'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --checksum'
-  SYSOP64_RSYNC_OPTIONS_COMMON+=' --compress'
+  declare S64_RSYNC_PATH_CLI="${S64_RSYNC_PATH_CLI:-}"
+  declare S64_RSYNC_OPTIONS_COMMON=''
+  S64_RSYNC_OPTIONS_COMMON+=' --one-file-system'
+  S64_RSYNC_OPTIONS_COMMON+=' --human-readable'
+  S64_RSYNC_OPTIONS_COMMON+=' --progress'
+  S64_RSYNC_OPTIONS_COMMON+=' --stats'
+  S64_RSYNC_OPTIONS_COMMON+=' --recursive'
+  S64_RSYNC_OPTIONS_COMMON+=' --checksum'
+  S64_RSYNC_OPTIONS_COMMON+=' --links'
+  S64_RSYNC_OPTIONS_COMMON+=' --delete'
+  S64_RSYNC_OPTIONS_COMMON+=' --mkpath'
+  S64_RSYNC_OPTIONS_COMMON+=' --verbose'
+  S64_RSYNC_OPTIONS_COMMON+=' --perms'
+  S64_RSYNC_OPTIONS_COMMON+=' --checksum'
+  S64_RSYNC_OPTIONS_COMMON+=' --compress'
 }
 
 #
 # Functions
 #
 
-function rsync_lib_setup() {
+function s64_rsync_lib_setup() {
   bl64_dbg_app_show_function
-  if [[ -z "$SYSOP64_RSYNC_PATH_CLI" ]]; then
+  if [[ -z "$S64_RSYNC_PATH_CLI" ]]; then
     if [[ -x '/home/linuxbrew/.linuxbrew/bin/rsync' ]]; then
-      SYSOP64_RSYNC_PATH_CLI='/home/linuxbrew/.linuxbrew/bin/rsync'
+      S64_RSYNC_PATH_CLI='/home/linuxbrew/.linuxbrew/bin/rsync'
     elif [[ -x '/opt/homebrew/bin/rsync' ]]; then
-      SYSOP64_RSYNC_PATH_CLI='/opt/homebrew/bin/rsync'
+      S64_RSYNC_PATH_CLI='/opt/homebrew/bin/rsync'
     elif [[ -x '/usr/local/bin/rsync' ]]; then
-      SYSOP64_RSYNC_PATH_CLI='/usr/local/bin/rsync'
+      S64_RSYNC_PATH_CLI='/usr/local/bin/rsync'
     elif [[ -x '/usr/bin/rsync' ]]; then
-      SYSOP64_RSYNC_PATH_CLI='/usr/bin/rsync'
+      S64_RSYNC_PATH_CLI='/usr/bin/rsync'
     else
       bl64_check_alert_resource_not_found 'rsync'
       return $?
     fi
   else
-    bl64_check_command "$SYSOP64_RSYNC_PATH_CLI" ||
+    bl64_check_command "$S64_RSYNC_PATH_CLI" ||
       return $?
   fi
 }
 
-function rsync_lib_run_rsync() {
+function s64_rsync_lib_run_rsync() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$SYSOP64_RSYNC_PATH_CLI" \
+  "$S64_RSYNC_PATH_CLI" \
     "$@"
   bl64_dbg_app_trace_stop
 }

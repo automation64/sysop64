@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Core-Lib
-  - Global flags: SYSOP64_CORE_SET_DEBUG, SYSOP64_CORE_SET_VERBOSE
+  - Global flags: S64_CORE_SET_DEBUG, S64_CORE_SET_VERBOSE
 - Linux-Lib
   - Added Fedora support
 - Linux-Distro

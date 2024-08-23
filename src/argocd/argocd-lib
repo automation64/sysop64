@@ -27,17 +27,17 @@
 
 # shellcheck disable=SC2034
 {
-  declare SYSOP64_ARGOCD_PATH_CLI="${SYSOP64_ARGOCD_PATH_CLI:-argocd}"
+  declare S64_ARGOCD_PATH_CLI="${S64_ARGOCD_PATH_CLI:-argocd}"
 }
 
 #
 # Functions
 #
 
-function argocd_lib_run_argocd() {
+function s64_argocd_lib_run_argocd() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$SYSOP64_ARGOCD_PATH_CLI" \
+  "$S64_ARGOCD_PATH_CLI" \
     "$@"
   bl64_dbg_app_trace_stop
 }

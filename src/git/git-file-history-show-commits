@@ -27,22 +27,22 @@
 #
 
 # template-import: 1.0.0
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/git/git-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/git/git-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
@@ -60,7 +60,7 @@ function initialize() {
 declare file_path="${1:-}"
 declare command='git-file-history-show-commits'
 
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
