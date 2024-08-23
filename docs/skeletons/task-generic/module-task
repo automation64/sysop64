@@ -2,7 +2,7 @@
 # template: 1.0.0
 # template-import: 1.0.0
 #######################################
-# X_MODULE_X / [X_SUBMODULE_X /] X_APP_NAME_X
+# X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X
 #
 # Version: 1.0.0
 #
@@ -58,7 +58,7 @@ function initialize() {
 function help() {
   bl64_msg_show_usage \
     '-x [-V Verbose] [-D Debug] [-h]' \
-    'X_MODULE_X / [X_SUBMODULE_X /] X_APP_NAME_X' \
+    'X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X' \
     '
     -x         : X_COMMAND_INFO_X
     ' '
