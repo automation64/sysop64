@@ -1,4 +1,5 @@
 # template-import: 1.0.0
+# X_IMPORTS_PLACEHOLDER_X
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # template: 1.0.0
-# template-import: 1.0.0
 #######################################
 # X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X
 #
@@ -26,34 +25,69 @@
 # Imports
 #
 
-declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/X_MODULE_X/X_MODULE_X-lib" || { echo "Error: unable to load module library" && exit 1; }
+#
+# Globals
+#
+
+# X_GLOBALS_PLACEHOLDER_X
 
 #
 # Functions
 #
 
+function X_COMMAND_X() {
+  bl64_dbg_app_show_function "$@"
+  # X_COMMAND_PLACEHOLDER_X
+}
+
 function initialize() {
-  bl64_dbg_app_show_function
-  s64_X_MODULE_X_lib_setup || return $?
+  bl64_dbg_app_show_function "$@"
+  # shellcheck disable=SC2034
+  local command="$1"
+
+  bl64_check_parameter 'command' ||
+    { help && return 1; }
+
   # X_INIT_PLACEHOLDER_X
+  return 0
+}
+
+function help() {
+  bl64_msg_show_usage \
+    '-x [-V Verbose] [-D Debug] [-h]' \
+    'X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X' \
+    '
+    -x         : X_COMMAND_INFO_X
+    ' '
+    -h         : Show help
+    ' '
+    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
+    '
 }
 
 #
 # Main
 #
 
-declare command='X_COMMAND_X'
+declare command="$BL64_VAR_NULL"
+declare debug="$BL64_DBG_TARGET_NONE"
+declare option=''
+declare verbose="$BL64_MSG_VERBOSE_ALL"
 
+(($# == 0)) && help && exit 1
+while getopts ':xV:D:h' option; do
+  case "$option" in
+  x) command='X_COMMAND_X' ;;
+  V) verbose="$OPTARG" ;;
+  D) debug="$OPTARG" ;;
+  h) help && exit 0 ;;
+  *) help && exit 1 ;;
+  esac
+done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize || exit $?
+initialize "$command" || exit $?
 
 bl64_msg_show_batch_start "$command"
-# X_COMMAND_PLACEHOLDER_X
+"${command}"
 bl64_msg_show_batch_finish $? "$command"
