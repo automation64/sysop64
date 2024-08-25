@@ -3,7 +3,7 @@
 #######################################
 # RSync / Lib
 #
-# Version: 1.0.0
+# Version: 1.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -71,8 +71,12 @@ function s64_rsync_lib_setup() {
 
 function s64_rsync_lib_run_rsync() {
   bl64_dbg_app_show_function "$@"
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_RSYNC_PATH_CLI" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }

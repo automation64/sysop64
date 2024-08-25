@@ -3,7 +3,7 @@
 #######################################
 # Linux / Lib
 #
-# Version: 1.2.0
+# Version: 1.3.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -93,11 +93,14 @@ function s64_linux_lib_run_blkid() {
 
 function s64_linux_lib_run_cryptsetup() {
   bl64_dbg_app_show_function "$@"
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_CRYPTSETUP" ||
     return $?
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_CRYPTSETUP" \
-    --verbose \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -114,33 +117,42 @@ function s64_linux_lib_run_lsblk() {
 
 function s64_linux_lib_run_mount() {
   bl64_dbg_app_show_function "$@"
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_MOUNT" ||
     return $?
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_MOUNT" \
-    --verbose \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
 function s64_linux_lib_run_fsck() {
   bl64_dbg_app_show_function "$@"
+  local verbose_flag='-V'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_FSCK" ||
     return $?
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_FSCK" \
-    -V \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
 function s64_linux_lib_run_badblocks() {
   bl64_dbg_app_show_function "$@"
+  local verbose_flag='-v'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_BADBLOCKS" ||
     return $?
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_BADBLOCKS" \
-    -v \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -157,11 +169,14 @@ function s64_linux_lib_run_journalctl() {
 
 function s64_linux_lib_run_mdadm() {
   bl64_dbg_app_show_function "$@"
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_MDADM" ||
     return $?
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_MDADM" \
-    --verbose \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -198,11 +213,14 @@ function s64_linux_lib_run_pvs() {
 
 function s64_linux_lib_run_mkfs() {
   bl64_dbg_app_show_function "$@"
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_MKFS" ||
     return $?
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_MKFS" \
-    --verbose \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
