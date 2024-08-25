@@ -2,7 +2,7 @@
 # template: 1.0.0
 # template-import: 1.0.0
 #######################################
-# X_MODULE_X / [X_SUBMODULE_X /] X_APP_NAME_X
+# X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X
 #
 # Version: 1.0.0
 #
@@ -26,7 +26,14 @@
 # Imports
 #
 
-# X_IMPORTS_PLACEHOLDER_X
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+  { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/X_MODULE_X/X_MODULE_X-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
@@ -34,6 +41,7 @@
 
 function initialize() {
   bl64_dbg_app_show_function
+  s64_X_MODULE_X_lib_setup || return $?
   # X_INIT_PLACEHOLDER_X
 }
 
@@ -43,7 +51,7 @@ function initialize() {
 
 declare command='X_COMMAND_X'
 
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"

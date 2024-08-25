@@ -28,44 +28,44 @@
 # shellcheck disable=SC2034
 {
   # Access mode credentials
-  declare SYSOP64_AWS_ACCESS_KEY_ID="${SYSOP64_AWS_ACCESS_KEY_ID:-}"
-  declare SYSOP64_AWS_ACCESS_KEY_SECRET="${SYSOP64_AWS_ACCESS_KEY_SECRET:-}"
-  declare SYSOP64_AWS_ACCESS_PROFILE="${SYSOP64_AWS_ACCESS_PROFILE:-}"
-  declare SYSOP64_AWS_ACCESS_TOKEN="${SYSOP64_AWS_ACCESS_TOKEN:-}"
-  declare SYSOP64_AWS_ACCESS_REGION="${SYSOP64_AWS_ACCESS_REGION:-}"
-  declare SYSOP64_AWS_ACCESS_MODE="${SYSOP64_AWS_ACCESS_MODE:-$BL64_AWS_ACCESS_MODE_KEY}"
+  declare S64_AWS_ACCESS_KEY_ID="${S64_AWS_ACCESS_KEY_ID:-}"
+  declare S64_AWS_ACCESS_KEY_SECRET="${S64_AWS_ACCESS_KEY_SECRET:-}"
+  declare S64_AWS_ACCESS_PROFILE="${S64_AWS_ACCESS_PROFILE:-}"
+  declare S64_AWS_ACCESS_TOKEN="${S64_AWS_ACCESS_TOKEN:-}"
+  declare S64_AWS_ACCESS_REGION="${S64_AWS_ACCESS_REGION:-}"
+  declare S64_AWS_ACCESS_MODE="${S64_AWS_ACCESS_MODE:-$BL64_AWS_ACCESS_MODE_KEY}"
 
   # API Endpoints
-  declare SYSOP64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD='amazon-linux-2023/x86_64/standard'
-  declare SYSOP64_AWS_API_EKS_AMI_AL2='amazon-linux-2'
+  declare S64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD='amazon-linux-2023/x86_64/standard'
+  declare S64_AWS_API_EKS_AMI_AL2='amazon-linux-2'
 }
 
 #
 # Functions
 #
 
-function aws_lib_setup() {
+function s64_aws_lib_setup() {
   bl64_aws_setup &&
-    aws_lib_access_check
+    s64_aws_lib_access_check
 }
 
 # shellcheck disable=SC2154
-function aws_lib_access_check() {
+function s64_aws_lib_access_check() {
   bl64_dbg_app_show_function
-  if [[ -n "$SYSOP64_AWS_ACCESS_REGION" ]]; then
-    bl64_aws_set_region "$SYSOP64_AWS_ACCESS_REGION"
+  if [[ -n "$S64_AWS_ACCESS_REGION" ]]; then
+    bl64_aws_set_region "$S64_AWS_ACCESS_REGION"
   fi
-  if [[ "$SYSOP64_AWS_ACCESS_MODE" == "$BL64_AWS_ACCESS_MODE_PROFILE" ]]; then
-    bl64_check_export 'SYSOP64_AWS_ACCESS_PROFILE' &&
-      bl64_aws_access_enable_profile "$SYSOP64_AWS_ACCESS_PROFILE"
-  elif [[ "$SYSOP64_AWS_ACCESS_MODE" == "$BL64_AWS_ACCESS_MODE_KEY" ]]; then
-    bl64_check_export 'SYSOP64_AWS_ACCESS_KEY_ID' &&
-      bl64_check_export 'SYSOP64_AWS_ACCESS_KEY_SECRET' &&
-      bl64_aws_access_enable_key "$SYSOP64_AWS_ACCESS_KEY_ID" "$SYSOP64_AWS_ACCESS_KEY_SECRET"
-  elif [[ "$SYSOP64_AWS_ACCESS_MODE" == "$BL64_AWS_ACCESS_MODE_TOKEN" ]]; then
-    bl64_check_export 'SYSOP64_AWS_ACCESS_KEY_ID' &&
-      bl64_check_export 'SYSOP64_AWS_ACCESS_KEY_SECRET' &&
-      bl64_check_export 'SYSOP64_AWS_ACCESS_TOKEN' &&
-      bl64_aws_access_enable_token "$SYSOP64_AWS_ACCESS_KEY_ID" "$SYSOP64_AWS_ACCESS_KEY_SECRET" "$SYSOP64_AWS_ACCESS_TOKEN"
+  if [[ "$S64_AWS_ACCESS_MODE" == "$BL64_AWS_ACCESS_MODE_PROFILE" ]]; then
+    bl64_check_export 'S64_AWS_ACCESS_PROFILE' &&
+      bl64_aws_access_enable_profile "$S64_AWS_ACCESS_PROFILE"
+  elif [[ "$S64_AWS_ACCESS_MODE" == "$BL64_AWS_ACCESS_MODE_KEY" ]]; then
+    bl64_check_export 'S64_AWS_ACCESS_KEY_ID' &&
+      bl64_check_export 'S64_AWS_ACCESS_KEY_SECRET' &&
+      bl64_aws_access_enable_key "$S64_AWS_ACCESS_KEY_ID" "$S64_AWS_ACCESS_KEY_SECRET"
+  elif [[ "$S64_AWS_ACCESS_MODE" == "$BL64_AWS_ACCESS_MODE_TOKEN" ]]; then
+    bl64_check_export 'S64_AWS_ACCESS_KEY_ID' &&
+      bl64_check_export 'S64_AWS_ACCESS_KEY_SECRET' &&
+      bl64_check_export 'S64_AWS_ACCESS_TOKEN' &&
+      bl64_aws_access_enable_token "$S64_AWS_ACCESS_KEY_ID" "$S64_AWS_ACCESS_KEY_SECRET" "$S64_AWS_ACCESS_TOKEN"
   fi
 }

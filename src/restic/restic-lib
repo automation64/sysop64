@@ -3,7 +3,7 @@
 #######################################
 # Restic / Lib
 #
-# Version: 1.0.0
+# Version: 1.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -27,9 +27,9 @@
 
 # shellcheck disable=SC2034
 {
-  declare SYSOP64_RESTIC_PATH_CLI="${SYSOP64_RESTIC_PATH_CLI:-}"
-  declare SYSOP64_RESTIC_PATH_REPOSITORY="${SYSOP64_RESTIC_PATH_REPOSITORY:-}"
-  declare SYSOP64_RESTIC_PASSWORD="${SYSOP64_RESTIC_PASSWORD:-}"
+  declare S64_RESTIC_PATH_CLI="${S64_RESTIC_PATH_CLI:-}"
+  declare S64_RESTIC_PATH_REPOSITORY="${S64_RESTIC_PATH_REPOSITORY:-}"
+  declare S64_RESTIC_PASSWORD="${S64_RESTIC_PASSWORD:-}"
   export RESTIC_REPOSITORY=''
   export RESTIC_PASSWORD=''
 }
@@ -38,37 +38,41 @@
 # Functions
 #
 
-function restic_lib_setup() {
+function s64_restic_lib_setup() {
   bl64_dbg_app_show_function
-  if [[ -z "$SYSOP64_RESTIC_PATH_CLI" ]]; then
+  if [[ -z "$S64_RESTIC_PATH_CLI" ]]; then
     if [[ -x '/home/linuxbrew/.linuxbrew/bin/restic' ]]; then
-      SYSOP64_RESTIC_PATH_CLI='/home/linuxbrew/.linuxbrew/bin/restic'
+      S64_RESTIC_PATH_CLI='/home/linuxbrew/.linuxbrew/bin/restic'
     elif [[ -x '/opt/homebrew/bin/restic' ]]; then
-      SYSOP64_RESTIC_PATH_CLI='/opt/homebrew/bin/restic'
+      S64_RESTIC_PATH_CLI='/opt/homebrew/bin/restic'
     elif [[ -x '/usr/local/bin/restic' ]]; then
-      SYSOP64_RESTIC_PATH_CLI='/usr/local/bin/restic'
+      S64_RESTIC_PATH_CLI='/usr/local/bin/restic'
     elif [[ -x '/usr/bin/restic' ]]; then
-      SYSOP64_RESTIC_PATH_CLI='/usr/bin/restic'
+      S64_RESTIC_PATH_CLI='/usr/bin/restic'
     else
       bl64_check_alert_resource_not_found 'restic'
       return $?
     fi
   else
-    bl64_check_command "$SYSOP64_RESTIC_PATH_CLI" ||
+    bl64_check_command "$S64_RESTIC_PATH_CLI" ||
       return $?
   fi
   bl64_check_privilege_root &&
-    bl64_check_export 'SYSOP64_RESTIC_PATH_REPOSITORY' &&
-    bl64_check_export 'SYSOP64_RESTIC_PASSWORD'
+    bl64_check_export 'S64_RESTIC_PATH_REPOSITORY' &&
+    bl64_check_export 'S64_RESTIC_PASSWORD'
 }
 
-function restic_lib_run_restic() {
+function s64_restic_lib_run_restic() {
   bl64_dbg_app_show_function "$@"
-  RESTIC_REPOSITORY="$SYSOP64_RESTIC_PATH_REPOSITORY"
-  RESTIC_PASSWORD="$SYSOP64_RESTIC_PASSWORD"
+  local verbose_flag='--verbose'
+  RESTIC_REPOSITORY="$S64_RESTIC_PATH_REPOSITORY"
+  RESTIC_PASSWORD="$S64_RESTIC_PASSWORD"
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+
   bl64_dbg_app_trace_start
-  "$SYSOP64_RESTIC_PATH_CLI" \
-    --verbose \
+  # shellcheck disable=SC2086
+  "$S64_RESTIC_PATH_CLI" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }

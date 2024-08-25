@@ -26,32 +26,32 @@
 # Imports
 #
 
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Globals
 #
 
 # Distro dependant upgrade command
-declare _SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE=''
+declare _S64_LINUX_DISTRO_DO_RELEASE_UPGRADE=''
 
 #
 # Functions
@@ -98,7 +98,7 @@ function prepare_ubuntu() {
 
 function upgrade_ubuntu() {
   bl64_dbg_app_show_function
-  "$_SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE" \
+  "$_S64_LINUX_DISTRO_DO_RELEASE_UPGRADE" \
     --allow-third-party \
     --frontend=DistUpgradeViewNonInteractive
 }
@@ -143,8 +143,8 @@ function initialize() {
   if [[ "$command" == 'upgrade' ]]; then
     case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*)
-      _SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE='/bin/do-release-upgrade'
-      bl64_check_command "$_SYSOP64_LINUX_DISTRO_DO_RELEASE_UPGRADE"
+      _S64_LINUX_DISTRO_DO_RELEASE_UPGRADE='/bin/do-release-upgrade'
+      bl64_check_command "$_S64_LINUX_DISTRO_DO_RELEASE_UPGRADE"
       ;;
     *) : ;;
     esac
@@ -189,7 +189,7 @@ while getopts ':pur:V:D:h' option; do
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize "$command" || exit $?
 
 bl64_msg_show_batch_start "$command"

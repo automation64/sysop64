@@ -25,7 +25,7 @@
 # Functions
 #
 
-function k8s_lib_cli_set_ns() {
+function s64_k8s_lib_cli_set_ns() {
   bl64_dbg_app_show_function "$@"
   local namespace="$1"
   # shellcheck disable=SC2154
@@ -36,7 +36,7 @@ function k8s_lib_cli_set_ns() {
   fi
 }
 
-function k8s_lib_cli_set_output() {
+function s64_k8s_lib_cli_set_output() {
   bl64_dbg_app_show_function "$@"
   local expand="$1"
   # shellcheck disable=SC2154

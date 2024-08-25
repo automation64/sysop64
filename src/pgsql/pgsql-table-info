@@ -25,13 +25,13 @@
 # Imports
 #
 
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/pgsql/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/pgsql/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Globals
@@ -47,22 +47,22 @@ export PSQL_PAGER=''
 function list() {
   bl64_dbg_app_show_function "$@"
   local table="$1"
-  psql_lib_run_psql \
-    --host="$SYSOP64_PGSQL_SERVER_HOST" \
-    --port="$SYSOP64_PGSQL_SERVER_PORT" \
-    --dbname="$SYSOP64_PGSQL_DB_NAME" \
-    --username="$SYSOP64_PGSQL_SERVER_USER" \
+  s64_psql_lib_run_psql \
+    --host="$S64_PGSQL_SERVER_HOST" \
+    --port="$S64_PGSQL_SERVER_PORT" \
+    --dbname="$S64_PGSQL_DB_NAME" \
+    --username="$S64_PGSQL_SERVER_USER" \
     --command="\\dt"
 }
 
 function describe() {
   bl64_dbg_app_show_function "$@"
   local table="$1"
-  psql_lib_run_psql \
-    --host="$SYSOP64_PGSQL_SERVER_HOST" \
-    --port="$SYSOP64_PGSQL_SERVER_PORT" \
-    --dbname="$SYSOP64_PGSQL_DB_NAME" \
-    --username="$SYSOP64_PGSQL_SERVER_USER" \
+  s64_psql_lib_run_psql \
+    --host="$S64_PGSQL_SERVER_HOST" \
+    --port="$S64_PGSQL_SERVER_PORT" \
+    --dbname="$S64_PGSQL_DB_NAME" \
+    --username="$S64_PGSQL_SERVER_USER" \
     --command="\\d $table"
 }
 
@@ -75,8 +75,8 @@ function initialize() {
   bl64_check_parameter 'command' ||
     { help && return 1; }
 
-  psql_lib_setup &&
-    bl64_check_export 'SYSOP64_PGSQL_SERVER_PASSWORD' ||
+  s64_psql_lib_setup &&
+    bl64_check_export 'S64_PGSQL_SERVER_PASSWORD' ||
     return $?
 
   if [[ "$command" == 'describe' ]]; then
@@ -84,7 +84,7 @@ function initialize() {
       return $?
   fi
 
-  PGPASSWORD="$SYSOP64_PGSQL_SERVER_PASSWORD"
+  PGPASSWORD="$S64_PGSQL_SERVER_PASSWORD"
 }
 
 function help() {
@@ -95,10 +95,10 @@ function help() {
     -l         : List tables
     -e         : Describe table
     ' '
-    -o Host    : Host FQDN. Alternative shell-env: SYSOP64_PGSQL_SERVER_HOST  
-    -p Port    : DB Port. Alternative shell-ehv: SYSOP64_PGSQL_SERVER_PORT 
-    -u User    : DB User. Alternative shell-ehv: SYSOP64_PGSQL_SERVER_USER 
-    -b DB      : DB Name. Alternative shell-ehv: SYSOP64_PGSQL_DB_NAME
+    -o Host    : Host FQDN. Alternative shell-env: S64_PGSQL_SERVER_HOST  
+    -p Port    : DB Port. Alternative shell-ehv: S64_PGSQL_SERVER_PORT 
+    -u User    : DB User. Alternative shell-ehv: S64_PGSQL_SERVER_USER 
+    -b DB      : DB Name. Alternative shell-ehv: S64_PGSQL_DB_NAME
     -t Table   : DB Table.
     -h         : Show help
     ' '
@@ -122,10 +122,10 @@ while getopts ':leo:p:u:b:t:V:D:h' option; do
   case "$option" in
   l) command='list' ;;
   e) command='describe' ;;
-  o) SYSOP64_PGSQL_SERVER_HOST="$OPTARG" ;;
-  p) SYSOP64_PGSQL_SERVER_PORT="$OPTARG" ;;
-  u) SYSOP64_PGSQL_SERVER_USER="$OPTARG" ;;
-  b) SYSOP64_PGSQL_DB_NAME="$OPTARG" ;;
+  o) S64_PGSQL_SERVER_HOST="$OPTARG" ;;
+  p) S64_PGSQL_SERVER_PORT="$OPTARG" ;;
+  u) S64_PGSQL_SERVER_USER="$OPTARG" ;;
+  b) S64_PGSQL_DB_NAME="$OPTARG" ;;
   t) table="$OPTARG" ;;
   V) verbose="$OPTARG" ;;
   D) debug="$OPTARG" ;;
@@ -133,7 +133,7 @@ while getopts ':leo:p:u:b:t:V:D:h' option; do
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize "$command" "$table" || exit $?
 
 bl64_msg_show_batch_start "$command"

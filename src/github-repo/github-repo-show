@@ -25,13 +25,13 @@
 # Imports
 #
 
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/github/github-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/github/github-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Globals
@@ -48,7 +48,7 @@ function show() {
   local api_prefix="repos/${owner}/${repository}"
 
   bl64_msg_show_info 'branch protection'
-  github_lib_run_gh api "${api_prefix}"
+  s64_github_lib_run_gh api "${api_prefix}"
 }
 
 function initialize() {
@@ -61,7 +61,7 @@ function initialize() {
   bl64_check_parameter 'command' ||
     { help && return 1; }
 
-  github_lib_setup &&
+  s64_github_lib_setup &&
     bl64_check_parameter 'owner' &&
     bl64_check_parameter 'repository'
 }
@@ -105,7 +105,7 @@ while getopts ':so:r:V:D:h' option; do
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize "$command" "$owner" "$repository" || exit $?
 
 bl64_msg_show_batch_start "$command"

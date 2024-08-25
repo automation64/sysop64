@@ -3,7 +3,7 @@
 #######################################
 # Linux / Lib
 #
-# Version: 1.2.0
+# Version: 1.3.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -27,182 +27,200 @@
 
 # shellcheck disable=SC2034
 {
-  declare SYSOP64_LINUX_PATH_CLI_BADBLOCKS=''
-  declare SYSOP64_LINUX_PATH_CLI_BLKID=''
-  declare SYSOP64_LINUX_PATH_CLI_CRYPTSETUP=''
-  declare SYSOP64_LINUX_PATH_CLI_FSCK=''
-  declare SYSOP64_LINUX_PATH_CLI_JOURNALCTL=''
-  declare SYSOP64_LINUX_PATH_CLI_LSBLK=''
-  declare SYSOP64_LINUX_PATH_CLI_LVS=''
-  declare SYSOP64_LINUX_PATH_CLI_MDADM=''
-  declare SYSOP64_LINUX_PATH_CLI_MKFS=''
-  declare SYSOP64_LINUX_PATH_CLI_MOUNT=''
-  declare SYSOP64_LINUX_PATH_CLI_PVS=''
-  declare SYSOP64_LINUX_PATH_CLI_VGS=''
+  declare S64_LINUX_PATH_CLI_BADBLOCKS=''
+  declare S64_LINUX_PATH_CLI_BLKID=''
+  declare S64_LINUX_PATH_CLI_CRYPTSETUP=''
+  declare S64_LINUX_PATH_CLI_FSCK=''
+  declare S64_LINUX_PATH_CLI_JOURNALCTL=''
+  declare S64_LINUX_PATH_CLI_LSBLK=''
+  declare S64_LINUX_PATH_CLI_LVS=''
+  declare S64_LINUX_PATH_CLI_MDADM=''
+  declare S64_LINUX_PATH_CLI_MKFS=''
+  declare S64_LINUX_PATH_CLI_MOUNT=''
+  declare S64_LINUX_PATH_CLI_PVS=''
+  declare S64_LINUX_PATH_CLI_VGS=''
 }
 
 #
 # Functions
 #
 
-function linux_lib_setup() {
+function s64_linux_lib_setup() {
   bl64_dbg_app_show_function
   # shellcheck disable=SC2154
   case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_DEBIAN")
-    SYSOP64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
-    SYSOP64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
-    SYSOP64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
-    SYSOP64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
-    SYSOP64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
-    SYSOP64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
-    SYSOP64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
-    SYSOP64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
-    SYSOP64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
-    SYSOP64_LINUX_PATH_CLI_MOUNT='/bin/mount'
-    SYSOP64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
-    SYSOP64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
+    S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
+    S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
+    S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+    S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+    S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
+    S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
+    S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
+    S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+    S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+    S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+    S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
     ;;
   "$BL64_OS_FLAVOR_FEDORA")
-    SYSOP64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
-    SYSOP64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
-    SYSOP64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
-    SYSOP64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
-    SYSOP64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
-    SYSOP64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
-    SYSOP64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
-    SYSOP64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
-    SYSOP64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
-    SYSOP64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
-    SYSOP64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
-    SYSOP64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
+    S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
+    S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
+    S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+    S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+    S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
+    S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
+    S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
+    S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+    S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+    S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+    S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
     ;;
   *) bl64_check_alert_unsupported ;;
   esac
 }
 
-function linux_lib_run_blkid() {
+function s64_linux_lib_run_blkid() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_BLKID" ||
+  bl64_check_command "$S64_LINUX_PATH_CLI_BLKID" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_BLKID" \
+  "$S64_LINUX_PATH_CLI_BLKID" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_cryptsetup() {
+function s64_linux_lib_run_cryptsetup() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" ||
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_CRYPTSETUP" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_CRYPTSETUP" \
-    --verbose \
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_CRYPTSETUP" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_lsblk() {
+function s64_linux_lib_run_lsblk() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_LSBLK" ||
+  bl64_check_command "$S64_LINUX_PATH_CLI_LSBLK" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_LSBLK" \
+  "$S64_LINUX_PATH_CLI_LSBLK" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_mount() {
+function s64_linux_lib_run_mount() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_MOUNT" ||
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_MOUNT" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_MOUNT" \
-    --verbose \
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_MOUNT" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_fsck() {
+function s64_linux_lib_run_fsck() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_FSCK" ||
+  local verbose_flag='-V'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_FSCK" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_FSCK" \
-    -V \
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_FSCK" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_badblocks() {
+function s64_linux_lib_run_badblocks() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_BADBLOCKS" ||
+  local verbose_flag='-v'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_BADBLOCKS" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_BADBLOCKS" \
-    -v \
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_BADBLOCKS" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_journalctl() {
+function s64_linux_lib_run_journalctl() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_JOURNALCTL" ||
+  bl64_check_command "$S64_LINUX_PATH_CLI_JOURNALCTL" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_JOURNALCTL" \
+  "$S64_LINUX_PATH_CLI_JOURNALCTL" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_mdadm() {
+function s64_linux_lib_run_mdadm() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_MDADM" ||
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_MDADM" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_MDADM" \
-    --verbose \
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_MDADM" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_vgs() {
+function s64_linux_lib_run_vgs() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_VGS" ||
+  bl64_check_command "$S64_LINUX_PATH_CLI_VGS" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_VGS" \
+  "$S64_LINUX_PATH_CLI_VGS" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_lvs() {
+function s64_linux_lib_run_lvs() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_LVS" ||
+  bl64_check_command "$S64_LINUX_PATH_CLI_LVS" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_LVS" \
+  "$S64_LINUX_PATH_CLI_LVS" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_pvs() {
+function s64_linux_lib_run_pvs() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_PVS" ||
+  bl64_check_command "$S64_LINUX_PATH_CLI_PVS" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_PVS" \
+  "$S64_LINUX_PATH_CLI_PVS" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function linux_lib_run_mkfs() {
+function s64_linux_lib_run_mkfs() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$SYSOP64_LINUX_PATH_CLI_MKFS" ||
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_MKFS" ||
     return $?
   bl64_dbg_app_trace_start
-  "$SYSOP64_LINUX_PATH_CLI_MKFS" \
-    --verbose \
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_MKFS" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }

@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# template: 1.0.0
+#######################################
+# OpenSSH / Lib
+#
+# Version: 1.0.0
+#
+#######################################
+# Copyright [2024] [serdigital64@gmail.com]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_OPENSSH_PATH_SSH_KEYGEN="${S64_OPENSSH_PATH_SSH_KEYGEN:-}"
+}
+
+#
+# Functions
+#
+
+function s64_openssh_lib_setup() {
+  bl64_dbg_app_show_function
+  local command='ssh-keygen'
+  if [[ -z "$S64_OPENSSH_PATH_SSH_KEYGEN" ]]; then
+    if [[ -x "/home/linuxbrew/.linuxbrew/bin/${command}" ]]; then
+      S64_OPENSSH_PATH_SSH_KEYGEN="/home/linuxbrew/.linuxbrew/bin/${command}"
+    elif [[ -x "/opt/homebrew/bin/${command}" ]]; then
+      S64_OPENSSH_PATH_SSH_KEYGEN="/opt/homebrew/bin/${command}"
+    elif [[ -x "/usr/local/bin/${command}" ]]; then
+      S64_OPENSSH_PATH_SSH_KEYGEN="/usr/local/bin/${command}"
+    elif [[ -x "/usr/bin/${command}" ]]; then
+      S64_OPENSSH_PATH_SSH_KEYGEN="/usr/bin/${command}"
+    else
+      bl64_check_alert_resource_not_found 'ssh-keygen'
+      return $?
+    fi
+  else
+    bl64_check_command "$S64_OPENSSH_PATH_SSH_KEYGEN" ||
+      return $?
+  fi
+}
+
+function s64_openssh_lib_run_ssh_keygen() {
+  bl64_dbg_app_show_function "$@"
+  local verbose_flag='-v'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_OPENSSH_PATH_SSH_KEYGEN" \
+    $verbose_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}

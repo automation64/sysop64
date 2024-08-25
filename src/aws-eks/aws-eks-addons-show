@@ -27,18 +27,18 @@
 #
 
 # template-import: 1.0.0
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-module-aws.bash" &&
-  source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-aws.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/aws/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/aws/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
@@ -52,7 +52,7 @@ function aws_eks_addons_list() {
     list-addons \
     $BL64_AWS_SET_FORMAT_JSON \
     --cluster-name "$cluster_name" |
-    "$SYSOP64_CORE_PATH_JQ" \
+    "$S64_CORE_PATH_JQ" \
       -r '.addons[]'
 
 }
@@ -73,8 +73,8 @@ function aws_eks_addons_show() {
 function initialize() {
   bl64_dbg_app_show_function
   bl64_check_export 'cluster_name' &&
-    bl64_check_command_search_path "$SYSOP64_CORE_PATH_JQ" &&
-    aws_lib_setup
+    bl64_check_command_search_path "$S64_CORE_PATH_JQ" &&
+    s64_aws_lib_setup
 }
 
 #
@@ -84,7 +84,7 @@ function initialize() {
 declare cluster_name="${1:-}"
 declare command='aws-eks-addons-show'
 
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"

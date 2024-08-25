@@ -25,14 +25,14 @@
 # Imports
 #
 
-declare SYSOP64_CORE_PATH_ROOT="${SYSOP64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${SYSOP64_CORE_PATH_BL64}/bashlib64-core.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
   { echo "Error: unable to load bashlib64" && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
-source "${SYSOP64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
@@ -43,7 +43,7 @@ function luks_open() {
   local device_path="${1:-}"
   local volume_name="${2:-}"
   bl64_msg_show_task "open luks device (${device_path} -> ${volume_name})"
-  linux_lib_run_cryptsetup \
+  s64_linux_lib_run_cryptsetup \
     luksOpen \
     "$device_path" \
     "$volume_name"
@@ -53,7 +53,7 @@ function fs_check() {
   bl64_dbg_app_show_function "$@"
   local volume_name="${1:-}"
   bl64_msg_show_task "check filesystem (${volume_name})"
-  linux_lib_run_fsck \
+  s64_linux_lib_run_fsck \
     "/dev/mapper/${volume_name}"
 }
 
@@ -62,7 +62,7 @@ function fs_mount() {
   local mount_point="${1:-}"
   local volume_name="${2:-}"
   bl64_msg_show_task "mount filesystem (${volume_name} -> ${mount_point})"
-  linux_lib_run_mount \
+  s64_linux_lib_run_mount \
     "/dev/mapper/${volume_name}" \
     "$mount_point"
 }
@@ -73,7 +73,7 @@ function initialize() {
     bl64_check_parameter 'device_path' &&
     bl64_check_parameter 'mount_point' &&
     bl64_check_parameter 'volume_name' &&
-    linux_lib_setup
+    s64_linux_lib_setup
 }
 
 #
@@ -85,7 +85,7 @@ declare device_path="${1:-}"
 declare mount_point="${2:-}"
 declare volume_name="${3:-}"
 
-bl64_dbg_set_level "$SYSOP64_CORE_SET_DEBUG" && bl64_msg_set_level "$SYSOP64_CORE_SET_VERBOSE" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
