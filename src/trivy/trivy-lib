@@ -4,7 +4,7 @@
 # template-module-cli: 1.1.0
 # template-module-vars: 1.0.0
 #######################################
-# X_MODULE_NAME_X / Lib
+# Trivy / Lib
 #
 # Version: 1.0.0
 #
@@ -30,43 +30,48 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_X_MODULE_CAPS_X_PATH_CLI="${S64_X_MODULE_CAPS_X_PATH_CLI:-X_MODULE_PATH_CLI_X}"
+  # Global Paths
+  declare S64_TRIVY_PATH_CLI="${S64_TRIVY_PATH_CLI:-}"
+  # Global Settings
+  declare S64_TRIVY_SET_FORMAT="${S64_TRIVY_SET_FORMAT:-table}"
 }
 
 #
 # Functions
 #
 
-function s64_X_MODULE_X_lib_setup() {
+function s64_trivy_lib_setup() {
   bl64_dbg_app_show_function
-  local command='X_MODULE_COMMAND_CLI_X'
-  if [[ -z "$S64_X_MODULE_CAPS_X_PATH_CLI" ]]; then
+  local command='trivy'
+  if [[ -z "$S64_TRIVY_PATH_CLI" ]]; then
     if [[ -x "/home/linuxbrew/.linuxbrew/bin/${command}" ]]; then
-      S64_X_MODULE_CAPS_X_PATH_CLI="/home/linuxbrew/.linuxbrew/bin/${command}"
+      S64_TRIVY_PATH_CLI="/home/linuxbrew/.linuxbrew/bin/${command}"
     elif [[ -x "/opt/homebrew/bin/${command}" ]]; then
-      S64_X_MODULE_CAPS_X_PATH_CLI="/opt/homebrew/bin/${command}"
+      S64_TRIVY_PATH_CLI="/opt/homebrew/bin/${command}"
     elif [[ -x "/usr/local/bin/${command}" ]]; then
-      S64_X_MODULE_CAPS_X_PATH_CLI="/usr/local/bin/${command}"
+      S64_TRIVY_PATH_CLI="/usr/local/bin/${command}"
     elif [[ -x "/usr/bin/${command}" ]]; then
-      S64_X_MODULE_CAPS_X_PATH_CLI="/usr/bin/${command}"
+      S64_TRIVY_PATH_CLI="/usr/bin/${command}"
     else
       bl64_check_alert_resource_not_found "$command"
       return $?
     fi
   else
-    bl64_check_command "$S64_X_MODULE_CAPS_X_PATH_CLI" ||
+    bl64_check_command "$S64_TRIVY_PATH_CLI" ||
       return $?
   fi
 }
 
-function s64_X_MODULE_X_lib_run_X_MODULE_CLI_NAME_X() {
+function s64_trivy_lib_run_trivy() {
   bl64_dbg_app_show_function "$@"
-  local verbose_flag='--verbose'
-  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  local verbose_flag=' '
+  bl64_msg_app_verbose_enabled || verbose_flag='--quiet'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_X_MODULE_CAPS_X_PATH_CLI" \
+  "$S64_TRIVY_PATH_CLI" \
     $verbose_flag \
+    --config=/dev/null \
+    --timeout=5m \
     "$@"
   bl64_dbg_app_trace_stop
 }

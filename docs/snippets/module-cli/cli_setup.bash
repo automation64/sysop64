@@ -1,7 +1,4 @@
 # template-module-setup: 1.1.0
-  # X_GLOBALS_PLACEHOLDER_X
-  declare S64_X_MODULE_CAPS_X_PATH_CLI="${S64_X_MODULE_CAPS_X_PATH_CLI:-}"
-
 # X_SETUP_PLACEHOLDER_X
   local command='X_MODULE_COMMAND_CLI_X'
   if [[ -z "$S64_X_MODULE_CAPS_X_PATH_CLI" ]]; then
