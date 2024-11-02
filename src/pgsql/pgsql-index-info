@@ -113,9 +113,9 @@ function help() {
     -e         : Describe index
     -k         : Check index status
     ' '
-    -o Host    : Host FQDN. Alternative shell-env: S64_PGSQL_SERVER_HOST  
-    -p Port    : DB Port. Alternative shell-ehv: S64_PGSQL_SERVER_PORT 
-    -u User    : DB User. Alternative shell-ehv: S64_PGSQL_SERVER_USER 
+    -o Host    : Host FQDN. Alternative shell-env: S64_PGSQL_SERVER_HOST
+    -p Port    : DB Port. Alternative shell-ehv: S64_PGSQL_SERVER_PORT
+    -u User    : DB User. Alternative shell-ehv: S64_PGSQL_SERVER_USER
     -b DB      : DB Name. Alternative shell-ehv: S64_PGSQL_DB_NAME
     -x Index   : DB Table.
     -h         : Show help
