@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# template: 1.0.0
-# template-import: 1.0.0
+# template-one: 2.0.0
 #######################################
 # ArgoCD / Cluster / List
 #
@@ -48,13 +47,11 @@ function initialize() {
 # Main
 #
 
-declare command='argocd-cluster-list'
-
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
-bl64_msg_show_batch_start "$command"
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_argocd_lib_run_argocd \
   cluster \
   list
-bl64_msg_show_batch_finish $? "$command"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

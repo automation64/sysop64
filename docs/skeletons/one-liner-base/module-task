@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-one-base: 1.0.0
 #######################################
 # X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X
 #
@@ -42,6 +42,6 @@ declare command='X_COMMAND_X'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
 initialize || exit $?
 
-bl64_msg_show_batch_start "$command"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}"
 # X_COMMAND_PLACEHOLDER_X
-bl64_msg_show_batch_finish $? "$command"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}"

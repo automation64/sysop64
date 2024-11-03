@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-module-lib: 2.0.0
 #######################################
 # ArgoCD / Lib
 #
-# Version: 1.1.0
+# Version: 1.2.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -43,8 +43,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
   declare S64_ARGOCD_PATH_CLI="${S64_ARGOCD_PATH_CLI:-}"
   # Global Settings
   declare S64_ARGOCD_SET_CONNECTION='--core'
-  declare S64_ARGOCD_SET_CONTEXT_CLUSTER="${S64_ARGOCD_SET_CONTEXT_CLUSTER:-}"
-  declare S64_ARGOCD_SET_CONTEXT_NAMESPACE="${S64_ARGOCD_SET_CONTEXT_NAMESPACE:-argocd}"
   declare S64_ARGOCD_SET_CONTEXT_NAME="${S64_ARGOCD_SET_CONTEXT_NAME:-argocdcli}"
 }
 
@@ -55,8 +53,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
 function s64_argocd_lib_setup() {
   bl64_dbg_app_show_function
 
-  bl64_k8s_setup &&
-    bl64_check_export 'S64_ARGOCD_SET_CONTEXT_CLUSTER' ||
+  bl64_k8s_setup ||
     return $?
 
   if [[ -z "$S64_ARGOCD_PATH_CLI" ]]; then

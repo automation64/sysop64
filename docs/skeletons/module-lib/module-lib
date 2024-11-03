@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.1.0
-# template-module-setup: 1.1.0
-# template-module-cli: 1.1.0
-# template-module-vars: 1.0.0
+# template-module-lib: 2.0.0
+#   template-module-base: 2.0.0
+#   template-module-setup: 2.0.0
+#   template-module-cli: 1.1.0
+#   template-module-vars: 1.0.0
 #######################################
 # X_MODULE_NAME_X / Lib
 #
@@ -25,6 +26,14 @@
 #######################################
 
 #
+# Imports
+#
+
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+  { echo "Error: unable to load bashlib64" && exit 1; }
+
+#
 # Globals
 #
 
@@ -39,23 +48,10 @@
 
 function s64_X_MODULE_X_lib_setup() {
   bl64_dbg_app_show_function
-  local command='X_MODULE_COMMAND_CLI_X'
   if [[ -z "$S64_X_MODULE_CAPS_X_PATH_CLI" ]]; then
-    if [[ -x "/home/linuxbrew/.linuxbrew/bin/${command}" ]]; then
-      S64_X_MODULE_CAPS_X_PATH_CLI="/home/linuxbrew/.linuxbrew/bin/${command}"
-    elif [[ -x "/opt/homebrew/bin/${command}" ]]; then
-      S64_X_MODULE_CAPS_X_PATH_CLI="/opt/homebrew/bin/${command}"
-    elif [[ -x "/usr/local/bin/${command}" ]]; then
-      S64_X_MODULE_CAPS_X_PATH_CLI="/usr/local/bin/${command}"
-    elif [[ -x "/usr/bin/${command}" ]]; then
-      S64_X_MODULE_CAPS_X_PATH_CLI="/usr/bin/${command}"
-    else
-      bl64_check_alert_resource_not_found "$command"
-      return $?
-    fi
+    S64_X_MODULE_CAPS_X_PATH_CLI="$(bl64_bsh_command_locate 'argocd')"
   else
-    bl64_check_command "$S64_X_MODULE_CAPS_X_PATH_CLI" ||
-      return $?
+    bl64_check_command "$S64_X_MODULE_CAPS_X_PATH_CLI"
   fi
 }
 
