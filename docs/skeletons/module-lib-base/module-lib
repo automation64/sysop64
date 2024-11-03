@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-module-base: 2.0.0
 #######################################
 # X_MODULE_NAME_X / Lib
 #
@@ -20,6 +20,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #######################################
+
+#
+# Imports
+#
+
+# X_IMPORTS_PLACEHOLDER_X
 
 #
 # Globals

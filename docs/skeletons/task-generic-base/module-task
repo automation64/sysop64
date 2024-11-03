@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-task-base: 1.0.0
 #######################################
 # X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X
 #
