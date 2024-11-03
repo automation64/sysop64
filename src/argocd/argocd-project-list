@@ -1,7 +1,6 @@
 
 #!/usr/bin/env bash
-# template: 1.0.0
-# template-import: 1.0.0
+# template-one: 2.0.0
 #######################################
 # ArgoCD / Project / List
 #
