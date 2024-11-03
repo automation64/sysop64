@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# template: 1.0.0
-# template-import: 1.0.0
+# template-one: 2.0.0
 #######################################
 # ArgoCD / CLI / Context set
 #
@@ -41,13 +40,18 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
 
 function initialize() {
   bl64_dbg_app_show_function
-  s64_argocd_lib_setup
+  bl64_check_parameter 'k8s_context_cluster' &&
+    bl64_check_parameter 'k8s_context_user' &&
+    s64_argocd_lib_setup
 }
 
 #
 # Main
 #
 
+declare k8s_context_cluster="${1:-}"
+declare k8s_context_user="${2:-}"
+declare k8s_context_namespace="${3:-argocd}"
 declare command='argocd-cli-context-set'
 
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
@@ -56,15 +60,17 @@ initialize || exit $?
 bl64_msg_show_batch_start "$command"
 bl64_msg_show_setup \
   'Configuring KubeCTL context for ArgoCD CLI' \
-  'S64_ARGOCD_SET_CONTEXT_CLUSTER' \
-  'S64_ARGOCD_SET_CONTEXT_NAMESPACE' \
-  'S64_ARGOCD_SET_CONTEXT_NAME'
+  'S64_ARGOCD_SET_CONTEXT_NAME' \
+  'k8s_context_cluster' \
+  'k8s_context_user' \
+  'k8s_context_namespace'
 
 bl64_k8s_run_kubectl \
   "$BL64_VAR_DEFAULT" \
   config set-context \
-  --cluster="$S64_ARGOCD_SET_CONTEXT_CLUSTER" \
-  --namespace="$S64_ARGOCD_SET_CONTEXT_NAMESPACE" \
+  --cluster="$k8s_context_cluster" \
+  --user="$k8s_context_user" \
+  --namespace="$k8s_context_namespace" \
   "$S64_ARGOCD_SET_CONTEXT_NAME" &&
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \
