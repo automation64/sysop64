@@ -3,7 +3,7 @@
 #######################################
 # Linux / Lib
 #
-# Version: 1.3.0
+# Version: 1.4.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -56,6 +56,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
     S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
+    S64_LINUX_PATH_CLI_LSUSB='/bin/lsusb'
     S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
     S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
     S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
@@ -70,6 +71,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
     S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
+    S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
     S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
     S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
     S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
@@ -220,6 +222,19 @@ function s64_linux_lib_run_mkfs() {
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_MKFS" \
+    $verbose_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_lsusb() {
+  bl64_dbg_app_show_function "$@"
+  local verbose_flag='--verbose'
+  bl64_msg_app_verbose_enabled || verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_LSUSB" ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_LSUSB" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
