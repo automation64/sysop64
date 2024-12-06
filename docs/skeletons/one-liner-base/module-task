@@ -39,9 +39,7 @@
 
 declare command='X_COMMAND_X'
 
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
-  initialize || exit $?
-
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 # X_COMMAND_PLACEHOLDER_X
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

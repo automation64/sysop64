@@ -80,8 +80,7 @@ while getopts ':xV:D:h' main_option; do
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
-  initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$main_command"
 "${main_command}"

@@ -41,8 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo 'Error: unable to load bashlib64' && exit 1; }
+  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
 

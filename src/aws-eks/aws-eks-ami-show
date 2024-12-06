@@ -28,11 +28,9 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" &&
-  source "${S64_CORE_PATH_ROOT}/aws/aws-lib" ||
-  { echo "Error: unable to load module library" && exit 1; }
+  source "${S64_CORE_PATH_ROOT}/aws/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo 'Error: unable to load bashlib64' && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
@@ -100,8 +98,7 @@ while getopts ':la:r:V:D:h' main_option; do
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
-  initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
 bl64_msg_show_batch_start "$main_command"
 "${main_command}" "$main_ami_family" "$main_k8s_version"
