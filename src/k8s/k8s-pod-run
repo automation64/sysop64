@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load mo
 source "${S64_CORE_PATH_ROOT}/k8s/k8s-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+  { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
@@ -104,8 +104,8 @@ while getopts ':si:n:e:V:D:h' option; do
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
+  initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$command"
 "${command}" "$namespace" "$image" "$entrypoint"

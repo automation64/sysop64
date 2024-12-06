@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+  { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Globals

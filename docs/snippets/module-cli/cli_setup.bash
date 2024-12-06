@@ -3,7 +3,7 @@
 # X_IMPORTS_PLACEHOLDER_X
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+  { echo 'Error: unable to load bashlib64' && exit 1; }
 
 
 # X_CLI_SETUP_PLACEHOLDER_X

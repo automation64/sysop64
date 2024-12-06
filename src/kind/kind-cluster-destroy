@@ -38,7 +38,7 @@ source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-cnt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+  { echo 'Error: unable to load bashlib64' && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/kind/kind-lib" || { echo "Error: unable to load module library" && exit 1; }
 
@@ -77,8 +77,8 @@ function initialize() {
 
 declare command='kind-cluster-destroy'
 
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
+  initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
 bl64_ui_ask_confirmation \

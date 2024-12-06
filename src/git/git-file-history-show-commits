@@ -40,7 +40,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+  { echo 'Error: unable to load bashlib64' && exit 1; }
 # shellcheck source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/git/git-lib" || { echo "Error: unable to load module library" && exit 1; }
 
@@ -60,8 +60,8 @@ function initialize() {
 declare file_path="${1:-}"
 declare command='git-file-history-show-commits'
 
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
+  initialize || exit $?
 
 bl64_msg_show_batch_start "$command"
 bl64_vcs_run_git \

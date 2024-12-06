@@ -29,12 +29,12 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/X_MODULE_X/X_MODULE_X-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" &&
+  source "${S64_CORE_PATH_ROOT}/X_MODULE_X/X_MODULE_X-lib" ||
+  { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+  { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Globals
@@ -54,7 +54,7 @@ function X_COMMAND_X() {
 function initialize() {
   bl64_dbg_app_show_function
 
-  bl64_check_parameter 'command' ||
+  bl64_check_parameter 'main_command' ||
     { help && return 1; }
 
   # optional # s64_X_MODULE_X_lib_setup || return $?
@@ -80,22 +80,22 @@ function help() {
 # Main
 #
 
-declare command="$BL64_VAR_NULL"
-declare option=''
+declare main_command="$BL64_VAR_NULL"
+declare main_option=''
 
 (($# == 0)) && help && exit 1
-while getopts ':xV:D:h' option; do
-  case "$option" in
-  x) command='X_COMMAND_X' ;;
+while getopts ':xV:D:h' main_option; do
+  case "$main_option" in
+  x) main_command='X_COMMAND_X' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) help && exit 0 ;;
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
+  initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$command"
-"${command}"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$command"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$main_command"
+"${main_command}"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$main_command"
