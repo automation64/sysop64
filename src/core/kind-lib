@@ -25,7 +25,7 @@
 # Imports
 #
 
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
 source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
