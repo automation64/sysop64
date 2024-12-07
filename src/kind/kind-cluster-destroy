@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
-# template-import: 1.0.0
+# template-one: 2.0.0
 #######################################
 # Kind / Cluster / Destroy
 #
-# Version: 1.0.0
+# Version: 2.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -28,18 +27,9 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/kind-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-bsh.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-cnt.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-ui.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/kind/kind-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
@@ -66,21 +56,17 @@ function network_destroy() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  s64_kind_lib_setup &&
-    bl64_cnt_setup
+  s64_kind_lib_setup
 }
 
 #
 # Main
 #
 
-declare command='kind-cluster-destroy'
-
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-
-bl64_msg_show_batch_start "$command"
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_ui_ask_confirmation \
   'Do you want to completely destroy the cluster?. Confirm by typing:' 'YES' &&
   cluster_destroy &&
   network_destroy
-bl64_msg_show_batch_finish $? "$command"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

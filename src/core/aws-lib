@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-module-lib: 2.0.0
 #######################################
 # AWS / Lib
 #
-# Version: 1.3.0
+# Version: 2.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-module-lib: 2.0.0
 #######################################
 # Kind / Lib
 #
-# Version: 1.0.0
+# Version: 2.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -20,6 +20,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-xsv.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-bsh.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-cnt.bash" &&
+  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-ui.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+  { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Globals
@@ -40,6 +55,10 @@
 
 function s64_kind_lib_setup() {
   bl64_dbg_app_show_function
+  bl64_cnt_setup &&
+    bl64_k8s_setup ||
+    return $?
+
   if [[ -z "$S64_KIND_PATH_CLI" ]]; then
     if [[ -x '/home/linuxbrew/.linuxbrew/bin/kind' ]]; then
       S64_KIND_PATH_CLI='/home/linuxbrew/.linuxbrew/bin/kind'

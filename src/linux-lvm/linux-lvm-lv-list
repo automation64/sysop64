@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-one: 2.0.0
 # template-import: 1.0.0
 #######################################
 # Linux / LVM / LV / List
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -28,11 +28,9 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
@@ -48,14 +46,12 @@ function initialize() {
 # Main
 #
 
-declare command='list'
-declare fields='lv_name,vg_name,lv_uuid,lv_attr,lv_size,seg_count,segtype,stripes,stripesize,chunksize'
+declare FIELDS='lv_name,vg_name,lv_uuid,lv_attr,lv_size,seg_count,segtype,stripes,stripesize,chunksize'
 
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-
-bl64_msg_show_batch_start "$command"
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_linux_lib_run_lvs \
   --nosuffix \
   --units M \
-  --options "$fields"
-bl64_msg_show_batch_finish $? "$command"
+  --options "$FIELDS"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
