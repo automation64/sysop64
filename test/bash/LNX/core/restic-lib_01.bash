@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 source ./test/lib/bash-core &&
-source ./src/restic/restic-lib
+source ./src/core/restic-lib
