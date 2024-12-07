@@ -253,8 +253,8 @@ function s64_linux_lib_run_lsusb() {
   bl64_msg_app_verbose_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_LSUSB" ||
     return $?
-  # shellcheck disable=SC2086
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_LSUSB" \
     $verbose_flag \
     "$@"
