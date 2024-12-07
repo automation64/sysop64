@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
-# template-import: 1.0.0
+# template-one: 2.0.0
 #######################################
 # Trivy / Container / Scan
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -28,11 +27,9 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/trivy-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/trivy/trivy-lib" || { echo "Error: unable to load module library" && exit 1; }
 
 #
 # Functions
@@ -40,23 +37,22 @@ source "${S64_CORE_PATH_ROOT}/trivy/trivy-lib" || { echo "Error: unable to load 
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'target_image' &&
-    s64_trivy_lib_setup || return $?
+  bl64_check_parameter 'TARGET_IMAGE' &&
+    s64_trivy_lib_setup
 }
 
 #
 # Main
 #
 
-declare target_image="${1:-}"
-declare command='scan'
+declare TARGET_IMAGE="${1:-}"
+declare BL64_SCRIPT_ID='scan'
 
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-
-bl64_msg_show_batch_start "$command"
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_trivy_lib_run_trivy \
   image \
   --format "$S64_TRIVY_SET_FORMAT" \
   --scanners vuln \
-  "$target_image"
-bl64_msg_show_batch_finish $? "$command"
+  "$TARGET_IMAGE"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
