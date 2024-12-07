@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
-# template-import: 1.0.0
+# template-one: 2.0.0
 #######################################
 # GIT / File / History / Show Commits
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -29,19 +28,9 @@
 # template-import: 1.0.0
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/git-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/git/git-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
@@ -49,19 +38,18 @@ source "${S64_CORE_PATH_ROOT}/git/git-lib" || { echo "Error: unable to load modu
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'file_path'
+  bl64_check_parameter 'FILE_PATH' &&
+    s64_git_lib_setup
 }
 
 #
 # Main
 #
 
-declare file_path="${1:-}"
-declare command='git-file-history-show-commits'
+declare FILE_PATH="${1:-}"
 
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-
-bl64_msg_show_batch_start "$command"
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_vcs_run_git \
   log \
   --all \
@@ -69,5 +57,5 @@ bl64_vcs_run_git \
   --oneline \
   --decorate=short \
   --full-history \
-  "$file_path"
-bl64_msg_show_batch_finish $? "$command"
+  "$FILE_PATH"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
