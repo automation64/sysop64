@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-module-lib: 2.0.0
 #######################################
 # OpenSSH / Lib
 #
-# Version: 1.0.0
+# Version: 2.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -22,6 +22,14 @@
 #######################################
 
 #
+# Imports
+#
+
+# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+  { echo 'Error: unable to load bashlib64' && exit 1; }
+
+#
 # Globals
 #
 
@@ -38,18 +46,7 @@ function s64_openssh_lib_setup() {
   bl64_dbg_app_show_function
   local command='ssh-keygen'
   if [[ -z "$S64_OPENSSH_PATH_SSH_KEYGEN" ]]; then
-    if [[ -x "/home/linuxbrew/.linuxbrew/bin/${command}" ]]; then
-      S64_OPENSSH_PATH_SSH_KEYGEN="/home/linuxbrew/.linuxbrew/bin/${command}"
-    elif [[ -x "/opt/homebrew/bin/${command}" ]]; then
-      S64_OPENSSH_PATH_SSH_KEYGEN="/opt/homebrew/bin/${command}"
-    elif [[ -x "/usr/local/bin/${command}" ]]; then
-      S64_OPENSSH_PATH_SSH_KEYGEN="/usr/local/bin/${command}"
-    elif [[ -x "/usr/bin/${command}" ]]; then
-      S64_OPENSSH_PATH_SSH_KEYGEN="/usr/bin/${command}"
-    else
-      bl64_check_alert_resource_not_found 'ssh-keygen'
-      return $?
-    fi
+    S64_OPENSSH_PATH_SSH_KEYGEN="$(bl64_bsh_command_locate 'ssh-keygen')"
   else
     bl64_check_command "$S64_OPENSSH_PATH_SSH_KEYGEN" ||
       return $?

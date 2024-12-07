@@ -42,7 +42,7 @@ function X_COMMAND_X() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'command' ||
+  bl64_check_parameter 'COMMAND' ||
     { help && return 1; }
 
   # X_INIT_PLACEHOLDER_X
@@ -67,22 +67,21 @@ function help() {
 # Main
 #
 
-declare command="$BL64_VAR_NULL"
-declare option=''
+declare COMMAND="$BL64_VAR_NULL"
+declare OPTION=''
 
 (($# == 0)) && help && exit 1
-while getopts ':xV:D:h' option; do
-  case "$option" in
-  x) command='X_COMMAND_X' ;;
+while getopts ':xV:D:h' OPTION; do
+  case "$OPTION" in
+  x) COMMAND='X_COMMAND_X' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) help && exit 0 ;;
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$command"
-"${command}"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$command"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
+"${COMMAND}"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"

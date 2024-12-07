@@ -26,13 +26,10 @@
 #
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/argocd/argocd-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/argocd-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
@@ -40,8 +37,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'k8s_context_cluster' &&
-    bl64_check_parameter 'k8s_context_user' &&
+  bl64_check_parameter 'K8S_CONTEXT_CLUSTER' &&
+    bl64_check_parameter 'K8S_CONTEXT_USER' &&
     s64_argocd_lib_setup
 }
 
@@ -49,27 +46,25 @@ function initialize() {
 # Main
 #
 
-declare k8s_context_cluster="${1:-}"
-declare k8s_context_user="${2:-}"
-declare k8s_context_namespace="${3:-argocd}"
+declare K8S_CONTEXT_CLUSTER="${1:-}"
+declare K8S_CONTEXT_USER="${2:-}"
+declare K8S_CONTEXT_NAMESPACE="${3:-argocd}"
 
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize || exit $?
-
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_show_setup \
   'Configuring KubeCTL context for ArgoCD CLI' \
   'S64_ARGOCD_SET_CONTEXT_NAME' \
-  'k8s_context_cluster' \
-  'k8s_context_user' \
-  'k8s_context_namespace'
+  'K8S_CONTEXT_CLUSTER' \
+  'K8S_CONTEXT_USER' \
+  'K8S_CONTEXT_NAMESPACE'
 
 bl64_k8s_run_kubectl \
   "$BL64_VAR_DEFAULT" \
   config set-context \
-  --cluster="$k8s_context_cluster" \
-  --user="$k8s_context_user" \
-  --namespace="$k8s_context_namespace" \
+  --cluster="$K8S_CONTEXT_CLUSTER" \
+  --user="$K8S_CONTEXT_USER" \
+  --namespace="$K8S_CONTEXT_NAMESPACE" \
   "$S64_ARGOCD_SET_CONTEXT_NAME" &&
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \

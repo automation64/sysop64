@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # template-module-lib: 2.0.0
 #######################################
-# K8S / Lib
+# GIT / Lib
 #
 # Version: 2.0.0
 #
@@ -25,39 +25,22 @@
 # Imports
 #
 
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
+# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+  { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
 #
 
-function s64_k8s_lib_setup() {
+function s64_git_lib_setup() {
   bl64_dbg_app_show_function
-
-  bl64_k8s_setup
-}
-
-function s64_k8s_lib_cli_set_ns() {
-  bl64_dbg_app_show_function "$@"
-  local namespace="$1"
-  # shellcheck disable=SC2154
-  if [[ "$namespace" == "$BL64_VAR_DEFAULT" ]]; then
-    printf -- '--all-namespaces'
-  else
-    printf -- '--namespace %s' "${namespace}"
-  fi
-}
-
-function s64_k8s_lib_cli_set_output() {
-  bl64_dbg_app_show_function "$@"
-  local expand="$1"
-  # shellcheck disable=SC2154
-  case "$expand" in
-  "$BL64_VAR_DEFAULT") printf -- '' ;;
-  'json') printf -- '--output json' ;;
-  *) printf -- '' ;;
-  esac
 }

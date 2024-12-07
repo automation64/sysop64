@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-one: 2.0.0
 # template-import: 1.0.0
 #######################################
 # Linux / Package / Upgrade
 #
-# Version: 1.0.0
+# Version: 1.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -27,24 +27,10 @@
 #
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
@@ -89,11 +75,7 @@ function initialize() {
 # Main
 #
 
-declare command='cleanup'
-
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize || exit $?
-
-bl64_msg_show_batch_start "$command"
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 cleanup
-bl64_msg_show_batch_finish $? "$command"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

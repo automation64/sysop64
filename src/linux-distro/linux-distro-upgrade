@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-one: 2.0.0
 # template-import: 1.0.0
 #######################################
 # Linux / Distro / Upgrade
@@ -27,30 +27,16 @@
 #
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" ||
-  { echo "Error: unable to load bashlib64" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/linux/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Globals
 #
 
-# Distro dependant upgrade command
+# Distro dependant upgrade COMMAND
 declare _S64_LINUX_DISTRO_DO_RELEASE_UPGRADE=''
 
 #
@@ -120,27 +106,26 @@ function upgrade() {
   bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
-  ${BL64_OS_UB}-*) upgrade_ubuntu;;
+  ${BL64_OS_UB}-*) upgrade_ubuntu ;;
   ${BL64_OS_FD}-*) upgrade_fedora "$release" ;;
   *) bl64_check_alert_unsupported ;;
   esac
 }
 
 function initialize() {
-  bl64_dbg_app_show_function "$@"
-  # shellcheck disable=SC2034
-  local command="$1"
+  bl64_dbg_app_show_function
 
-  bl64_check_parameter 'command' ||
+  bl64_check_parameter 'COMMAND' ||
     { help && return 1; }
 
   bl64_check_privilege_root &&
     bl64_os_check_compatibility \
       "${BL64_OS_UB}-23" \
-      "${BL64_OS_FD}-39" ||
+      "${BL64_OS_FD}-39" &&
+    s64_linux_lib_setup ||
     return $?
 
-  if [[ "$command" == 'upgrade' ]]; then
+  if [[ "$BL64_SCRIPT_ID" == 'upgrade' ]]; then
     case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*)
       _S64_LINUX_DISTRO_DO_RELEASE_UPGRADE='/bin/do-release-upgrade'
@@ -171,27 +156,25 @@ function help() {
 # Main
 #
 
-declare command="$BL64_VAR_NULL"
-declare debug="$BL64_DBG_TARGET_NONE"
-declare option=''
-declare verbose="$BL64_MSG_VERBOSE_ALL"
-declare release="$BL64_VAR_NULL"
+declare COMMAND="$BL64_VAR_NULL"
+declare OPTION=''
+declare RELEASE="$BL64_VAR_NULL"
 
 (($# == 0)) && help && exit 1
-while getopts ':pur:V:D:h' option; do
-  case "$option" in
-  p) command='prepare' ;;
-  u) command='upgrade' ;;
-  r) release="$OPTARG" ;;
-  V) verbose="$OPTARG" ;;
-  D) debug="$OPTARG" ;;
+while getopts ':pur:V:D:h' OPTION; do
+  case "$OPTION" in
+  p) COMMAND='prepare' ;;
+  u) COMMAND='upgrade' ;;
+  r) RELEASE="$OPTARG" ;;
+  V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
+  D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) help && exit 0 ;;
   *) help && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize "$command" || exit $?
+initialize "$BL64_SCRIPT_ID" || exit $?
 
-bl64_msg_show_batch_start "$command"
-"${command}" "$release"
-bl64_msg_show_batch_finish $? "$command"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
+"${COMMAND}" "$RELEASE"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"

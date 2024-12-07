@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
+# template-task: 2.0.0
 #######################################
 # AWS EKS / AMI / Show
 #
-# Version: 1.0.2
+# Version: 1.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -26,16 +26,10 @@
 #
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-aws.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo "Error: unable to load bashlib64" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/aws/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/aws-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
@@ -60,11 +54,8 @@ function show_recommended() {
 }
 
 function initialize() {
-  bl64_dbg_app_show_function "$@"
-  # shellcheck disable=SC2034
-  local command="$1"
-
-  bl64_check_parameter 'command' ||
+  bl64_dbg_app_show_function
+  bl64_check_parameter 'COMMAND' ||
     { help && return 1; }
   s64_aws_lib_setup
 }
@@ -89,26 +80,25 @@ function help() {
 # Main
 #
 
-declare command="$BL64_VAR_NULL"
-declare option=''
-declare ami_family='AL2023'
-declare k8s_version='1.29'
+declare COMMAND="$BL64_VAR_NULL"
+declare OPTION=''
+declare AMI_FAMILY='AL2023'
+declare K8S_VERSION='1.29'
 
 (($# == 0)) && help && exit 1
-while getopts ':la:r:V:D:h' option; do
-  case "$option" in
-  l) command='show_recommended' ;;
-  a) ami_family="$OPTARG" ;;
-  r) k8s_version="$OPTARG" ;;
+while getopts ':la:r:V:D:h' OPTION; do
+  case "$OPTION" in
+  l) COMMAND='show_recommended' ;;
+  a) AMI_FAMILY="$OPTARG" ;;
+  r) K8S_VERSION="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) help && exit 0 ;;
   *) help && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize "$command" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "$command"
-"${command}" "$ami_family" "$k8s_version"
-bl64_msg_show_batch_finish $? "$command"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
+"${COMMAND}" "$AMI_FAMILY" "$K8S_VERSION"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"
