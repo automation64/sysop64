@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 # template-one: 2.0.0
 #######################################
@@ -28,9 +27,7 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/argocd/argocd-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/argocd-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 

@@ -27,9 +27,7 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/k8s/k8s-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/k8s-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
@@ -85,18 +83,18 @@ function help() {
 # Main
 #
 
-declare command='shell_run'
-declare option=''
-declare namespace='default'
-declare image="$BL64_VAR_DEFAULT"
-declare entrypoint="$BL64_VAR_DEFAULT"
+declare COMMAND='shell_run'
+declare OPTION=''
+declare K8S_NAMESPACE='default'
+declare CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
+declare CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
 
-while getopts ':si:n:e:V:D:h' option; do
-  case "$option" in
-  s) command='shell_run' ;;
-  n) namespace="$OPTARG" ;;
-  i) image="$OPTARG" ;;
-  e) entrypoint="$OPTARG" ;;
+while getopts ':si:n:e:V:D:h' OPTION; do
+  case "$OPTION" in
+  s) COMMAND='shell_run' ;;
+  n) K8S_NAMESPACE="$OPTARG" ;;
+  i) CONTAINER_IMAGE="$OPTARG" ;;
+  e) CONTAINER_ENTRYPOINT="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) help && exit 0 ;;
@@ -105,6 +103,6 @@ while getopts ':si:n:e:V:D:h' option; do
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$command"
-"${command}" "$namespace" "$image" "$entrypoint"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$command"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
+"${COMMAND}" "$K8S_NAMESPACE" "$CONTAINER_IMAGE" "$CONTAINER_ENTRYPOINT"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"

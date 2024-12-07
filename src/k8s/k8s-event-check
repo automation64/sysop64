@@ -3,7 +3,7 @@
 #######################################
 # K8S / Event / Check
 #
-# Version: 2.0.0
+# Version: 2.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -27,9 +27,7 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/k8s/k8s-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/k8s-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
@@ -98,17 +96,17 @@ function help() {
 # Main
 #
 
-declare command='all_check'
-declare option=''
-declare expand="$BL64_VAR_DEFAULT"
-declare namespace="$BL64_VAR_DEFAULT"
+declare COMMAND='all_check'
+declare OPTION=''
+declare DETAIL_FORMAT="$BL64_VAR_DEFAULT"
+declare K8S_NAMESPACE="$BL64_VAR_DEFAULT"
 
-while getopts ':apjn:V:D:h' option; do
-  case "$option" in
-  a) command='all_check' ;;
-  p) command='pod_check' ;;
-  n) namespace="$OPTARG" ;;
-  j) expand='json' ;;
+while getopts ':apjn:V:D:h' OPTION; do
+  case "$OPTION" in
+  a) COMMAND='all_check' ;;
+  p) COMMAND='pod_check' ;;
+  n) K8S_NAMESPACE="$OPTARG" ;;
+  j) DETAIL_FORMAT='json' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) help && exit 0 ;;
@@ -117,6 +115,6 @@ while getopts ':apjn:V:D:h' option; do
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$command"
-"$command" "$namespace" "$expand"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$command"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
+"$COMMAND" "$K8S_NAMESPACE" "$DETAIL_FORMAT"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"
