@@ -46,18 +46,7 @@ function s64_openssh_lib_setup() {
   bl64_dbg_app_show_function
   local command='ssh-keygen'
   if [[ -z "$S64_OPENSSH_PATH_SSH_KEYGEN" ]]; then
-    if [[ -x "/home/linuxbrew/.linuxbrew/bin/${command}" ]]; then
-      S64_OPENSSH_PATH_SSH_KEYGEN="/home/linuxbrew/.linuxbrew/bin/${command}"
-    elif [[ -x "/opt/homebrew/bin/${command}" ]]; then
-      S64_OPENSSH_PATH_SSH_KEYGEN="/opt/homebrew/bin/${command}"
-    elif [[ -x "/usr/local/bin/${command}" ]]; then
-      S64_OPENSSH_PATH_SSH_KEYGEN="/usr/local/bin/${command}"
-    elif [[ -x "/usr/bin/${command}" ]]; then
-      S64_OPENSSH_PATH_SSH_KEYGEN="/usr/bin/${command}"
-    else
-      bl64_check_alert_resource_not_found 'ssh-keygen'
-      return $?
-    fi
+    S64_OPENSSH_PATH_SSH_KEYGEN="$(bl64_bsh_command_locate 'ssh-keygen')"
   else
     bl64_check_command "$S64_OPENSSH_PATH_SSH_KEYGEN" ||
       return $?
