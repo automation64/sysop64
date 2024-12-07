@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# template: 1.0.0
-# template-import: 1.0.0
+# template-one: 2.0.0
 #######################################
 # Restic / Backup / Restore
 #
-# Version: 2.0.0
+# Version: 2.0.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -28,12 +27,9 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/restic-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
-# shellcheck source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/restic/restic-lib" || { echo "Error: unable to load module library" && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
 # Functions
@@ -42,35 +38,33 @@ source "${S64_CORE_PATH_ROOT}/restic/restic-lib" || { echo "Error: unable to loa
 function initialize() {
   bl64_dbg_app_show_function
   s64_restic_lib_setup &&
-    bl64_check_parameter 'backup_tag' &&
-    bl64_check_parameter 'destination'
+    bl64_check_parameter 'BACKUP_TAG' &&
+    bl64_check_parameter 'DESTINATION'
 }
 
 #
 # Main
 #
 
-declare command='restore'
-declare backup_tag="${1:-}"
-declare destination="${2:-}"
-declare backup_id="${3:-latest}"
-declare backup_host="${4:-}"
+declare BACKUP_TAG="${1:-}"
+declare DESTINATION="${2:-}"
+declare BACKUP_ID="${3:-latest}"
+declare BACKUP_HOST="${4:-}"
 
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-
-bl64_msg_show_batch_start "$command"
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_show_info "
-Backup Tag : ${backup_tag}
-Backup ID  : ${backup_id}
-Backup Host: ${backup_host}
-Destination: ${destination}"
+Backup Tag : ${BACKUP_TAG}
+Backup ID  : ${BACKUP_ID}
+Backup Host: ${BACKUP_HOST}
+Destination: ${DESTINATION}"
 
-bl64_ui_ask_confirmation 'Warning: destination content will be replaced using absolute paths from backup' &&
+bl64_ui_ask_confirmation 'Warning: DESTINATION content will be replaced using absolute paths from backup' &&
   s64_restic_lib_run_restic \
     --verbose \
-    --target "$destination" \
-    --tag "$backup_tag" \
-    ${backup_host:+--host "$backup_host"} \
+    --target "$DESTINATION" \
+    --tag "$BACKUP_TAG" \
+    ${BACKUP_HOST:+--host "$BACKUP_HOST"} \
     restore \
-    "$backup_id"
-bl64_msg_show_batch_finish $? "$command"
+    "$BACKUP_ID"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
