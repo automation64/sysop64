@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # template-one: 2.0.0
 #######################################
-# Linux / FS / Create / XFS
+# Linux / FS / CIFS / Mount
 #
 # Version: 1.0.1
 #
@@ -38,7 +38,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 function initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
-    bl64_check_parameter 'DEVICE_PATH' &&
+    bl64_check_parameter 'CIFS_SERVER_IP' &&
+    bl64_check_parameter 'CIFS_SHARE_NAME' &&
+    bl64_check_parameter 'MOUNT_PATH'
     s64_linux_lib_setup
 }
 
@@ -46,12 +48,17 @@ function initialize() {
 # Main
 #
 
-declare DEVICE_PATH="${1:-}"
+declare CIFS_SERVER_IP="${1:-}"
+declare CIFS_SHARE_NAME="${2:-}"
+declare MOUNT_PATH="${3:-}"
+declare CIFS_USER="${4:-guest}"
+declare CIFS_OPTIONS='nosetuids,cache=strict,mapchars'
 
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_ui_ask_confirmation "Warning: destination content will be destroyed (${DEVICE_PATH})" &&
-  s64_linux_lib_run_mkfs \
-    --type xfs \
-    "$DEVICE_PATH"
+s64_linux_lib_run_mount \
+  --type cifs \
+  --options "${CIFS_OPTIONS},username=${CIFS_USER}" \
+  "//${CIFS_SERVER_IP}/${CIFS_SHARE_NAME}" \
+  "$MOUNT_PATH"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
