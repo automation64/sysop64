@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.17.0]
+
+### Added
+
+- RSync
+  - rsync-copy-dir-cifs
+
+### Changed
+
+- RSync
+  - rsync-clone-dir-send-root -> rsync-clone-dir-local
+  - rsync-clone-dir-send-user -> rsync-copy-dir-local
+
+### Removed
+
+- RSync
+  - rsync-clone-dir-list-delta
+
 ## [0.16.0]
 
 ### Added
