@@ -3,7 +3,7 @@
 #######################################
 # Linux / FS / CIFS / Mount
 #
-# Version: 1.0.1
+# Version: 1.0.2
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -40,7 +40,8 @@ function initialize() {
   bl64_check_privilege_root &&
     bl64_check_parameter 'CIFS_SERVER_IP' &&
     bl64_check_parameter 'CIFS_SHARE_NAME' &&
-    bl64_check_parameter 'MOUNT_PATH'
+    bl64_check_parameter 'MOUNT_PATH' &&
+    bl64_check_directory "$MOUNT_PATH" &&
     s64_linux_lib_setup
 }
 
