@@ -58,6 +58,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" ||
 #
 
 function s64_aws_lib_setup() {
+  bl64_dbg_app_show_function
   bl64_xsv_setup &&
     bl64_aws_setup &&
     s64_aws_lib_access_check
