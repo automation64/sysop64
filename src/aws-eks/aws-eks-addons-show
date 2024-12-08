@@ -3,7 +3,7 @@
 #######################################
 # AWS / EKS / AddOns / Show
 #
-# Version: 1.1.0
+# Version: 1.1.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -43,7 +43,7 @@ function aws_eks_addons_list() {
     list-addons \
     $BL64_AWS_SET_FORMAT_JSON \
     --cluster-name "$cluster_name" |
-    "$S64_CORE_PATH_JQ" \
+    bl64_xsv_run_jq \
       -r '.addons[]'
 }
 
@@ -63,7 +63,6 @@ function aws_eks_addons_show() {
 function initialize() {
   bl64_dbg_app_show_function
   bl64_check_parameter 'CLUSTER_NAME' &&
-    bl64_check_command_search_path "$S64_CORE_PATH_JQ" &&
     s64_aws_lib_setup
 }
 

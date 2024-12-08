@@ -3,7 +3,7 @@
 #######################################
 # AWS / Lib
 #
-# Version: 2.0.0
+# Version: 2.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -26,7 +26,8 @@
 #
 
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" ||
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
@@ -57,7 +58,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 #
 
 function s64_aws_lib_setup() {
-  bl64_aws_setup &&
+  bl64_dbg_app_show_function
+  bl64_xsv_setup &&
+    bl64_aws_setup &&
     s64_aws_lib_access_check
 }
 

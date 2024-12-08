@@ -3,7 +3,7 @@
 #######################################
 # Core / Lib
 #
-# Version: 1.2.0
+# Version: 2.0.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -27,16 +27,26 @@
 
 # shellcheck disable=SC2034
 {
-    # Default SysOp64 install path
-    declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
-    # Default BL64 install path
-    declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-/opt/bl64}"
+  # Default SysOp64 install path
+  declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 
-    # Default debut level
-    declare S64_CORE_SET_DEBUG="${S64_CORE_SET_DEBUG:-NONE}"
-    # Default verbose level
-    declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
+  # Default BL64 install path
+  declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-/opt/bl64}"
 
-    # Default JQuery tool path
-    declare S64_CORE_PATH_JQ="${S64_CORE_PATH_JQ:-/usr/bin/jq}"
+  # Default log repository
+  declare S64_CORE_PATH_LOGS="${S64_CORE_PATH_LOGS:-${HOME}/logs-sysop64}"
+
+  # Default debut level
+  declare S64_CORE_SET_DEBUG="${S64_CORE_SET_DEBUG:-NONE}"
+
+  # Default verbose level
+  declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
+}
+
+#
+# Functions
+#
+
+function s64_core_lib_setup_logging() {
+  :
 }
