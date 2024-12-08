@@ -27,14 +27,26 @@
 
 # shellcheck disable=SC2034
 {
-    # Default SysOp64 install path
-    declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
-    # Default BL64 install path
-    declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-/opt/bl64}"
+  # Default SysOp64 install path
+  declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 
-    # Default debut level
-    declare S64_CORE_SET_DEBUG="${S64_CORE_SET_DEBUG:-NONE}"
+  # Default BL64 install path
+  declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-/opt/bl64}"
 
-    # Default verbose level
-    declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
+  # Default log repository
+  declare S64_CORE_PATH_LOGS="${S64_CORE_PATH_LOGS:-${HOME}/logs-sysop64}"
+
+  # Default debut level
+  declare S64_CORE_SET_DEBUG="${S64_CORE_SET_DEBUG:-NONE}"
+
+  # Default verbose level
+  declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
+}
+
+#
+# Functions
+#
+
+function s64_core_lib_setup_logging() {
+  :
 }
