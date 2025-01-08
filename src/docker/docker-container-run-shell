@@ -49,6 +49,7 @@ function initialize() {
 
 declare CONTAINER_IMAGE="${1:-alpine:latest}"
 declare ENTRY_POINT="${2:-sh}"
+shift; shift
 
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
@@ -58,5 +59,6 @@ bl64_cnt_run_docker \
   --tty \
   --interactive \
   --entrypoint="$ENTRY_POINT" \
-  "$CONTAINER_IMAGE"
+  "$CONTAINER_IMAGE" \
+  "$@"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
