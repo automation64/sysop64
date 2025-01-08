@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # template-one: 2.0.0
 #######################################
-# Docker / System / Prune
+# Docker / Container / Run / Shell
 #
-# Version: 1.1.1
+# Version: 1.1.0
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -45,9 +45,16 @@ function initialize() {
 # Main
 #
 
+declare M_IMAGE_NAME="${1:-alpine:latest}"
+declare M_ENTRYPOINT="${2:-sh}"
+
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_cnt_run_docker \
-  system \
-  prune
+  run \
+  --rm \
+  --tty \
+  --interactive \
+  --entrypoint="$M_ENTRYPOINT" \
+  "$M_IMAGE_NAME"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
