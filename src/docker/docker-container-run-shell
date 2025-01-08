@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# template-one: 2.0.0
+#   template-one-base: 1.0.0
+#   template-import: 2.0.0
+#######################################
+# Docker / Container / Run / Shell
+#
+# Version: 1.0.0
+#
+#######################################
+# Copyright [2024] [serdigital64@gmail.com]
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+# shellcheck source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/docker-lib" || { echo "Error: unable to load module library" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+
+#
+# Functions
+#
+
+function initialize() {
+  bl64_dbg_app_show_function
+  s64_docker_lib_setup &&
+    bl64_cnt_check_not_in_container
+}
+
+#
+# Main
+#
+
+declare CONTAINER_IMAGE="${1:-alpine:latest}"
+declare ENTRY_POINT="${2:-sh}"
+
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+bl64_cnt_run_docker \
+  run \
+  --rm \
+  --tty \
+  --interactive \
+  --entrypoint="$ENTRY_POINT" \
+  "$CONTAINER_IMAGE"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
