@@ -4,7 +4,7 @@
 #######################################
 # Linux / Distro / Upgrade
 #
-# Version: 1.1.0
+# Version: 1.1.1
 #
 #######################################
 # Copyright [2024] [serdigital64@gmail.com]
@@ -120,12 +120,12 @@ function initialize() {
 
   bl64_check_privilege_root &&
     bl64_os_check_compatibility \
-      "${BL64_OS_UB}-23" \
-      "${BL64_OS_FD}-39" &&
+      "${BL64_OS_UB}-22" "${BL64_OS_UB}-23" "${BL64_OS_UB}-24" \
+      "${BL64_OS_FD}-39" "${BL64_OS_FD}-40" "${BL64_OS_FD}-41" &&
     s64_linux_lib_setup ||
     return $?
 
-  if [[ "$BL64_SCRIPT_ID" == 'upgrade' ]]; then
+  if [[ "$COMMAND" == 'upgrade' ]]; then
     case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*)
       _S64_LINUX_DISTRO_DO_RELEASE_UPGRADE='/bin/do-release-upgrade'
