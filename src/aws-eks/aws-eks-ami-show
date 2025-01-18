@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 2.0.0
-#######################################
-# AWS EKS / AMI / Show
-#
-# Version: 1.1.0
-#
+# template-task: 3.0.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -56,32 +51,27 @@ function initialize() {
   s64_aws_lib_setup
 }
 
-function help() {
-  bl64_msg_show_usage \
-    '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]' \
-    'AWS EKS / AMI / Info' \
-    '
-    -l         : Show recommended AMI for EKS version
-    ' '
-    -h         : Show help
-    ' '
-    -a Family  : AMI Family. Format: AL2|AL2023
-    -r Version : K8S version for the AMI. Format: X.Y
-    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
-    '
-}
-
 #
 # Main
 #
 
-declare COMMAND="$BL64_VAR_NULL"
+declare COMMAND='show_recommended'
 declare OPTION=''
 declare AMI_FAMILY='AL2023'
 declare K8S_VERSION='1.29'
 
-(($# == 0)) && help && exit 1
+bl64_lib_script_version_set '2.0.0'
+bl64_msg_help_usage_set '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'AWS EKS / AMI / Info'
+# shellcheck disable=SC2016
+bl64_msg_help_parameters_set \
+'-l         : Show recommended AMI for EKS version
+-h         : Show help
+-a Family  : AMI Family. Format: AL2|AL2023
+-r Version : K8S version for the AMI. Format: X.Y
+-V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+-D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
+
 while getopts ':la:r:V:D:h' OPTION; do
   case "$OPTION" in
   l) COMMAND='show_recommended' ;;
@@ -89,8 +79,8 @@ while getopts ':la:r:V:D:h' OPTION; do
   r) K8S_VERSION="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) help && exit 0 ;;
-  *) help && exit 1 ;;
+  h) bl64_msg_help_show && exit 0 ;;
+  *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?

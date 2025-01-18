@@ -18,7 +18,11 @@
 #
 
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
   { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #

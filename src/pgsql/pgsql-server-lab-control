@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 2.0.0
-#######################################
-# PGSQL / Server / Lab / Control
-#
-# Version: 1.0.2
-#
+# template-task: 3.0.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -68,21 +63,6 @@ function initialize() {
     bl64_cnt_setup
 }
 
-function help() {
-  bl64_msg_show_usage \
-    '-s|-o [-V Verbose] [-D Debug] [-h]' \
-    'PGSQL / Server / Lab / Control' \
-    '
-    -s         : Start container and detach
-    -o         : Stop detached container
-    ' '
-    -h         : Show help
-    ' '
-    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
-    '
-}
-
 #
 # Main
 #
@@ -90,15 +70,26 @@ function help() {
 declare COMMAND="$BL64_VAR_NULL"
 declare OPTION=''
 
-(($# == 0)) && help && exit 1
+bl64_lib_script_version_set '2.0.0'
+bl64_msg_help_usage_set '-s|-o [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'PGSQL / Server / Lab / Control'
+# shellcheck disable=SC2016
+bl64_msg_help_parameters_set \
+'-s         : Start container and detach
+-o         : Stop detached container
+-h         : Show help
+-V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+-D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
+
+(($# == 0)) && bl64_msg_help_show && exit 1
 while getopts ':soV:D:h' OPTION; do
   case "$OPTION" in
   s) COMMAND='start' ;;
   o) COMMAND='stop' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) help && exit 0 ;;
-  *) help && exit 1 ;;
+  h) bl64_msg_help_show && exit 0 ;;
+  *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?

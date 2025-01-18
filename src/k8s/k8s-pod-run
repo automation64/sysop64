@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 2.0.0
-#######################################
-# K8S / Pod / Run
-#
-# Version: 2.0.0
-#
+# template-task: 3.0.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -59,23 +54,6 @@ function initialize() {
   s64_k8s_lib_setup
 }
 
-function help() {
-  bl64_msg_show_usage \
-    '[-s] [-i Image] [-e EntryPoint] [-n NameSpace] [-V Verbose] [-D Debug] [-h]' \
-    'K8S / Pod / Run' \
-    '
-    -s           : Run interactive shell (Default)
-    ' '
-    -h           : Show help
-    ' '
-    -i Image     : Full image path for the container. Default: alpine
-    -e EntryPoint: Command to run in the container. Default: sh
-    -n NameSpace : K8S namespace where the pod will run. Default: default
-    -V Verbose   : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug     : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
-    '
-}
-
 #
 # Main
 #
@@ -86,6 +64,20 @@ declare K8S_NAMESPACE='default'
 declare CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
 declare CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
 
+bl64_lib_script_version_set '3.0.0'
+bl64_msg_help_usage_set '[-s] [-i Image] [-e EntryPoint] [-n NameSpace] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'K8S / Pod / Run'
+# shellcheck disable=SC2016
+bl64_msg_help_parameters_set \
+'-s           : Run interactive shell (Default)
+-h           : Show help
+-i Image     : Full image path for the container. Default: alpine
+-e EntryPoint: Command to run in the container. Default: sh
+-n NameSpace : K8S namespace where the pod will run. Default: default
+-V Verbose   : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+-D Debug     : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
+'
+
 while getopts ':si:n:e:V:D:h' OPTION; do
   case "$OPTION" in
   s) COMMAND='shell_run' ;;
@@ -94,8 +86,8 @@ while getopts ':si:n:e:V:D:h' OPTION; do
   e) CONTAINER_ENTRYPOINT="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) help && exit 0 ;;
-  *) help && exit 1 ;;
+  h) bl64_msg_help_show && exit 0 ;;
+  *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
