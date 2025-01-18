@@ -22,7 +22,11 @@
 #
 
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
   { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
@@ -33,6 +37,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 {
   declare S64_X_MODULE_CAPS_X_VERSION='1.0.0'
   declare S64_X_MODULE_CAPS_X_PATH_CLI="${S64_X_MODULE_CAPS_X_PATH_CLI:-}"
+  # X_GLOBALS_PLACEHOLDER_X
 }
 
 #
@@ -48,7 +53,7 @@ function s64_X_MODULE_X_lib_setup() {
   fi
 }
 
-function s64_X_MODULE_X_lib_run_X_MODULE_CLI_NAME_X() {
+function s64_X_MODULE_X_lib_run_X_CLI_COMMAND_X() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
   bl64_msg_app_verbose_enabled || verbose_flag=' '
@@ -59,3 +64,5 @@ function s64_X_MODULE_X_lib_run_X_MODULE_CLI_NAME_X() {
     "$@"
   bl64_dbg_app_trace_stop
 }
+
+# X_FUNCTIONS_PLACEHOLDER_X
