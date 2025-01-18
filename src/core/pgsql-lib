@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# template-module-lib: 2.0.0
-#######################################
-# PGSQL / Lib
-#
-# Version: 2.0.0
-#
+# template-module-lib: 2.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -38,6 +33,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
+  declare S64_PGSQL_VERSION='2.0.0'
   declare S64_PGSQL_SERVER_LAB_NAME="${S64_PGSQL_SERVER_LAB_NAME:-pgsql-lab}"
   declare S64_PGSQL_SERVER_LAB_PASSWORD="${S64_PGSQL_SERVER_LAB_PASSWORD:-Random-Password.${RANDOM}}"
   declare S64_PGSQL_PATH_CLI="${S64_PGSQL_PATH_CLI:-}"

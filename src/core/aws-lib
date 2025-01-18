@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# template-module-lib: 2.0.0
-#######################################
-# AWS / Lib
-#
-# Version: 2.1.0
-#
+# template-module-lib: 2.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -37,6 +32,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" ||
 
 # shellcheck disable=SC2034
 {
+  declare S64_AWS_VERSION='2.1.0'
+
   # Access mode credentials
   declare S64_AWS_ACCESS_KEY_ID="${S64_AWS_ACCESS_KEY_ID:-}"
   declare S64_AWS_ACCESS_KEY_SECRET="${S64_AWS_ACCESS_KEY_SECRET:-}"

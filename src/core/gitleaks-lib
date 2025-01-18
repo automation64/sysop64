@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 # template-module-lib: 2.2.0
-#   template-module-base: 2.2.0
-#   template-module-setup: 2.0.0
-#   template-module-cli: 1.1.0
-#   template-module-vars: 1.0.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #

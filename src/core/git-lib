@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# template-module-lib: 2.0.0
-#######################################
-# GIT / Lib
-#
-# Version: 2.0.0
-#
+# template-module-lib: 2.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -33,6 +28,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
   { echo 'Error: unable to load bashlib64' && exit 1; }
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_GIT_VERSION='2.0.0'
+}
 
 #
 # Functions
