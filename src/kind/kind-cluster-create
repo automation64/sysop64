@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 2.0.0
-#######################################
-# Kind / Cluster / Create
-#
-# Version: 2.0.0
-#
+# template-one: 3.0.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -18,29 +13,18 @@
 # limitations under the License.
 #######################################
 
-#
-# Imports
-#
-
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/kind-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-#
-# Functions
-#
-
 function initialize() {
   bl64_dbg_app_show_function
   s64_kind_lib_setup
 }
 
-#
-# Main
-#
-
+bl64_lib_script_version_set '2.0.0'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_kind_lib_run_kind \
