@@ -1,21 +1,12 @@
 #!/usr/bin/env bash
-# template-task: 2.0.0
-#   template-task-base: 1.1.0
-#   template-import: 2.0.0
+# template-task: 3.0.0
+#   template-task-base: 2.0.0
 #######################################
-# X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X
-#
-# Version: 1.0.0
-#
-#######################################
-# Copyright [2024] [serdigital64@gmail.com]
+# Copyright SerDigital64 - https://github.com/serdigital64
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,27 +41,9 @@ function X_COMMAND_X() {
 
 function initialize() {
   bl64_dbg_app_show_function
-
-  bl64_check_parameter 'COMMAND' ||
-    { help && return 1; }
-
-  # optional # s64_X_MODULE_X_lib_setup || return $?
+  bl64_check_parameter 'COMMAND' || { help && return 1; }
+  s64_X_MODULE_X_lib_setup
   # X_INIT_PLACEHOLDER_X
-  return 0
-}
-
-function help() {
-  bl64_msg_show_usage \
-    '-x [-V Verbose] [-D Debug] [-h]' \
-    'X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X' \
-    '
-    -x         : X_COMMAND_INFO_X
-    ' '
-    -h         : Show help
-    ' '
-    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
-    '
 }
 
 #
@@ -80,14 +53,23 @@ function help() {
 declare COMMAND="$BL64_VAR_NULL"
 declare OPTION=''
 
-(($# == 0)) && help && exit 1
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_usage_set 'X_HELP_CLI_X [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'X_HELP_ABOUT_X'
+# shellcheck disable=SC2016
+bl64_msg_help_parameters_set \
+  'X_HELP_PARAMETERS_X
+-V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+-D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
+
+(($# == 0)) && bl64_msg_help_show && exit 1
 while getopts ':xV:D:h' OPTION; do
   case "$OPTION" in
   x) COMMAND='X_COMMAND_X' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) help && exit 0 ;;
-  *) help && exit 1 ;;
+  h) bl64_msg_help_show && exit 0 ;;
+  *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?

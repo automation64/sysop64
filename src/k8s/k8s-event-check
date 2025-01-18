@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
-# template-task: 2.0.0
+# template-task: 3.0.0
 #######################################
-# K8S / Event / Check
-#
-# Version: 2.1.0
-#
-#######################################
-# Copyright [2024] [serdigital64@gmail.com]
+# Copyright SerDigital64 - https://github.com/serdigital64
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,24 +66,6 @@ function initialize() {
   s64_k8s_lib_setup
 }
 
-function help() {
-
-  bl64_msg_show_usage \
-    '-a|-p [-n Namespace] [-j] [-V Verbose] [-D Debug] [-h]' \
-    'K8S / Event / Check' \
-    '
-    -a         : Check all events
-    -p         : Check pod events
-    ' '
-    -h         : Show help
-    -j         : Expand events using JSON format
-    ' '
-    -n Namespace: Kubernetes namespace. Default: all
-    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
-    '
-}
-
 #
 # Main
 #
@@ -101,6 +75,19 @@ declare OPTION=''
 declare DETAIL_FORMAT="$BL64_VAR_DEFAULT"
 declare K8S_NAMESPACE="$BL64_VAR_DEFAULT"
 
+bl64_lib_script_version_set '3.0.0'
+bl64_msg_help_usage_set '-a|-p [-n Namespace] [-j] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'K8S / Event / Check'
+# shellcheck disable=SC2016
+bl64_msg_help_parameters_set \
+'-a         : Check all events
+-p         : Check pod events
+-h         : Show help
+-j         : Expand events using JSON format
+-n Namespace: Kubernetes namespace. Default: all
+-V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+-D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
+
 while getopts ':apjn:V:D:h' OPTION; do
   case "$OPTION" in
   a) COMMAND='all_check' ;;
@@ -109,8 +96,8 @@ while getopts ':apjn:V:D:h' OPTION; do
   j) DETAIL_FORMAT='json' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) help && exit 0 ;;
-  *) help && exit 1 ;;
+  h) bl64_msg_help_show && exit 0 ;;
+  *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?

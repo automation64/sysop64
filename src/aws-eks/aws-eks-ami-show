@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
-# template-task: 2.0.0
+# template-task: 3.0.0
 #######################################
-# AWS EKS / AMI / Show
-#
-# Version: 1.1.0
-#
-#######################################
-# Copyright [2024] [serdigital64@gmail.com]
+# Copyright SerDigital64 - https://github.com/serdigital64
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,37 +47,31 @@ function show_recommended() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'COMMAND' ||
-    { help && return 1; }
+  bl64_check_parameter 'COMMAND' || { help && return 1; }
   s64_aws_lib_setup
-}
-
-function help() {
-  bl64_msg_show_usage \
-    '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]' \
-    'AWS EKS / AMI / Info' \
-    '
-    -l         : Show recommended AMI for EKS version
-    ' '
-    -h         : Show help
-    ' '
-    -a Family  : AMI Family. Format: AL2|AL2023
-    -r Version : K8S version for the AMI. Format: X.Y
-    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
-    '
 }
 
 #
 # Main
 #
 
-declare COMMAND="$BL64_VAR_NULL"
+declare COMMAND='show_recommended'
 declare OPTION=''
 declare AMI_FAMILY='AL2023'
 declare K8S_VERSION='1.29'
 
-(($# == 0)) && help && exit 1
+bl64_lib_script_version_set '2.0.0'
+bl64_msg_help_usage_set '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'AWS EKS / AMI / Info'
+# shellcheck disable=SC2016
+bl64_msg_help_parameters_set \
+'-l         : Show recommended AMI for EKS version
+-h         : Show help
+-a Family  : AMI Family. Format: AL2|AL2023
+-r Version : K8S version for the AMI. Format: X.Y
+-V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+-D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
+
 while getopts ':la:r:V:D:h' OPTION; do
   case "$OPTION" in
   l) COMMAND='show_recommended' ;;
@@ -93,8 +79,8 @@ while getopts ':la:r:V:D:h' OPTION; do
   r) K8S_VERSION="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) help && exit 0 ;;
-  *) help && exit 1 ;;
+  h) bl64_msg_help_show && exit 0 ;;
+  *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
