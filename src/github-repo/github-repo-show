@@ -44,8 +44,7 @@ function show() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'COMMAND' ||
-    { help && return 1; }
+  bl64_check_parameter 'COMMAND' || { help && return 1; }
 
   bl64_check_parameter 'REPO_OWNER' &&
     bl64_check_parameter 'REPO_NAME' &&

@@ -72,8 +72,7 @@ function show_active() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'COMMAND' ||
-    { help && return 1; }
+  bl64_check_parameter 'COMMAND' || { help && return 1; }
 
   s64_psql_lib_setup &&
     bl64_check_export 'S64_PGSQL_SERVER_PASSWORD' ||

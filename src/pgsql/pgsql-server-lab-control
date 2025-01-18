@@ -62,8 +62,7 @@ function stop() {
 function initialize() {
   bl64_dbg_app_show_function
 
-  bl64_check_parameter 'COMMAND' ||
-    { help && return 1; }
+  bl64_check_parameter 'COMMAND' || { help && return 1; }
 
   bl64_cnt_check_not_in_container &&
     bl64_cnt_setup

@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 2.0.0
-# template-import: 1.0.0
-#######################################
-# Linux / Distro / Upgrade
-#
-# Version: 1.1.1
-#
+# template-task: 3.0.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -112,8 +106,7 @@ function upgrade() {
 function initialize() {
   bl64_dbg_app_show_function
 
-  bl64_check_parameter 'COMMAND' ||
-    { help && return 1; }
+  bl64_check_parameter 'COMMAND' || { help && return 1; }
 
   bl64_check_privilege_root &&
     bl64_os_check_compatibility \
@@ -133,22 +126,6 @@ function initialize() {
   fi
 }
 
-function help() {
-  bl64_msg_show_usage \
-    '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]' \
-    'Linux / Distro / Upgrade' \
-    '
-    -p         : Prepare for Distro upgrade
-    -u         : Perform for Distro upgrade
-    ' '
-    -h         : Show help
-    ' '
-    -r Release : Target release
-    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
-    '
-}
-
 #
 # Main
 #
@@ -157,7 +134,19 @@ declare COMMAND="$BL64_VAR_NULL"
 declare OPTION=''
 declare RELEASE="$BL64_VAR_NULL"
 
-(($# == 0)) && help && exit 1
+bl64_lib_script_version_set '1.0.2'
+bl64_msg_help_usage_set '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'Linux / Distro / Upgrade'
+# shellcheck disable=SC2016
+bl64_msg_help_parameters_set \
+'-p         : Prepare for Distro upgrade
+-u         : Perform for Distro upgrade
+-h         : Show help
+-r Release : Target release
+-V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+-D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
+
+(($# == 0)) && bl64_msg_help_show && exit 1
 while getopts ':pur:V:D:h' OPTION; do
   case "$OPTION" in
   p) COMMAND='prepare' ;;
@@ -165,12 +154,11 @@ while getopts ':pur:V:D:h' OPTION; do
   r) RELEASE="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) help && exit 0 ;;
-  *) help && exit 1 ;;
+  h) bl64_msg_help_show && exit 0 ;;
+  *) bl64_msg_help_show && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" || exit $?
-initialize "$BL64_SCRIPT_ID" || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
 "${COMMAND}" "$RELEASE"

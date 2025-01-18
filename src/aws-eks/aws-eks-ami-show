@@ -52,8 +52,7 @@ function show_recommended() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'COMMAND' ||
-    { help && return 1; }
+  bl64_check_parameter 'COMMAND' || { help && return 1; }
   s64_aws_lib_setup
 }
 
