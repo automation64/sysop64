@@ -46,20 +46,6 @@ function initialize() {
   # X_INIT_PLACEHOLDER_X
 }
 
-function help() {
-  bl64_msg_show_usage \
-    '-x [-V Verbose] [-D Debug] [-h]' \
-    'X_MODULE_NAME_X / [X_SUBMODULE_NAME_X /] X_APP_NAME_X' \
-    '
-    -x         : X_COMMAND_INFO_X
-    ' '
-    -h         : Show help
-    ' '
-    -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
-    -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
-    '
-}
-
 #
 # Main
 #
@@ -67,14 +53,23 @@ function help() {
 declare COMMAND="$BL64_VAR_NULL"
 declare OPTION=''
 
-(($# == 0)) && help && exit 1
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_usage_set 'X_HELP_CLI_X [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'X_HELP_ABOUT_X'
+# shellcheck disable=SC2016
+bl64_msg_help_parameters_set \
+  'X_HELP_PARAMETERS_X
+-V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+-D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
+
+(($# == 0)) && bl64_msg_help_show && exit 1
 while getopts ':xV:D:h' OPTION; do
   case "$OPTION" in
   x) COMMAND='X_COMMAND_X' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) help && exit 0 ;;
-  *) help && exit 1 ;;
+  h) bl64_msg_help_show && exit 0 ;;
+  *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
