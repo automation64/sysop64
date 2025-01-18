@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - GitLeaks
 - Git
   - git-commit-undo-last
+  - git-repo-backup-create
+  - git-repo-optimize
+  - git-config-show
 
 ### Fixed
 
