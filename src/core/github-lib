@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_GITHUB_VERSION='2.0.0'
+  declare S64_GITHUB_VERSION='2.0.1'
   declare S64_GITHUB_PATH_CLI="${S64_GITHUB_PATH_CLI:-}"
 
   export GH_VERBOSE
@@ -59,7 +59,7 @@ function s64_github_lib_reset() {
 function s64_github_lib_run_gh() {
   bl64_dbg_app_show_function "$@"
   s64_github_lib_reset
-  bl64_msg_app_verbose_enabled && GH_VERBOSE='1'
+  bl64_msg_app_verbose_is_enabled && GH_VERBOSE='1'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_GITHUB_PATH_CLI" \
