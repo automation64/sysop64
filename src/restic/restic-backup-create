@@ -25,20 +25,19 @@ function initialize() {
     bl64_check_parameter 'BACKUP_TAG' &&
     bl64_check_parameter 'BACKUP_SOURCE' &&
     bl64_check_path_absolute "$BACKUP_SOURCE" &&
-    bl64_check_path "$BACKUP_SOURCE"
+    bl64_check_path "$BACKUP_SOURCE" &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'S64_RESTIC_PATH_REPOSITORY' \
+      'BACKUP_SOURCE' \
+      'BACKUP_TAG'
 }
 
 declare BACKUP_TAG="${1:-}"
 declare BACKUP_SOURCE="${2:-}"
 
-bl64_lib_script_version_set '1.0.2'
+bl64_lib_script_version_set '1.0.3'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-  'S64_RESTIC_PATH_REPOSITORY' \
-  'BACKUP_SOURCE' \
-  'BACKUP_TAG'
-
 bl64_msg_show_task 'create backup'
 s64_restic_lib_run_restic \
   --tag "$BACKUP_TAG" \

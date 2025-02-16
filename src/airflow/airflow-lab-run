@@ -21,24 +21,24 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 
 function initialize() {
   bl64_dbg_app_show_function
-  s64_airflow_lib_setup
+  s64_airflow_lib_setup &&
+    bl64_msg_show_setup 'Run AirFlow Standalone container for local lab testing' \
+      'MAIN_HOST_PORT' \
+      'MAIN_CONTAINER_VERSION'
 }
 
 declare MAIN_HOST_PORT="${1:-8080}"
 declare MAIN_CONTAINER_VERSION="${2:-latest}"
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-bl64_msg_show_setup 'Run AirFlow Standalone container for local lab testing' \
-  'MAIN_HOST_PORT' \
-  'MAIN_CONTAINER_VERSION'
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_cnt_run_docker \
   run \
   --rm \
   --tty \
   --interactive \
-  --publish 8080:8080 \
-  apache/airflow:latest \
+  --publish "$MAIN_HOST_PORT":"$MAIN_HOST_PORT" \
+  "apache/airflow:${MAIN_CONTAINER_VERSION}" \
   standalone
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

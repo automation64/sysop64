@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.0.0
+# template-one: 3.0.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -26,7 +26,13 @@ function initialize() {
     bl64_check_parameter 'CIFS_SHARE_NAME' &&
     bl64_check_parameter 'MOUNT_PATH' &&
     bl64_check_directory "$MOUNT_PATH" &&
-    s64_linux_lib_setup
+    s64_linux_lib_setup &&
+    bl64_msg_show_setup 'Mount CIFS share' \
+      'CIFS_SERVER_IP' \
+      'CIFS_SHARE_NAME' \
+      'MOUNT_PATH' \
+      'CIFS_USER' \
+      'CIFS_OPTIONS'
 }
 
 declare CIFS_SERVER_IP="${1:-}"

@@ -24,19 +24,19 @@ function initialize() {
   s64_git_lib_setup &&
     bl64_check_parameter 'REPOSITORY_PATH' &&
     bl64_check_parameter 'BACKUP_NAME' &&
-    bl64_check_parameter 'BACKUP_DESTINATION'
+    bl64_check_parameter 'BACKUP_DESTINATION' &&
+    bl64_msg_show_setup 'create repository backup for:' \
+      'REPOSITORY_PATH' \
+      'BACKUP_NAME' \
+      'BACKUP_DESTINATION'
 }
 
 declare REPOSITORY_PATH="${1:-}"
 declare BACKUP_NAME="${2:-}"
 declare BACKUP_DESTINATION="${3:-}"
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-bl64_msg_show_setup 'create repository backup for:' \
-  'REPOSITORY_PATH' \
-  'BACKUP_NAME' \
-  'BACKUP_DESTINATION'
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 cd "$REPOSITORY_PATH" &&
   bl64_vcs_run_git \

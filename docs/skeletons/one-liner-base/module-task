@@ -24,11 +24,11 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 
 # X_FUNCTIONS_PLACEHOLDER_X
 
+# X_INITIALIZE_PLACEHOLDER_X
+
 # X_MAIN_PLACEHOLDER_X
 bl64_lib_script_version_set '1.0.0'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-bl64_msg_show_setup 'X_SETUP_TITLE_X' \
-  X_SETUP_VARIABLE_X
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 # X_COMMAND_PLACEHOLDER_X
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
