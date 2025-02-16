@@ -40,14 +40,14 @@ function network_destroy() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  s64_kind_lib_setup
+  s64_kind_lib_setup &&
+    bl64_ui_ask_confirmation \
+      'Do you want to completely destroy the cluster?. Confirm by typing:' 'YES'
 }
 
-bl64_lib_script_version_set '2.0.0'
+bl64_lib_script_version_set '2.0.1'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_ui_ask_confirmation \
-  'Do you want to completely destroy the cluster?. Confirm by typing:' 'YES' &&
-  cluster_destroy &&
+cluster_destroy &&
   network_destroy
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
