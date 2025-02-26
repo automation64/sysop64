@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.0.0
+# template-one: 3.0.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -13,7 +13,9 @@
 # limitations under the License.
 #######################################
 
-declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_AT64="${HOME}/at64"
+[[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/pgsql-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
@@ -26,21 +28,19 @@ function initialize() {
   bl64_dbg_app_show_function
   s64_psql_lib_setup &&
     bl64_check_export 'S64_PGSQL_SERVER_PASSWORD' &&
-    bl64_check_parameter 'TABLE_NAME' ||
-    return $?
-  PGPASSWORD="$S64_PGSQL_SERVER_PASSWORD"
+    bl64_check_parameter 'TABLE_NAME' &&
+    PGPASSWORD="$S64_PGSQL_SERVER_PASSWORD" &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'S64_PGSQL_SERVER_HOST' \
+      'S64_PGSQL_SERVER_PORT' \
+      'S64_PGSQL_SERVER_USER' \
+      'S64_PGSQL_DB_NAME'
 }
 
 declare TABLE_NAME="${1:-}"
 
-bl64_lib_script_version_set '2.0.0'
+bl64_lib_script_version_set '2.0.1'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-  'S64_PGSQL_SERVER_HOST' \
-  'S64_PGSQL_SERVER_PORT' \
-  'S64_PGSQL_SERVER_USER' \
-  'S64_PGSQL_DB_NAME'
-
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_psql_lib_run_psql \
   --host="$S64_PGSQL_SERVER_HOST" \

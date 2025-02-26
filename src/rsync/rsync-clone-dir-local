@@ -13,7 +13,9 @@
 # limitations under the License.
 #######################################
 
-declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_AT64="${HOME}/at64"
+[[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/rsync-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
@@ -25,27 +27,31 @@ function initialize() {
     bl64_check_parameter 'RSYNC_CLONE_FROM' &&
     bl64_check_parameter 'RSYNC_CLONE_TO' &&
     bl64_check_directory "$RSYNC_CLONE_FROM" &&
-    s64_rsync_lib_setup
+    s64_rsync_lib_setup &&
+    bl64_msg_show_setup 'Clone (delete destination differences) files between Linux paths. Operation is privileged, source file ownership is kept.' \
+      'S64_RSYNC_OPTIONS_COMMON' \
+      'S64_RSYNC_OPTIONS_LOCAL' \
+      'RSYNC_CLONE_FROM' \
+      'RSYNC_CLONE_TO' &&
+    bl64_ui_ask_confirmation "Warning: destination content will be replaced (${RSYNC_CLONE_FROM} -> ${RSYNC_CLONE_TO})"
 }
 
 declare RSYNC_CLONE_FROM="${1:-}"
 declare RSYNC_CLONE_TO="${2:-}"
 
-bl64_lib_script_version_set '1.0.2'
+bl64_lib_script_version_set '1.0.3'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_msg_show_info 'Copy files from Linux path to Linux path. Operation is privileged, source file ownership is kept.'
 # shellcheck disable=SC2086
-bl64_ui_ask_confirmation "Warning: destination content will be replaced (${RSYNC_CLONE_FROM} -> ${RSYNC_CLONE_TO})" &&
-  s64_rsync_lib_run_rsync \
-    $S64_RSYNC_OPTIONS_COMMON \
-    $S64_RSYNC_OPTIONS_LOCAL \
-    --recursive \
-    --delete \
-    --owner \
-    --group \
-    --times \
-    --numeric-ids \
-    "$RSYNC_CLONE_FROM" \
-    "$RSYNC_CLONE_TO"
+s64_rsync_lib_run_rsync \
+  $S64_RSYNC_OPTIONS_COMMON \
+  $S64_RSYNC_OPTIONS_LOCAL \
+  --recursive \
+  --delete \
+  --owner \
+  --group \
+  --times \
+  --numeric-ids \
+  "$RSYNC_CLONE_FROM" \
+  "$RSYNC_CLONE_TO"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

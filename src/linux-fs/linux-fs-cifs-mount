@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.0.0
+# template-one: 3.0.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -13,7 +13,9 @@
 # limitations under the License.
 #######################################
 
-declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_AT64="${HOME}/at64"
+[[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/linux-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
@@ -26,7 +28,13 @@ function initialize() {
     bl64_check_parameter 'CIFS_SHARE_NAME' &&
     bl64_check_parameter 'MOUNT_PATH' &&
     bl64_check_directory "$MOUNT_PATH" &&
-    s64_linux_lib_setup
+    s64_linux_lib_setup &&
+    bl64_msg_show_setup 'Mount CIFS share' \
+      'CIFS_SERVER_IP' \
+      'CIFS_SHARE_NAME' \
+      'MOUNT_PATH' \
+      'CIFS_USER' \
+      'CIFS_OPTIONS'
 }
 
 declare CIFS_SERVER_IP="${1:-}"

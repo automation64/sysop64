@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.0.0
+# template-one: 3.0.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -13,7 +13,9 @@
 # limitations under the License.
 #######################################
 
-declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+declare S64_CORE_PATH_AT64="${HOME}/at64"
+[[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/git-lib" || { echo "Error: unable to load module library" && exit 1; }
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
@@ -24,19 +26,19 @@ function initialize() {
   s64_git_lib_setup &&
     bl64_check_parameter 'REPOSITORY_PATH' &&
     bl64_check_parameter 'BACKUP_NAME' &&
-    bl64_check_parameter 'BACKUP_DESTINATION'
+    bl64_check_parameter 'BACKUP_DESTINATION' &&
+    bl64_msg_show_setup 'create repository backup for:' \
+      'REPOSITORY_PATH' \
+      'BACKUP_NAME' \
+      'BACKUP_DESTINATION'
 }
 
 declare REPOSITORY_PATH="${1:-}"
 declare BACKUP_NAME="${2:-}"
 declare BACKUP_DESTINATION="${3:-}"
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
-bl64_msg_show_setup 'create repository backup for:' \
-  'REPOSITORY_PATH' \
-  'BACKUP_NAME' \
-  'BACKUP_DESTINATION'
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 cd "$REPOSITORY_PATH" &&
   bl64_vcs_run_git \
