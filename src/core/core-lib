@@ -19,20 +19,13 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='2.0.1'
-
-  # Default Automation64 install path
-  declare S64_CORE_PATH_AT64="${HOME}/at64"
-  [[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
-
-  # Default SysOp64 install path
-  declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
+  declare S64_CORE_VERSION='2.0.2'
 
   # Default BL64 install path
   declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-${S64_CORE_PATH_AT64}/bl64}"
 
   # Default log repository
-  declare S64_CORE_PATH_LOGS="${S64_CORE_PATH_LOGS:-${HOME}/logs-sysop64}"
+  declare S64_CORE_PATH_LOGS="${S64_CORE_PATH_LOGS:-${HOME}/sysop64-logs}"
 
   # Default debut level
   declare S64_CORE_SET_DEBUG="${S64_CORE_SET_DEBUG:-NONE}"
