@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
+  { echo 'Error: unable to load bashlib64' && exit 1; }
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_MACOS_VERSION='1.0.0'
+  declare S64_MACOS_PATH_CLI_LSOF=''
+}
+
+#
+# Functions
+#
+
+function s64_macos_lib_setup() {
+  bl64_dbg_app_show_function
+  S64_MACOS_PATH_CLI_LSOF='/usr/sbin/lsof'
+}
+
+function s64_macos_lib_run_lsof() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_MACOS_PATH_CLI_LSOF" || return $?
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_LSOF" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
