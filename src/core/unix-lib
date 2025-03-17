@@ -32,7 +32,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_UNIX_VERSION='1.0.0'
-  declare S64_UNIX_PATH_CLI_DU="${S64_UNIX_PATH_CLI_DU:-}"
+  declare S64_UNIX_PATH_CLI_DU=''
+  declare S64_UNIX_PATH_CLI_NETSTAT=''
 }
 
 #
@@ -41,9 +42,26 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_unix_lib_setup() {
   bl64_dbg_app_show_function
-  if [[ -z "$S64_UNIX_PATH_CLI_DU" ]]; then
-    S64_UNIX_PATH_CLI_DU="$(bl64_bsh_command_locate 'du')"
-  fi
+  case "$BL64_OS_FLAVOR" in
+  "$BL64_OS_FLAVOR_ALPINE")
+    S64_UNIX_PATH_CLI_DU='/usr/bin/du'
+    S64_UNIX_PATH_CLI_NETSTAT='/bin/netstat'
+    ;;
+  "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_SUSE")
+    S64_UNIX_PATH_CLI_DU='/usr/bin/du'
+    S64_UNIX_PATH_CLI_NETSTAT='/bin/netstat'
+    ;;
+  "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT")
+    S64_UNIX_PATH_CLI_DU='/usr/bin/du'
+    S64_UNIX_PATH_CLI_NETSTAT='/bin/netstat'
+    ;;
+  "$BL64_OS_FLAVOR_MACOS")
+    S64_UNIX_PATH_CLI_DU='/usr/bin/du'
+    S64_UNIX_PATH_CLI_NETSTAT='/usr/sbin/netstat'
+    ;;
+  *) bl64_check_alert_unsupported ;;
+  esac
+
 }
 
 function s64_unix_lib_run_du() {
@@ -52,6 +70,16 @@ function s64_unix_lib_run_du() {
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_UNIX_PATH_CLI_DU" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_unix_lib_run_netstat() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_UNIX_PATH_CLI_NETSTAT" || return $?
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_UNIX_PATH_CLI_NETSTAT" \
     "$@"
   bl64_dbg_app_trace_stop
 }
