@@ -55,6 +55,7 @@ function s64_kind_lib_setup() {
   if [[ -z "$S64_KIND_PATH_CLI" ]]; then
     S64_KIND_PATH_CLI="$(bl64_bsh_command_locate 'kind')"
   fi
+  return 0
 }
 
 function s64_kind_lib_run_kind() {

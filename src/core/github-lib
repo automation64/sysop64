@@ -46,6 +46,7 @@ function s64_github_lib_setup() {
   if [[ -z "$S64_GITHUB_PATH_CLI" ]]; then
     S64_GITHUB_PATH_CLI="$(bl64_bsh_command_locate 'gh')"
   fi
+  return 0
 }
 
 function s64_github_lib_reset() {

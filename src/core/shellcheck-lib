@@ -44,6 +44,7 @@ function s64_shellcheck_lib_setup() {
   if [[ -z "$S64_SHELLCHECK_PATH_CLI" ]]; then
     S64_SHELLCHECK_PATH_CLI="$(bl64_bsh_command_locate 'shellcheck')"
   fi
+  return 0
 }
 
 function s64_shellcheck_lib_run_shellcheck() {

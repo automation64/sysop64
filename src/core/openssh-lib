@@ -40,6 +40,7 @@ function s64_openssh_lib_setup() {
   if [[ -z "$S64_OPENSSH_PATH_SSH_KEYGEN" ]]; then
     S64_OPENSSH_PATH_SSH_KEYGEN="$(bl64_bsh_command_locate 'ssh-keygen')"
   fi
+  return 0
 }
 
 function s64_openssh_lib_run_ssh_keygen() {

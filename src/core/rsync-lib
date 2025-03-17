@@ -55,6 +55,7 @@ function s64_rsync_lib_setup() {
   if [[ -z "$S64_RSYNC_PATH_CLI" ]]; then
     S64_RSYNC_PATH_CLI="$(bl64_bsh_command_locate 'rsync')"
   fi
+  return 0
 }
 
 function s64_rsync_lib_run_rsync() {

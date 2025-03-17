@@ -44,6 +44,7 @@ function s64_gitleaks_lib_setup() {
   if [[ -z "$S64_GITLEAKS_PATH_CLI" ]]; then
     S64_GITLEAKS_PATH_CLI="$(bl64_bsh_command_locate 'gitleaks')"
   fi
+  return 0
 }
 
 function s64_gitleaks_lib_run_gitleaks() {

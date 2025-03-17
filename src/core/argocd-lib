@@ -51,6 +51,7 @@ function s64_argocd_lib_setup() {
   if [[ -z "$S64_ARGOCD_PATH_CLI" ]]; then
     S64_ARGOCD_PATH_CLI="$(bl64_bsh_command_locate 'argocd')"
   fi
+  return 0
 }
 
 function s64_argocd_lib_run_argocd() {
