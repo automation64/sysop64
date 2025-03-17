@@ -1,0 +1,4 @@
+export S64_CORE_PATH_ROOT="src"
+declare cmd="$1"
+shift
+"./$S64_CORE_PATH_ROOT/$cmd" "$@"

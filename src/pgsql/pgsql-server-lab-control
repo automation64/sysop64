@@ -31,18 +31,13 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 
 function start() {
   bl64_dbg_app_show_function
-  local container_port='5432'
   bl64_msg_show_task 'start Postgresql Server in container mode'
   bl64_cnt_run \
     --name "$S64_PGSQL_SERVER_LAB_NAME" \
     --env POSTGRES_PASSWORD="$S64_PGSQL_SERVER_LAB_PASSWORD" \
     --detach \
-    --publish "$container_port:$container_port" \
-    postgres &&
-    bl64_msg_show_info "Starded container information
-Container Name: ${S64_PGSQL_SERVER_LAB_NAME}
-Password: ${S64_PGSQL_SERVER_LAB_PASSWORD}
-Port: ${container_port}"
+    --publish "$S64_PGSQL_SERVER_LAB_PORT:$S64_PGSQL_SERVER_LAB_PORT" \
+    postgres
 }
 
 function stop() {
@@ -58,11 +53,13 @@ function stop() {
 
 function initialize() {
   bl64_dbg_app_show_function
-
   bl64_check_parameter 'COMMAND' || { help && return 1; }
-
   bl64_cnt_check_not_in_container &&
-    bl64_cnt_setup
+    bl64_cnt_setup &&
+    bl64_msg_show_setup 'PostgreSQL Lab Server' \
+      'S64_PGSQL_SERVER_LAB_NAME' \
+      'S64_PGSQL_SERVER_LAB_PASSWORD' \
+      'S64_PGSQL_SERVER_LAB_PORT'
 }
 
 #
@@ -72,12 +69,12 @@ function initialize() {
 declare COMMAND="$BL64_VAR_NULL"
 declare OPTION=''
 
-bl64_lib_script_version_set '2.0.0'
+bl64_lib_script_version_set '2.0.1'
 bl64_msg_help_usage_set '-s|-o [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'PGSQL / Server / Lab / Control'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
-'-s         : Start container and detach
+  '-s         : Start container and detach
 -o         : Stop detached container
 -h         : Show help
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*

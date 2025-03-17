@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_SHELLCHECK_VERSION='1.0.0'
+  declare S64_SHELLCHECK_VERSION='1.0.1'
   declare S64_SHELLCHECK_PATH_CLI="${S64_SHELLCHECK_PATH_CLI:-}"
 }
 
@@ -43,13 +43,13 @@ function s64_shellcheck_lib_setup() {
   bl64_dbg_app_show_function
   if [[ -z "$S64_SHELLCHECK_PATH_CLI" ]]; then
     S64_SHELLCHECK_PATH_CLI="$(bl64_bsh_command_locate 'shellcheck')"
-  else
-    bl64_check_command "$S64_SHELLCHECK_PATH_CLI"
   fi
+  return 0
 }
 
 function s64_shellcheck_lib_run_shellcheck() {
   bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_SHELLCHECK_PATH_CLI" || return $?
   unset SHELLCHECK_OPTS
   bl64_dbg_app_trace_start
   "$S64_SHELLCHECK_PATH_CLI" \
