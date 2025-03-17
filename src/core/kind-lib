@@ -34,7 +34,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_KIND_VERSION='2.0.1'
+  declare S64_KIND_VERSION='2.0.2'
   declare S64_KIND_PATH_CLI="${S64_KIND_PATH_CLI:-}"
 
   # Cluster definition
@@ -54,15 +54,13 @@ function s64_kind_lib_setup() {
 
   if [[ -z "$S64_KIND_PATH_CLI" ]]; then
     S64_KIND_PATH_CLI="$(bl64_bsh_command_locate 'kind')"
-  else
-    bl64_check_command "$S64_KIND_PATH_CLI" ||
-      return $?
   fi
 }
 
 function s64_kind_lib_run_kind() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbosity 1'
+  bl64_check_command "$S64_KIND_PATH_CLI" || return $?
   bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086

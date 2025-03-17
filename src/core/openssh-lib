@@ -27,7 +27,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_VERSION='2.0.1'
+  declare S64_OPENSSH_VERSION='2.0.2'
   declare S64_OPENSSH_PATH_SSH_KEYGEN="${S64_OPENSSH_PATH_SSH_KEYGEN:-}"
 }
 
@@ -37,18 +37,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 
 function s64_openssh_lib_setup() {
   bl64_dbg_app_show_function
-  local command='ssh-keygen'
   if [[ -z "$S64_OPENSSH_PATH_SSH_KEYGEN" ]]; then
     S64_OPENSSH_PATH_SSH_KEYGEN="$(bl64_bsh_command_locate 'ssh-keygen')"
-  else
-    bl64_check_command "$S64_OPENSSH_PATH_SSH_KEYGEN" ||
-      return $?
   fi
 }
 
 function s64_openssh_lib_run_ssh_keygen() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='-v'
+  bl64_check_command "$S64_OPENSSH_PATH_SSH_KEYGEN" || return $?
   bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
