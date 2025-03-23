@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# template-one: 3.0.1
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+declare S64_CORE_PATH_AT64="${HOME}/at64"
+[[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
+
+declare MY_MODULE="${1:-}"
+declare MY_TASK="${2:-}"
+
+if [[ -z "$MY_MODULE" ]]; then
+  cd "$S64_CORE_PATH_ROOT" &&
+    ls -1
+elif [[ -n "$MY_MODULE" && -z "$MY_TASK" ]]; then
+  [[ "$MY_MODULE" == 'core' || ! -d "${S64_CORE_PATH_ROOT}/${MY_MODULE}" ]] &&
+    echo "Fatal: invalid SysOp64 module name" &&
+    exit 1
+  cd "${S64_CORE_PATH_ROOT}/${MY_MODULE}" &&
+    ls -1
+elif [[ -n "$MY_MODULE" && -n "$MY_TASK" ]]; then
+  [[ ! -x "${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_TASK}" ]] &&
+    echo "Fatal: invalid SysOp64 module/task name" &&
+    exit 1
+  shift
+  shift
+  "${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_TASK}" "$@"
+fi
