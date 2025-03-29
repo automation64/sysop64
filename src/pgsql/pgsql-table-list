@@ -44,5 +44,5 @@ s64_psql_lib_run_psql \
   --port="$S64_PGSQL_SERVER_PORT" \
   --dbname="$S64_PGSQL_DB_NAME" \
   --username="$S64_PGSQL_SERVER_USER" \
-  --COMMAND='\\dt'
+  --command='\\dt'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

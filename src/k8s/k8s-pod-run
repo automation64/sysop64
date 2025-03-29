@@ -60,8 +60,8 @@ function initialize() {
 # Main
 #
 
-declare COMMAND='shell_run'
-declare OPTION=''
+declare MY_COMMAND='shell_run'
+declare MY_OPTION=''
 declare K8S_NAMESPACE='default'
 declare CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
 declare CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
@@ -80,9 +80,9 @@ bl64_msg_help_parameters_set \
 -D Debug     : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
 '
 
-while getopts ':si:n:e:V:D:h' OPTION; do
-  case "$OPTION" in
-  s) COMMAND='shell_run' ;;
+while getopts ':si:n:e:V:D:h' MY_OPTION; do
+  case "$MY_OPTION" in
+  s) MY_COMMAND='shell_run' ;;
   n) K8S_NAMESPACE="$OPTARG" ;;
   i) CONTAINER_IMAGE="$OPTARG" ;;
   e) CONTAINER_ENTRYPOINT="$OPTARG" ;;
@@ -94,6 +94,6 @@ while getopts ':si:n:e:V:D:h' OPTION; do
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
-"${COMMAND}" "$K8S_NAMESPACE" "$CONTAINER_IMAGE" "$CONTAINER_ENTRYPOINT"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
+"${MY_COMMAND}" "$K8S_NAMESPACE" "$CONTAINER_IMAGE" "$CONTAINER_ENTRYPOINT"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"

@@ -26,7 +26,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 
 function initialize() {
   bl64_dbg_app_show_function
-  s64_X_MODULE_X_lib_setup || return $?
+  s64_X_MODULE_X_lib_setup
   # X_INIT_PLACEHOLDER_X
 }
 

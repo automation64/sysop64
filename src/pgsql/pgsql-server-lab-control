@@ -53,7 +53,7 @@ function stop() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'COMMAND' || { help && return 1; }
+  bl64_check_parameter 'MY_COMMAND' || { help && return 1; }
   bl64_cnt_check_not_in_container &&
     bl64_cnt_setup &&
     bl64_msg_show_setup 'PostgreSQL Lab Server' \
@@ -66,10 +66,10 @@ function initialize() {
 # Main
 #
 
-declare COMMAND="$BL64_VAR_NULL"
-declare OPTION=''
+declare MY_COMMAND="$BL64_VAR_NULL"
+declare MY_OPTION=''
 
-bl64_lib_script_version_set '2.0.1'
+bl64_lib_script_version_set '2.0.2'
 bl64_msg_help_usage_set '-s|-o [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'PGSQL / Server / Lab / Control'
 # shellcheck disable=SC2016
@@ -81,10 +81,10 @@ bl64_msg_help_parameters_set \
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
 (($# == 0)) && bl64_msg_help_show && exit 1
-while getopts ':soV:D:h' OPTION; do
-  case "$OPTION" in
-  s) COMMAND='start' ;;
-  o) COMMAND='stop' ;;
+while getopts ':soV:D:h' MY_OPTION; do
+  case "$MY_OPTION" in
+  s) MY_COMMAND='start' ;;
+  o) MY_COMMAND='stop' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) bl64_msg_help_show && exit 0 ;;
@@ -93,6 +93,6 @@ while getopts ':soV:D:h' OPTION; do
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
-"${COMMAND}"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
+"${MY_COMMAND}"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"

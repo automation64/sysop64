@@ -43,7 +43,7 @@ function X_COMMAND_X() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'COMMAND' || { help && return 1; }
+  bl64_check_parameter 'MY_COMMAND' || { help && return 1; }
   s64_X_MODULE_X_lib_setup
   # X_INIT_PLACEHOLDER_X
   bl64_msg_show_setup 'X_SETUP_TITLE_X' \
@@ -54,8 +54,8 @@ function initialize() {
 # Main
 #
 
-declare COMMAND="$BL64_VAR_NULL"
-declare OPTION=''
+declare MY_COMMAND="$BL64_VAR_NULL"
+declare MY_OPTION=''
 
 bl64_lib_script_version_set '1.0.0'
 bl64_msg_help_usage_set 'X_HELP_CLI_X [-V Verbose] [-D Debug] [-h]'
@@ -67,9 +67,9 @@ bl64_msg_help_parameters_set \
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
 (($# == 0)) && bl64_msg_help_show && exit 1
-while getopts ':xV:D:h' OPTION; do
-  case "$OPTION" in
-  x) COMMAND='X_COMMAND_X' ;;
+while getopts ':xV:D:h' MY_OPTION; do
+  case "$MY_OPTION" in
+  x) MY_COMMAND='X_COMMAND_X' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) bl64_msg_help_show && exit 0 ;;
@@ -78,6 +78,6 @@ while getopts ':xV:D:h' OPTION; do
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
-"${COMMAND}"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
+"${MY_COMMAND}"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"

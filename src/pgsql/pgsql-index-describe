@@ -28,7 +28,7 @@ function initialize() {
   bl64_dbg_app_show_function
   s64_psql_lib_setup &&
     bl64_check_export 'S64_PGSQL_SERVER_PASSWORD' &&
-    bl64_check_parameter 'INDEX_NAME' &&
+    bl64_check_parameter 'MY_INDEX_NAME' &&
     PGPASSWORD="$S64_PGSQL_SERVER_PASSWORD" &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
       'S64_PGSQL_SERVER_HOST' \
@@ -37,9 +37,9 @@ function initialize() {
       'S64_PGSQL_DB_NAME'
 }
 
-declare INDEX_NAME="${1:-}"
+declare MY_INDEX_NAME="${1:-}"
 
-bl64_lib_script_version_set '2.0.1'
+bl64_lib_script_version_set '2.0.2'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_psql_lib_run_psql \
@@ -47,5 +47,5 @@ s64_psql_lib_run_psql \
   --port="$S64_PGSQL_SERVER_PORT" \
   --dbname="$S64_PGSQL_DB_NAME" \
   --username="$S64_PGSQL_SERVER_USER" \
-  --COMMAND="\\d $INDEX_NAME"
+  --command="\\d $MY_INDEX_NAME"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

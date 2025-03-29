@@ -49,7 +49,7 @@ function show_recommended() {
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'COMMAND' || { help && return 1; }
+  bl64_check_parameter 'MY_COMMAND' || { help && return 1; }
   s64_aws_lib_setup
 }
 
@@ -57,10 +57,10 @@ function initialize() {
 # Main
 #
 
-declare COMMAND='show_recommended'
-declare OPTION=''
-declare AMI_FAMILY='AL2023'
-declare K8S_VERSION='1.29'
+declare MY_COMMAND='show_recommended'
+declare MY_OPTION=''
+declare MY_AMI_FAMILY='AL2023'
+declare MY_K8S_VERSION='1.29'
 
 bl64_lib_script_version_set '2.0.0'
 bl64_msg_help_usage_set '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]'
@@ -74,11 +74,11 @@ bl64_msg_help_parameters_set \
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':la:r:V:D:h' OPTION; do
-  case "$OPTION" in
-  l) COMMAND='show_recommended' ;;
-  a) AMI_FAMILY="$OPTARG" ;;
-  r) K8S_VERSION="$OPTARG" ;;
+while getopts ':la:r:V:D:h' MY_OPTION; do
+  case "$MY_OPTION" in
+  l) MY_COMMAND='show_recommended' ;;
+  a) MY_AMI_FAMILY="$OPTARG" ;;
+  r) MY_K8S_VERSION="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) bl64_msg_help_show && exit 0 ;;
@@ -87,6 +87,6 @@ while getopts ':la:r:V:D:h' OPTION; do
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
-"${COMMAND}" "$AMI_FAMILY" "$K8S_VERSION"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
+"${MY_COMMAND}" "$MY_AMI_FAMILY" "$MY_K8S_VERSION"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"

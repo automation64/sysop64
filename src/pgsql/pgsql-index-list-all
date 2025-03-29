@@ -36,7 +36,7 @@ function initialize() {
       'S64_PGSQL_DB_NAME'
 }
 
-bl64_lib_script_version_set '2.0.1'
+bl64_lib_script_version_set '2.0.2'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_psql_lib_run_psql \
@@ -44,5 +44,5 @@ s64_psql_lib_run_psql \
   --port="$S64_PGSQL_SERVER_PORT" \
   --dbname="$S64_PGSQL_DB_NAME" \
   --username="$S64_PGSQL_SERVER_USER" \
-  --COMMAND='\\di'
+  --command='\\di'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

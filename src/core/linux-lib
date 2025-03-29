@@ -38,10 +38,11 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='2.0.1'
+  declare S64_LINUX_VERSION='2.1.0'
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
   declare S64_LINUX_PATH_CLI_BLKID=''
   declare S64_LINUX_PATH_CLI_CRYPTSETUP=''
+  declare S64_LINUX_PATH_CLI_UDISKSCTL=''
   declare S64_LINUX_PATH_CLI_FSCK=''
   declare S64_LINUX_PATH_CLI_JOURNALCTL=''
   declare S64_LINUX_PATH_CLI_LSBLK=''
@@ -66,6 +67,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
     S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
@@ -77,10 +79,11 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
     S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
     ;;
-  "$BL64_OS_FLAVOR_FEDORA")
+  "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT")
     S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
     S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
@@ -94,6 +97,17 @@ function s64_linux_lib_setup() {
     ;;
   *) bl64_check_alert_unsupported ;;
   esac
+}
+
+function s64_linux_lib_run_udisksctl() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_UDISKSCTL" ||
+    return $?
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_UDISKSCTL" \
+    "$@"
+  bl64_dbg_app_trace_stop
 }
 
 function s64_linux_lib_run_blkid() {
@@ -228,7 +242,7 @@ function s64_linux_lib_run_pvs() {
 
 function s64_linux_lib_run_mkfs() {
   bl64_dbg_app_show_function "$@"
-  local verbose_flag='--verbose'
+  local verbose_flag='-v'
   bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_MKFS" ||
     return $?
