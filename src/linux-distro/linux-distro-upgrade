@@ -30,8 +30,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 # Globals
 #
 
-# Distro dependant upgrade COMMAND
-declare _S64_LINUX_DISTRO_DO_RELEASE_UPGRADE=''
+# Distro dependant upgrade MY_COMMAND
+declare _S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE=''
 
 #
 # Functions
@@ -78,14 +78,14 @@ function prepare_ubuntu() {
 
 function upgrade_ubuntu() {
   bl64_dbg_app_show_function
-  "$_S64_LINUX_DISTRO_DO_RELEASE_UPGRADE" \
+  "$_S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE" \
     --allow-third-party \
     --frontend=DistUpgradeViewNonInteractive
 }
 
 function prepare() {
   bl64_dbg_app_show_function
-  bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
+  bl64_ui_confirmation_ask 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_UB}-*) prepare_ubuntu ;;
@@ -97,7 +97,7 @@ function prepare() {
 function upgrade() {
   bl64_dbg_app_show_function "$@"
   local release="$1"
-  bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
+  bl64_ui_confirmation_ask 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_UB}-*) upgrade_ubuntu ;;
@@ -109,7 +109,7 @@ function upgrade() {
 function initialize() {
   bl64_dbg_app_show_function
 
-  bl64_check_parameter 'COMMAND' || { help && return 1; }
+  bl64_check_parameter 'MY_COMMAND' || { help && return 1; }
 
   bl64_check_privilege_root &&
     bl64_os_check_compatibility \
@@ -118,11 +118,11 @@ function initialize() {
     s64_linux_lib_setup ||
     return $?
 
-  if [[ "$COMMAND" == 'upgrade' ]]; then
+  if [[ "$MY_COMMAND" == 'upgrade' ]]; then
     case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*)
-      _S64_LINUX_DISTRO_DO_RELEASE_UPGRADE='/bin/do-release-upgrade'
-      bl64_check_command "$_S64_LINUX_DISTRO_DO_RELEASE_UPGRADE"
+      _S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE='/bin/do-release-upgrade'
+      bl64_check_command "$_S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE"
       ;;
     *) : ;;
     esac
@@ -133,11 +133,11 @@ function initialize() {
 # Main
 #
 
-declare COMMAND="$BL64_VAR_NULL"
-declare OPTION=''
-declare RELEASE="$BL64_VAR_NULL"
+declare MY_COMMAND="$BL64_VAR_NULL"
+declare MY_OPTION=''
+declare MY_RELEASE="$BL64_VAR_NULL"
 
-bl64_lib_script_version_set '1.0.2'
+bl64_lib_script_version_set '1.0.3'
 bl64_msg_help_usage_set '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'Linux / Distro / Upgrade'
 # shellcheck disable=SC2016
@@ -150,11 +150,11 @@ bl64_msg_help_parameters_set \
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
 (($# == 0)) && bl64_msg_help_show && exit 1
-while getopts ':pur:V:D:h' OPTION; do
-  case "$OPTION" in
-  p) COMMAND='prepare' ;;
-  u) COMMAND='upgrade' ;;
-  r) RELEASE="$OPTARG" ;;
+while getopts ':pur:V:D:h' MY_OPTION; do
+  case "$MY_OPTION" in
+  p) MY_COMMAND='prepare' ;;
+  u) MY_COMMAND='upgrade' ;;
+  r) MY_RELEASE="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) bl64_msg_help_show && exit 0 ;;
@@ -163,6 +163,6 @@ while getopts ':pur:V:D:h' OPTION; do
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
-"${COMMAND}" "$RELEASE"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
+"${MY_COMMAND}" "$MY_RELEASE"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"

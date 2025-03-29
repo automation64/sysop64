@@ -25,7 +25,7 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-readonly FIELDS='lv_name,vg_name,lv_uuid,lv_attr,lv_size,seg_count,segtype,stripes,stripesize,chunksize'
+readonly MY_FIELDS='lv_name,vg_name,lv_uuid,lv_attr,lv_size,seg_count,segtype,stripes,stripesize,chunksize'
 
 function initialize() {
   bl64_dbg_app_show_function
@@ -39,5 +39,5 @@ bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_linux_lib_run_lvs \
   --nosuffix \
   --units M \
-  --options "$FIELDS"
+  --options "$MY_FIELDS"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

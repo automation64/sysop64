@@ -72,8 +72,8 @@ function initialize() {
 # Main
 #
 
-declare COMMAND='all_check'
-declare OPTION=''
+declare MY_COMMAND='all_check'
+declare MY_OPTION=''
 declare DETAIL_FORMAT="$BL64_VAR_DEFAULT"
 declare K8S_NAMESPACE="$BL64_VAR_DEFAULT"
 
@@ -90,10 +90,10 @@ bl64_msg_help_parameters_set \
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-while getopts ':apjn:V:D:h' OPTION; do
-  case "$OPTION" in
-  a) COMMAND='all_check' ;;
-  p) COMMAND='pod_check' ;;
+while getopts ':apjn:V:D:h' MY_OPTION; do
+  case "$MY_OPTION" in
+  a) MY_COMMAND='all_check' ;;
+  p) MY_COMMAND='pod_check' ;;
   n) K8S_NAMESPACE="$OPTARG" ;;
   j) DETAIL_FORMAT='json' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
@@ -104,6 +104,6 @@ while getopts ':apjn:V:D:h' OPTION; do
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 
-bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$COMMAND"
-"$COMMAND" "$K8S_NAMESPACE" "$DETAIL_FORMAT"
-bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$COMMAND"
+bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
+"$MY_COMMAND" "$K8S_NAMESPACE" "$DETAIL_FORMAT"
+bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"

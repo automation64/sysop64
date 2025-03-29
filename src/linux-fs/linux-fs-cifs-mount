@@ -25,31 +25,31 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 function initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
-    bl64_check_parameter 'CIFS_SERVER_IP' &&
-    bl64_check_parameter 'CIFS_SHARE_NAME' &&
-    bl64_check_parameter 'MOUNT_PATH' &&
-    bl64_check_directory "$MOUNT_PATH" &&
+    bl64_check_parameter 'MY_CIFS_SERVER_IP' &&
+    bl64_check_parameter 'MY_CIFS_SHARE_NAME' &&
+    bl64_check_parameter 'MY_MOUNT_PATH' &&
+    bl64_check_directory "$MY_MOUNT_PATH" &&
     s64_linux_lib_setup &&
     bl64_msg_show_setup 'Mount CIFS share' \
-      'CIFS_SERVER_IP' \
-      'CIFS_SHARE_NAME' \
-      'MOUNT_PATH' \
-      'CIFS_USER' \
-      'CIFS_OPTIONS'
+      'MY_CIFS_SERVER_IP' \
+      'MY_CIFS_SHARE_NAME' \
+      'MY_MOUNT_PATH' \
+      'MY_CIFS_USER' \
+      'MY_CIFS_OPTIONS'
 }
 
-declare CIFS_SERVER_IP="${1:-}"
-declare CIFS_SHARE_NAME="${2:-}"
-declare MOUNT_PATH="${3:-}"
-declare CIFS_USER="${4:-guest}"
-declare CIFS_OPTIONS='nosetuids,cache=strict,mapchars'
+declare MY_CIFS_SERVER_IP="${1:-}"
+declare MY_CIFS_SHARE_NAME="${2:-}"
+declare MY_MOUNT_PATH="${3:-}"
+declare MY_CIFS_USER="${4:-guest}"
+declare MY_CIFS_OPTIONS='nosetuids,cache=strict,mapchars'
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_linux_lib_run_mount \
   --type cifs \
-  --options "${CIFS_OPTIONS},username=${CIFS_USER}" \
-  "//${CIFS_SERVER_IP}/${CIFS_SHARE_NAME}" \
-  "$MOUNT_PATH"
+  --options "${MY_CIFS_OPTIONS},username=${MY_CIFS_USER}" \
+  "//${MY_CIFS_SERVER_IP}/${MY_CIFS_SHARE_NAME}" \
+  "$MY_MOUNT_PATH"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

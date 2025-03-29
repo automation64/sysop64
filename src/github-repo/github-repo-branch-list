@@ -23,19 +23,19 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 
 function initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'REPO_OWNER' &&
-    bl64_check_parameter 'REPO_NAME' &&
+  bl64_check_parameter 'MY_REPO_OWNER' &&
+    bl64_check_parameter 'MY_REPO_NAME' &&
     s64_github_lib_setup
 }
 
-declare REPO_OWNER="${1:-}"
-declare REPO_NAME="${2:-}"
+declare MY_REPO_OWNER="${1:-}"
+declare MY_REPO_NAME="${2:-}"
 
-bl64_lib_script_version_set '2.0.0'
+bl64_lib_script_version_set '2.0.1'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}"
 bl64_msg_show_info 'branch protection'
 s64_github_lib_run_gh \
   api \
-  "repos/${REPO_OWNER}/${REPO_NAME}/branches"
+  "repos/${MY_REPO_OWNER}/${MY_REPO_NAME}/branches"
 bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}"
