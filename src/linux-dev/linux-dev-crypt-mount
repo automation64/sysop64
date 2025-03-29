@@ -57,7 +57,11 @@ function initialize() {
     bl64_check_parameter 'MY_DEVICE_PATH' &&
     bl64_check_parameter 'MY_MOUNT_POINT' &&
     bl64_check_parameter 'MY_VOLUME_NAME' &&
-    s64_linux_lib_setup
+    s64_linux_lib_setup &&
+    bl64_msg_show_setup 'Mount crypto device' \
+      'MY_DEVICE_PATH' \
+      'MY_MOUNT_POINT' \
+      'MY_VOLUME_LABEL'
 }
 
 declare MY_DEVICE_PATH="${1:-}"

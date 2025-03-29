@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Linux
   - linux-lib: RHEL family compatibility
+- Linux-Dev
+  - linux-dev-crypt-close
+- Linux-FS
   - linux-fs-ext4-create
 - Modules
   - MacOS-App

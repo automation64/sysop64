@@ -26,7 +26,10 @@ function initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
     bl64_check_parameter 'MY_DEVICE_PATH' &&
-    s64_linux_lib_setup
+    s64_linux_lib_setup &&
+    bl64_msg_show_setup 'Create crypto device' \
+      'MY_DEVICE_PATH' \
+      'MY_VOLUME_LABEL'
 }
 
 declare MY_DEVICE_PATH="${1:-}"
