@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - linux-lib: RHEL family compatibility
 - Linux-Dev
   - linux-dev-crypt-close
+  - linux-dev-block-poweroff
 - Linux-FS
   - linux-fs-ext4-create
 - Modules
