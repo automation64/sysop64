@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_UNIX_VERSION='1.2.0'
+  declare S64_UNIX_VERSION='1.2.1'
   declare S64_UNIX_PATH_CLI_DU=''
   declare S64_UNIX_PATH_CLI_NETSTAT=''
   declare S64_UNIX_PATH_CLI_PS=''
@@ -81,7 +81,7 @@ function s64_unix_lib_setup() {
 
 function s64_unix_lib_run_ps() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_PATH_CLI_PS" || return $?
+  bl64_check_command "$S64_UNIX_PATH_CLI_PS" "$BL64_VAR_DEFAULT" 'S64_UNIX_PATH_CLI_PS' || return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_UNIX_PATH_CLI_PS" \
@@ -91,7 +91,7 @@ function s64_unix_lib_run_ps() {
 
 function s64_unix_lib_run_du() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_PATH_CLI_DU" || return $?
+  bl64_check_command "$S64_UNIX_PATH_CLI_DU" "$BL64_VAR_DEFAULT" 'S64_UNIX_PATH_CLI_DU' || return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_UNIX_PATH_CLI_DU" \
@@ -101,7 +101,7 @@ function s64_unix_lib_run_du() {
 
 function s64_unix_lib_run_screen() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_PATH_CLI_DU" || return $?
+  bl64_check_command "$S64_UNIX_PATH_CLI_DU" "$BL64_VAR_DEFAULT" 'S64_UNIX_PATH_CLI_DU' || return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_UNIX_PATH_CLI_SCREEN" \
@@ -111,7 +111,7 @@ function s64_unix_lib_run_screen() {
 
 function s64_unix_lib_run_netstat() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_PATH_CLI_NETSTAT" || return $?
+  bl64_check_command "$S64_UNIX_PATH_CLI_NETSTAT" "$BL64_VAR_DEFAULT" 'S64_UNIX_PATH_CLI_NETSTAT' || return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_UNIX_PATH_CLI_NETSTAT" \
@@ -121,7 +121,7 @@ function s64_unix_lib_run_netstat() {
 
 function s64_unix_lib_run_su() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_PATH_CLI_SU" || return $?
+  bl64_check_command "$S64_UNIX_PATH_CLI_SU" "$BL64_VAR_DEFAULT" 'S64_UNIX_PATH_CLI_SU' || return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_UNIX_PATH_CLI_SU" \

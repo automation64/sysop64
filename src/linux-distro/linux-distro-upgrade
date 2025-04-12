@@ -30,8 +30,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 # Globals
 #
 
-# Distro dependant upgrade MY_COMMAND
-declare _S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE=''
+declare MY_CMD_RELEASE_UPGRADE=''
 
 #
 # Functions
@@ -78,7 +77,7 @@ function prepare_ubuntu() {
 
 function upgrade_ubuntu() {
   bl64_dbg_app_show_function
-  "$_S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE" \
+  "$MY_CMD_RELEASE_UPGRADE" \
     --allow-third-party \
     --frontend=DistUpgradeViewNonInteractive
 }
@@ -121,8 +120,8 @@ function initialize() {
   if [[ "$MY_COMMAND" == 'upgrade' ]]; then
     case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*)
-      _S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE='/bin/do-release-upgrade'
-      bl64_check_command "$_S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE"
+      MY_CMD_RELEASE_UPGRADE='/bin/do-release-upgrade'
+      bl64_check_command "$MY_CMD_RELEASE_UPGRADE"
       ;;
     *) : ;;
     esac
