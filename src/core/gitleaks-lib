@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_GITLEAKS_VERSION='1.0.2'
+  declare S64_GITLEAKS_VERSION='1.0.3'
   declare S64_GITLEAKS_PATH_CLI="${S64_GITLEAKS_PATH_CLI:-}"
 }
 
@@ -50,7 +50,7 @@ function s64_gitleaks_lib_setup() {
 function s64_gitleaks_lib_run_gitleaks() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose --log-level=info'
-  bl64_check_command "$S64_GITLEAKS_PATH_CLI" || return $?
+  bl64_check_command "$S64_GITLEAKS_PATH_CLI" "$BL64_VAR_DEFAULT" 'S64_GITLEAKS_PATH_CLI' || return $?
   bl64_msg_app_verbose_is_enabled || verbose_flag='--log-level=warn'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086

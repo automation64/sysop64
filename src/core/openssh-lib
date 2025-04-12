@@ -18,7 +18,11 @@
 #
 
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
   { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
@@ -27,7 +31,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_VERSION='2.0.2'
+  declare S64_OPENSSH_VERSION='2.1.0'
+  declare S64_OPENSSH_PATH_SSH="${S64_OPENSSH_PATH_SSH:-}"
+  declare S64_OPENSSH_PATH_SSH_ADD="${S64_OPENSSH_PATH_SSH_ADD:-}"
   declare S64_OPENSSH_PATH_SSH_KEYGEN="${S64_OPENSSH_PATH_SSH_KEYGEN:-}"
 }
 
@@ -37,21 +43,45 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 
 function s64_openssh_lib_setup() {
   bl64_dbg_app_show_function
-  if [[ -z "$S64_OPENSSH_PATH_SSH_KEYGEN" ]]; then
-    S64_OPENSSH_PATH_SSH_KEYGEN="$(bl64_bsh_command_locate 'ssh-keygen')"
-  fi
+  [[ -z "$S64_OPENSSH_PATH_SSH" ]] && S64_OPENSSH_PATH_SSH="$(bl64_bsh_command_locate 'ssh')"
+  [[ -z "$S64_OPENSSH_PATH_SSH_ADD" ]] && S64_OPENSSH_PATH_SSH_ADD="$(bl64_bsh_command_locate 'ssh-add')"
+  [[ -z "$S64_OPENSSH_PATH_SSH_KEYGEN" ]] && S64_OPENSSH_PATH_SSH_KEYGEN="$(bl64_bsh_command_locate 'ssh-keygen')"
   return 0
 }
 
 function s64_openssh_lib_run_ssh_keygen() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='-v'
-  bl64_check_command "$S64_OPENSSH_PATH_SSH_KEYGEN" || return $?
+  bl64_check_command "$S64_OPENSSH_PATH_SSH_KEYGEN" "$BL64_VAR_DEFAULT" 'S64_OPENSSH_PATH_SSH_KEYGEN' || return $?
   bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_OPENSSH_PATH_SSH_KEYGEN" \
     $verbose_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_openssh_lib_run_ssh() {
+  bl64_dbg_app_show_function "$@"
+  local verbose_flag='-v'
+  bl64_check_command "$S64_OPENSSH_PATH_SSH" "$BL64_VAR_DEFAULT" 'S64_OPENSSH_PATH_SSH' || return $?
+  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_OPENSSH_PATH_SSH" \
+    $verbose_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_openssh_lib_run_ssh_add() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_OPENSSH_PATH_SSH_ADD" "$BL64_VAR_DEFAULT" 'S64_OPENSSH_PATH_SSH_ADD' || return $?
+  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_OPENSSH_PATH_SSH_ADD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

@@ -40,7 +40,7 @@ function cleanup_fedora() {
 
 function cleanup() {
   bl64_dbg_app_show_function
-  bl64_ui_confirmation_ask 'Warning: the task will auto-cleanup packages' ||
+  bl64_ui_ask_confirmation 'Warning: the task will auto-cleanup packages' ||
     return $?
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_UB}-*) cleanup_ubuntu ;;
@@ -57,7 +57,7 @@ function initialize() {
       "${BL64_OS_FD}"
 }
 
-bl64_lib_script_version_set '1.0.2'
+bl64_lib_script_version_set '1.0.3'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 cleanup

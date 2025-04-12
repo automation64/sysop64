@@ -30,8 +30,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 # Globals
 #
 
-# Distro dependant upgrade MY_COMMAND
-declare _S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE=''
+declare MY_CMD_RELEASE_UPGRADE=''
 
 #
 # Functions
@@ -78,14 +77,14 @@ function prepare_ubuntu() {
 
 function upgrade_ubuntu() {
   bl64_dbg_app_show_function
-  "$_S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE" \
+  "$MY_CMD_RELEASE_UPGRADE" \
     --allow-third-party \
     --frontend=DistUpgradeViewNonInteractive
 }
 
 function prepare() {
   bl64_dbg_app_show_function
-  bl64_ui_confirmation_ask 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
+  bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_UB}-*) prepare_ubuntu ;;
@@ -97,7 +96,7 @@ function prepare() {
 function upgrade() {
   bl64_dbg_app_show_function "$@"
   local release="$1"
-  bl64_ui_confirmation_ask 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
+  bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_UB}-*) upgrade_ubuntu ;;
@@ -121,8 +120,8 @@ function initialize() {
   if [[ "$MY_COMMAND" == 'upgrade' ]]; then
     case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*)
-      _S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE='/bin/do-release-upgrade'
-      bl64_check_command "$_S64_LINUX_DISTRO_DO_MY_RELEASE_UPGRADE"
+      MY_CMD_RELEASE_UPGRADE='/bin/do-release-upgrade'
+      bl64_check_command "$MY_CMD_RELEASE_UPGRADE"
       ;;
     *) : ;;
     esac
@@ -137,7 +136,7 @@ declare MY_COMMAND="$BL64_VAR_NULL"
 declare MY_OPTION=''
 declare MY_RELEASE="$BL64_VAR_NULL"
 
-bl64_lib_script_version_set '1.0.3'
+bl64_lib_script_version_set '1.0.4'
 bl64_msg_help_usage_set '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'Linux / Distro / Upgrade'
 # shellcheck disable=SC2016

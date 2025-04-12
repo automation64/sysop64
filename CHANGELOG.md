@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0]
+
+### Added
+
+- MacOS
+  - s64_macos_lib_run_defaults
+- OpenSSH
+  - s64_openssh_lib_run_ssh
+  - s64_openssh_lib_run_ssh_add
+
+### Fixed
+
+- OpenSSH
+  - trivy-lib: missing bl64 modules
+- Trivy
+  - openssh-lib: missing bl64 modules
+
 ## [1.4.0]
 
 ### Added
