@@ -85,7 +85,7 @@ function upgrade_ubuntu() {
 
 function prepare() {
   bl64_dbg_app_show_function
-  bl64_ui_confirmation_ask 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
+  bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_UB}-*) prepare_ubuntu ;;
@@ -97,7 +97,7 @@ function prepare() {
 function upgrade() {
   bl64_dbg_app_show_function "$@"
   local release="$1"
-  bl64_ui_confirmation_ask 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
+  bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_UB}-*) upgrade_ubuntu ;;
@@ -137,7 +137,7 @@ declare MY_COMMAND="$BL64_VAR_NULL"
 declare MY_OPTION=''
 declare MY_RELEASE="$BL64_VAR_NULL"
 
-bl64_lib_script_version_set '1.0.3'
+bl64_lib_script_version_set '1.0.4'
 bl64_msg_help_usage_set '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'Linux / Distro / Upgrade'
 # shellcheck disable=SC2016
