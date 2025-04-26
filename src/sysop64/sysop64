@@ -38,10 +38,11 @@ function my_task_list() {
 }
 
 function my_task_run() {
-  [[ ! -x "${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_TASK}" ]] &&
-    echo "Fatal: invalid SysOp64 module/task name" &&
+  local task="${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}"
+  [[ ! -x "$task" ]] &&
+    echo "Fatal: invalid SysOp64 module/task name (${task})" &&
     return 1
-  "${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}" "$@"
+  "$task" "$@"
 }
 
 declare MY_MODULE="${1:-}"
