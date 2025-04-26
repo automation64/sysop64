@@ -29,7 +29,7 @@ function my_module_list() {
 function my_task_list() {
   local task=''
   [[ "$MY_MODULE" == 'core' || ! -d "${S64_CORE_PATH_ROOT}/${MY_MODULE}" ]] &&
-    echo "Fatal: invalid SysOp64 module name" &&
+    bl64_msg_show_fatal "invalid SysOp64 module name (${MY_MODULE})" &&
     return 1
   cd "${S64_CORE_PATH_ROOT}/${MY_MODULE}" || return $?
   for task in "${MY_MODULE}"-*; do
@@ -40,7 +40,7 @@ function my_task_list() {
 function my_task_run() {
   local task="${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}"
   [[ ! -x "$task" ]] &&
-    echo "Fatal: invalid SysOp64 module/task name (${task})" &&
+    bl64_msg_show_fatal "Fatal: invalid SysOp64 module/task name (${task})" &&
     return 1
   "$task" "$@"
 }
@@ -51,14 +51,13 @@ declare MY_TASK="${2:-}"
 bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_usage_set 'sysop64 [MODULE] [TASK] [TASK-PARAMETERS]'
 bl64_msg_help_about_set 'Run SysOp64 tasks'
-# shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
   '
   MODULE         : Module name. If none, list them all
   TASK           : Task name. If none, list them all. Requires MODULE to be set
   TASK-PARAMETERS: Task parameters
 '
-
+bl64_msg_set_format "$BL64_MSG_FORMAT_PLAIN"
 if [[ -z "$MY_MODULE" ]]; then
   my_module_list
 elif [[ -n "$MY_MODULE" && -z "$MY_TASK" ]]; then
