@@ -25,7 +25,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 
 # X_FUNCTIONS_PLACEHOLDER_X
 
-function initialize() {
+function my_initialize() {
   bl64_dbg_app_show_function
   s64_X_MODULE_X_lib_setup ||
     return 1
@@ -55,7 +55,7 @@ while getopts ':xV:D:h' MY_OPTION; do
   *) bl64_msg_help_show && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
 "${MY_COMMAND}"
