@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# template-task-base: 2.0.1
-#   template-import: 2.0.1
+# template-task-base: 2.1.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -14,10 +13,6 @@
 # limitations under the License.
 #######################################
 
-#
-# Imports
-#
-
 declare S64_CORE_PATH_AT64="${HOME}/at64"
 [[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
@@ -26,26 +21,18 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-#
-# Globals
-#
-
 # X_GLOBALS_PLACEHOLDER_X
 
-#
-# Functions
-#
+# X_FUNCTIONS_PLACEHOLDER_X
 
-function X_COMMAND_X() {
-  bl64_dbg_app_show_function "$@"
-  # X_COMMAND_PLACEHOLDER_X
+function initialize() {
+  bl64_dbg_app_show_function
+  s64_X_MODULE_X_lib_setup ||
+    return 1
+  # X_INIT_PLACEHOLDER_X
+  bl64_msg_show_about
+  # X_INIT_INFO_PLACEHOLDER_X
 }
-
-# X_INITIALIZE_PLACEHOLDER_X
-
-#
-# Main
-#
 
 declare MY_COMMAND="$BL64_VAR_NULL"
 declare MY_OPTION=''
@@ -59,7 +46,6 @@ bl64_msg_help_parameters_set \
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-(($# == 0)) && bl64_msg_help_show && exit 1
 while getopts ':xV:D:h' MY_OPTION; do
   case "$MY_OPTION" in
   x) MY_COMMAND='X_COMMAND_X' ;;
