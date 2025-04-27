@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.6.0]
 
+### Added
+
+- K8S
+  - k8s-container-attach-output
+  - k8s-container-attach-shell
+  - k8s-container-attach-shell
+  - k8s-container-attach-terminal
+  - k8s-container-attach-terminal
+  - k8s-container-get-file
+  - k8s-container-put-file
+  - k8s-container-show-filesystem
+  - k8s-container-show-log
+  - k8s-pod-get-env
+  - k8s-pod-run-debug
+  - k8s-pod-show-env
+  - k8s-pod-show-processes
+
 ### Changed
 
 - SysDen64

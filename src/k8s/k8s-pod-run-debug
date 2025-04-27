@@ -29,31 +29,49 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 # Functions
 #
 
-function shell_run() {
+function my_shell_run() {
   bl64_dbg_app_show_function "$@"
   local namespace="$1"
   local image="$2"
   local entrypoint="$3"
-  local pod_name='sysop64-shell'
+  local pod_name="$4"
+  local container_name="$5"
 
-  [[ "$entrypoint" == "$BL64_VAR_DEFAULT" ]] && entrypoint='sh'
-  [[ "$image" == "$BL64_VAR_DEFAULT" ]] && image='alpine'
-
-  bl64_msg_show_task "Run interactive shell (${namespace}/${pod_name} -> ${image})"
+  [[ "$container_name" == 'NONE' ]] && container_name=''
+  bl64_msg_show_task "Attach debugging shell (${image} -> ${namespace}/${pod_name}${container_name:+/$container_name})"
+  [[ -n "$container_name" ]] && container_name="--target=${container_name}"
   # shellcheck disable=SC2086,SC2046
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \
-    run \
-    "$pod_name" \
-    --namespace "$namespace" \
+    debug \
+    --attach \
+    --tty \
+    --stdin \
+    --namespace="$namespace" \
     --image="$image" \
-    --attach --rm --tty --stdin --restart=Never \
+    ${container_name} \
+    "$pod_name" \
     -- "$entrypoint"
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_k8s_lib_setup
+  [[ -n "$MY_OPTION" ]] &&
+    bl64_check_parameter 'MY_TARGET_POD' ||
+    { bl64_msg_help_show && return 1; }
+
+  s64_k8s_lib_setup ||
+    return $?
+
+  bl64_lib_var_is_default "$MY_CONTAINER_ENTRYPOINT" && MY_CONTAINER_ENTRYPOINT='sh'
+  bl64_lib_var_is_default "$MY_CONTAINER_IMAGE" && MY_CONTAINER_IMAGE='alpine'
+  bl64_msg_show_about
+  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    'MY_K8S_NAMESPACE' \
+    'MY_TARGET_POD' \
+    'MY_TARGET_CONTAINER' \
+    'MY_CONTAINER_IMAGE' \
+    'MY_CONTAINER_ENTRYPOINT'
 }
 
 #
@@ -62,17 +80,21 @@ function my_initialize() {
 
 declare MY_COMMAND='shell_run'
 declare MY_OPTION=''
-declare K8S_NAMESPACE='default'
-declare CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
-declare CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
+declare MY_K8S_NAMESPACE='default'
+declare MY_CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
+declare MY_CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
+declare MY_TARGET_POD=''
+declare MY_TARGET_CONTAINER='NONE'
 
-bl64_lib_script_version_set '3.0.0'
-bl64_msg_help_usage_set '[-s] [-i Image] [-e EntryPoint] [-n NameSpace] [-V Verbose] [-D Debug] [-h]'
-bl64_msg_help_about_set 'K8S / Pod / Run'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_usage_set '[-s] <-p Pod> [-c Container] [-i Image] [-e EntryPoint] [-n NameSpace] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_about_set 'K8S / Pod / Run / Debug'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
-'-s           : Run interactive shell (Default)
+  '-s           : Attach debugging shell to pod (Default)
 -h           : Show help
+-p Pod       : Target Pod name
+-c Container : Target Container name in the Target Pod. Default: none
 -i Image     : Full image path for the container. Default: alpine
 -e EntryPoint: Command to run in the container. Default: sh
 -n NameSpace : K8S namespace where the pod will run. Default: default
@@ -80,12 +102,14 @@ bl64_msg_help_parameters_set \
 -D Debug     : Enable debugging mode. Format: one of BL64_DBG_TARGET_*
 '
 
-while getopts ':si:n:e:V:D:h' MY_OPTION; do
+while getopts ':sp:c:i:n:e:V:D:h' MY_OPTION; do
   case "$MY_OPTION" in
   s) MY_COMMAND='shell_run' ;;
-  n) K8S_NAMESPACE="$OPTARG" ;;
-  i) CONTAINER_IMAGE="$OPTARG" ;;
-  e) CONTAINER_ENTRYPOINT="$OPTARG" ;;
+  n) MY_K8S_NAMESPACE="$OPTARG" ;;
+  p) MY_TARGET_POD="$OPTARG" ;;
+  c) MY_TARGET_CONTAINER="$OPTARG" ;;
+  i) MY_CONTAINER_IMAGE="$OPTARG" ;;
+  e) MY_CONTAINER_ENTRYPOINT="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) bl64_msg_help_show && exit 0 ;;
@@ -95,5 +119,5 @@ done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
-"${MY_COMMAND}" "$K8S_NAMESPACE" "$CONTAINER_IMAGE" "$CONTAINER_ENTRYPOINT"
+"my_${MY_COMMAND}" "$MY_K8S_NAMESPACE" "$MY_CONTAINER_IMAGE" "$MY_CONTAINER_ENTRYPOINT" "$MY_TARGET_POD" "$MY_TARGET_CONTAINER"
 bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"
