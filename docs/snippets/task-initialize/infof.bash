@@ -1,0 +1,3 @@
+  # X_INIT_INFO_PLACEHOLDER_X
+  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    'X_PARAMETER_X'

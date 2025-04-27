@@ -58,5 +58,5 @@ done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
-"${MY_COMMAND}"
+"my_${MY_COMMAND}"
 bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"
