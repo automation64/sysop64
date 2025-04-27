@@ -21,33 +21,33 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-function initialize() {
+function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'K8S_CONTEXT_CLUSTER' &&
-    bl64_check_parameter 'K8S_CONTEXT_USER' &&
+  bl64_check_parameter 'MY_K8S_CONTEXT_CLUSTER' &&
+    bl64_check_parameter 'MY_K8S_CONTEXT_USER' &&
     s64_argocd_lib_setup &&
     bl64_msg_show_setup \
       'Configuring KubeCTL context for ArgoCD CLI' \
       'S64_ARGOCD_SET_CONTEXT_NAME' \
-      'K8S_CONTEXT_CLUSTER' \
-      'K8S_CONTEXT_USER' \
-      'K8S_CONTEXT_NAMESPACE'
+      'MY_K8S_CONTEXT_CLUSTER' \
+      'MY_K8S_CONTEXT_USER' \
+      'MY_K8S_CONTEXT_NAMESPACE'
 }
 
-declare K8S_CONTEXT_CLUSTER="${1:-}"
-declare K8S_CONTEXT_USER="${2:-}"
-declare K8S_CONTEXT_NAMESPACE="${3:-argocd}"
+declare MY_K8S_CONTEXT_CLUSTER="${1:-}"
+declare MY_K8S_CONTEXT_USER="${2:-}"
+declare MY_K8S_CONTEXT_NAMESPACE="${3:-argocd}"
 
 bl64_lib_script_version_set '1.0.1'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 
 bl64_k8s_run_kubectl \
   "$BL64_VAR_DEFAULT" \
   config set-context \
-  --cluster="$K8S_CONTEXT_CLUSTER" \
-  --user="$K8S_CONTEXT_USER" \
-  --namespace="$K8S_CONTEXT_NAMESPACE" \
+  --cluster="$MY_K8S_CONTEXT_CLUSTER" \
+  --user="$MY_K8S_CONTEXT_USER" \
+  --namespace="$MY_K8S_CONTEXT_NAMESPACE" \
   "$S64_ARGOCD_SET_CONTEXT_NAME" &&
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \

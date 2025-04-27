@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.0.1
+# template-task: 3.1.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -16,24 +16,54 @@
 declare S64_CORE_PATH_AT64="${HOME}/at64"
 [[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
+# shellcheck source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+
+function my_module_list() {
+  cd "$S64_CORE_PATH_ROOT" &&
+    ls -1
+}
+
+function my_task_list() {
+  local task=''
+  [[ "$MY_MODULE" == 'core' || ! -d "${S64_CORE_PATH_ROOT}/${MY_MODULE}" ]] &&
+    bl64_msg_show_fatal "invalid SysOp64 module name (${MY_MODULE})" &&
+    return 1
+  cd "${S64_CORE_PATH_ROOT}/${MY_MODULE}" || return $?
+  for task in "${MY_MODULE}"-*; do
+    [[ -f "$task" ]] && echo "${task#${MY_MODULE}-}"
+  done
+}
+
+function my_task_run() {
+  local task="${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}"
+  [[ ! -x "$task" ]] &&
+    bl64_msg_show_fatal "Fatal: invalid SysOp64 module/task name (${task})" &&
+    return 1
+  "$task" "$@"
+}
 
 declare MY_MODULE="${1:-}"
 declare MY_TASK="${2:-}"
 
+bl64_lib_script_version_set '1.1.0'
+bl64_msg_help_usage_set 'sysop64 [MODULE] [TASK] [TASK-PARAMETERS]'
+bl64_msg_help_about_set 'Run SysOp64 tasks'
+bl64_msg_help_parameters_set \
+  '
+  MODULE         : Module name. If none, list them all
+  TASK           : Task name. If none, list them all. Requires MODULE to be set
+  TASK-PARAMETERS: Task parameters
+'
+bl64_msg_set_format "$BL64_MSG_FORMAT_PLAIN"
 if [[ -z "$MY_MODULE" ]]; then
-  cd "$S64_CORE_PATH_ROOT" &&
-    ls -1
+  my_module_list
 elif [[ -n "$MY_MODULE" && -z "$MY_TASK" ]]; then
-  [[ "$MY_MODULE" == 'core' || ! -d "${S64_CORE_PATH_ROOT}/${MY_MODULE}" ]] &&
-    echo "Fatal: invalid SysOp64 module name" &&
-    exit 1
-  cd "${S64_CORE_PATH_ROOT}/${MY_MODULE}" &&
-    ls -1
+  my_task_list
 elif [[ -n "$MY_MODULE" && -n "$MY_TASK" ]]; then
-  [[ ! -x "${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_TASK}" ]] &&
-    echo "Fatal: invalid SysOp64 module/task name" &&
-    exit 1
   shift
   shift
-  "${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_TASK}" "$@"
+  my_task_run "$@"
 fi

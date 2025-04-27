@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# template-task: 3.0.1
-#   template-task-base: 2.0.1
+# template-task: 3.1.0
+#   template-task-base: 2.1.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -14,10 +14,6 @@
 # limitations under the License.
 #######################################
 
-#
-# Imports
-#
-
 declare S64_CORE_PATH_AT64="${HOME}/at64"
 [[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
@@ -26,28 +22,24 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-#
-# Globals
-#
-
 # X_GLOBALS_PLACEHOLDER_X
 
-#
-# Functions
-#
-
-function X_COMMAND_X() {
+function my_X_COMMAND_X() {
   bl64_dbg_app_show_function "$@"
   # X_COMMAND_PLACEHOLDER_X
 }
 
-function initialize() {
+function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_COMMAND' || { help && return 1; }
-  s64_X_MODULE_X_lib_setup
+  # X_INIT_PARAMETER_PLACEHOLDER_X
+  [[ -n "$MY_OPTION" && -n "$MY_COMMAND" ]] &&
+    bl64_check_parameter 'MY_PARAMETERX' ||
+    { bl64_msg_help_show && return 1; }
+  s64_X_MODULE_X_lib_setup ||
+    return 1
   # X_INIT_PLACEHOLDER_X
-  bl64_msg_show_setup 'X_SETUP_TITLE_X' \
-    X_SETUP_VARIABLE_X
+  bl64_msg_show_about
+  # X_INIT_INFO_PLACEHOLDER_X
 }
 
 #
@@ -66,7 +58,6 @@ bl64_msg_help_parameters_set \
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
-(($# == 0)) && bl64_msg_help_show && exit 1
 while getopts ':xV:D:h' MY_OPTION; do
   case "$MY_OPTION" in
   x) MY_COMMAND='X_COMMAND_X' ;;
@@ -76,8 +67,8 @@ while getopts ':xV:D:h' MY_OPTION; do
   *) bl64_msg_help_show && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
-"${MY_COMMAND}"
+"my_${MY_COMMAND}"
 bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"

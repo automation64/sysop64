@@ -46,7 +46,7 @@ function aws_eks_addons_show() {
   done
 }
 
-function initialize() {
+function my_initialize() {
   bl64_dbg_app_show_function
   bl64_check_parameter 'CLUSTER_NAME' &&
     s64_aws_lib_setup
@@ -55,7 +55,7 @@ function initialize() {
 declare CLUSTER_NAME="${1:-}"
 
 bl64_lib_script_version_set '1.0.1'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 aws_eks_addons_show "$CLUSTER_NAME"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 3.0.0
+# template-task: 3.1.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -29,12 +29,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 # Functions
 #
 
-function all_check() {
+function my_all_check() {
   bl64_dbg_app_show_function "$@"
   local namespace="$1"
   local expand="$2"
 
-  bl64_msg_show_info 'Events of type Warning'
+  bl64_msg_show_info 'Show Warning Events'
   # shellcheck disable=SC2086,SC2046
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \
@@ -45,12 +45,12 @@ function all_check() {
     --sort-by='lastTimestamp'
 }
 
-function pod_check() {
+function my_pod_check() {
   bl64_dbg_app_show_function "$@"
   local namespace="$1"
   local expand="$2"
 
-  bl64_msg_show_info 'Events of type Warning for Pods not healthy'
+  bl64_msg_show_task 'Show Pod Warning Events'
   # shellcheck disable=SC2086,SC2046
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \
@@ -63,9 +63,16 @@ function pod_check() {
     --sort-by='lastTimestamp'
 }
 
-function initialize() {
+function my_initialize() {
   bl64_dbg_app_show_function
-  s64_k8s_lib_setup
+  [[ -n "$MY_OPTION" ]] ||
+    { bl64_msg_help_show && return 1; }
+  s64_k8s_lib_setup ||
+    return $?
+  bl64_msg_show_about
+  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    'MY_K8S_NAMESPACE' \
+    'MY_DETAIL_FORMAT'
 }
 
 #
@@ -74,8 +81,8 @@ function initialize() {
 
 declare MY_COMMAND='all_check'
 declare MY_OPTION=''
-declare DETAIL_FORMAT="$BL64_VAR_DEFAULT"
-declare K8S_NAMESPACE="$BL64_VAR_DEFAULT"
+declare MY_DETAIL_FORMAT="$BL64_VAR_DEFAULT"
+declare MY_K8S_NAMESPACE="$BL64_VAR_DEFAULT"
 
 bl64_lib_script_version_set '3.0.0'
 bl64_msg_help_usage_set '-a|-p [-n Namespace] [-j] [-V Verbose] [-D Debug] [-h]'
@@ -94,16 +101,16 @@ while getopts ':apjn:V:D:h' MY_OPTION; do
   case "$MY_OPTION" in
   a) MY_COMMAND='all_check' ;;
   p) MY_COMMAND='pod_check' ;;
-  n) K8S_NAMESPACE="$OPTARG" ;;
-  j) DETAIL_FORMAT='json' ;;
+  n) MY_K8S_NAMESPACE="$OPTARG" ;;
+  j) MY_DETAIL_FORMAT='json' ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
   D) S64_CORE_SET_DEBUG="$OPTARG" ;;
   h) bl64_msg_help_show && exit 0 ;;
   *) bl64_msg_help_show && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
-"$MY_COMMAND" "$K8S_NAMESPACE" "$DETAIL_FORMAT"
+"my_${MY_COMMAND}" "$MY_K8S_NAMESPACE" "$MY_DETAIL_FORMAT"
 bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"
