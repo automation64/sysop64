@@ -27,8 +27,8 @@ function my_initialize() {
     bl64_cnt_check_not_in_container
 }
 
-declare CONTAINER_IMAGE="${1:-alpine:latest}"
-declare ENTRY_POINT="${2:-sh}"
+declare MY_CONTAINER_IMAGE="${1:-alpine:latest}"
+declare MY_ENTRY_POINT="${2:-sh}"
 shift; shift
 
 bl64_lib_script_version_set '1.0.0'
@@ -39,7 +39,7 @@ bl64_cnt_run_docker \
   --rm \
   --tty \
   --interactive \
-  --entrypoint="$ENTRY_POINT" \
-  "$CONTAINER_IMAGE" \
+  --entrypoint="$MY_ENTRY_POINT" \
+  "$MY_CONTAINER_IMAGE" \
   "$@"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
