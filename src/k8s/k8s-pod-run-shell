@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 3.0.0
+# template-task: 3.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -26,6 +26,21 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
+# Globals
+#
+
+declare MY_CPU_LIMIT='100m'
+declare MY_MEMORY_LIMIT='1024Mi'
+declare MY_CPU_REQUEST='50m'
+declare MY_MEMORY_REQUEST='512Mi'
+declare MY_POD_NAME='sysop64-shell'
+declare MY_COMMAND='shell_run'
+declare MY_OPTION=''
+declare MY_K8S_NAMESPACE='default'
+declare MY_CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
+declare MY_CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
+
+#
 # Functions
 #
 
@@ -34,10 +49,36 @@ function my_shell_run() {
   local namespace="$1"
   local image="$2"
   local entrypoint="$3"
-  local pod_name='sysop64-shell'
+  local overrides_json=''
 
-  bl64_msg_show_task "Run interactive shell (${namespace}/${pod_name} -> ${image})"
-  # shellcheck disable=SC2086,SC2046
+  bl64_msg_show_task "Run interactive shell (${namespace}/${MY_POD_NAME} -> ${image})"
+  printf -v overrides_json '
+  { "spec": {
+      "restartPolicy": "Never",
+      "containers": [
+        {
+          "name": "%s",
+          "image": "%s",
+          "imagePullPolicy": "IfNotPresent",
+          "command": ["%s"],
+          "resources": {
+            "requests": {
+              "cpu": "%s",
+              "memory": "%s"
+            },
+            "limits": {
+              "cpu": "%s",
+              "memory": "%s"
+            }
+          },
+          "stdin": true,
+          "tty": true
+        }
+      ]
+    }
+  }
+  ' "$MY_POD_NAME" "$image" "$entrypoint" "$MY_CPU_REQUEST" "$MY_MEMORY_REQUEST" "$MY_CPU_LIMIT" "$MY_MEMORY_LIMIT"
+
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \
     run \
@@ -48,39 +89,37 @@ function my_shell_run() {
     --restart=Never \
     --namespace="$namespace" \
     --image="$image" \
-    "$pod_name" \
+    --overrides="$overrides_json" \
+    "$MY_POD_NAME" \
     -- "$entrypoint"
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  [[ -n "$MY_OPTION" ]] ||
-    { bl64_msg_help_show && return 1; }
-  s64_k8s_lib_setup ||
-    return $?
+  [[ -n "$MY_OPTION" ]] || { bl64_msg_help_show && return 1; }
+  s64_k8s_lib_setup || 
+  return $?
   [[ "$MY_CONTAINER_ENTRYPOINT" == "$BL64_VAR_DEFAULT" ]] && MY_CONTAINER_ENTRYPOINT='sh'
   [[ "$MY_CONTAINER_IMAGE" == "$BL64_VAR_DEFAULT" ]] && MY_CONTAINER_IMAGE='alpine'
   bl64_msg_show_about
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
     'MY_K8S_NAMESPACE' \
     'MY_CONTAINER_IMAGE' \
-    'MY_CONTAINER_ENTRYPOINT'
+    'MY_CONTAINER_ENTRYPOINT' \
+    'MY_CPU_REQUEST' \
+    'MY_MEMORY_REQUEST' \
+    'MY_CPU_LIMIT' \
+    'MY_MEMORY_LIMIT' \
+    'MY_POD_NAME'
 }
 
 #
 # Main
 #
 
-declare MY_COMMAND='shell_run'
-declare MY_OPTION=''
-declare MY_K8S_NAMESPACE='default'
-declare MY_CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
-declare MY_CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
-
-bl64_lib_script_version_set '3.0.0'
+bl64_lib_script_version_set '3.1.0'
 bl64_msg_help_usage_set '[-s] [-i Image] [-e EntryPoint] [-n NameSpace] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'K8S / Pod / Run / Shell'
-# shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
   '-s           : Run interactive shell (Default)
 -h           : Show help
