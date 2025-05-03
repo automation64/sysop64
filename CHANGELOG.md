@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0]
+
+### Added
+
+- AWS-CLI
+  - aws-cli-profile-list
+- AWS-SSO
+  - aws-sso-login
+- PGSql
+  - pgsql-cli-shell
+- K8S
+  - k8s-container-show-spec
+  - k8s-deployment-scale-down
+  - k8s-deployment-scale-up
+  - k8s-event-show-all-pod
+  - k8s-event-show-all-node
+  - k8s-event-show-warning-all
+  - k8s-event-show-warning-pod
+  - k8s-event-show-warning-nodes
+  - k8s-node-show-meta
+  - k8s-node-show-pods
+  - k8s-node-show-resources
+  - k8s-pod-show-meta
+  - k8s-pod-show-volumes
+  - s64_k8s_lib_run_kubectl
+
+### Deprecated
+
+- K8S
+  - k8s-event-check
+  - s64_k8s_lib_cli_set_output
+
 ## [1.6.0]
 
 ### Added
