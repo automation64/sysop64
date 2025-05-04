@@ -38,7 +38,7 @@ function my_initialize() {
     bl64_check_parameter 'MY_PARAMETERX' ||
     { bl64_msg_help_show && return 1; }
   s64_X_MODULE_X_lib_setup ||
-    return 1
+    return $?
   # X_INIT_PLACEHOLDER_X
   bl64_msg_show_about
   # X_INIT_INFO_PLACEHOLDER_X

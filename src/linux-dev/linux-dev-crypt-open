@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.0.0
+# template-one: 3.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -22,20 +22,24 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
+declare MY_DEVICE_PATH="${1:-}"
+declare MY_VOLUME_NAME="${2:-}"
+
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
     bl64_check_parameter 'MY_DEVICE_PATH' &&
-    s64_linux_lib_setup &&
-    bl64_msg_show_setup 'Open crypto device' \
-      'MY_DEVICE_PATH' \
-      'MY_VOLUME_NAME'
+    bl64_check_parameter 'MY_VOLUME_NAME' &&
+    s64_linux_lib_setup ||
+    return $?
+  bl64_msg_show_about
+  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    'MY_DEVICE_PATH' \
+    'MY_VOLUME_NAME'
 }
 
-declare MY_DEVICE_PATH="${1:-}"
-declare MY_VOLUME_NAME="${2:-}"
-
-bl64_lib_script_version_set '1.0.2'
+bl64_lib_script_version_set '1.0.3'
+bl64_msg_help_about_set 'Open dm-crypt device'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_linux_lib_run_cryptsetup \
