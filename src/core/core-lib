@@ -19,7 +19,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='2.0.2'
+  declare S64_CORE_VERSION='2.1.0'
 
   # Default BL64 install path
   declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-${S64_CORE_PATH_AT64}/bl64}"
@@ -32,12 +32,24 @@
 
   # Default verbose level
   declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
+
+  # Common UI tools
+  declare S64_CORE_PATH_VI="${S64_CORE_PATH_VI:-}"
 }
 
 #
 # Functions
 #
 
-function s64_core_lib_setup_logging() {
-  :
+function s64_core_lib_file_edit() {
+  bl64_dbg_app_show_function "$@"
+  if [[ -z "$S64_CORE_PATH_VI" ]]; then
+    S64_CORE_PATH_VI="$(bl64_bsh_command_locate 'vi')"
+  fi
+  bl64_check_command "$S64_CORE_PATH_VI" "$BL64_VAR_DEFAULT" 'vi' || return $?
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_CORE_PATH_VI" \
+    "$@"
+  bl64_dbg_app_trace_stop
 }
