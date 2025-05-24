@@ -32,6 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_MACOS_VERSION='1.3.0'
+
   declare S64_MACOS_PATH_CLI_CODESIGN=''
   declare S64_MACOS_PATH_CLI_DEFAULTS=''
   declare S64_MACOS_PATH_CLI_DSCACHEUTIL=''
@@ -41,6 +42,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_MACOS_PATH_CLI_PKGUTIL=''
   declare S64_MACOS_PATH_CLI_PLUTIL=''
   declare S64_MACOS_PATH_CLI_SYSADMINCTL=''
+
+  declare S64_MACOS_PATH_CFG_APPLICATION_SUPPORT=''
+  declare S64_MACOS_PATH_CFG_PREFERENCES=''
 }
 
 #
@@ -60,6 +64,9 @@ function s64_macos_lib_setup() {
     S64_MACOS_PATH_CLI_PKGUTIL='/usr/sbin/pkgutil'
     S64_MACOS_PATH_CLI_PLUTIL='/usr/bin/plutil'
     S64_MACOS_PATH_CLI_SYSADMINCTL='/usr/sbin/sysadminctl'
+
+    S64_MACOS_PATH_CFG_APPLICATION_SUPPORT='Library/Application Support'
+    S64_MACOS_PATH_CFG_PREFERENCES='Library/Preferences'
     ;;
   *) bl64_check_alert_unsupported ;;
   esac
@@ -134,10 +141,12 @@ function s64_macos_lib_run_osascript() {
 
 function s64_macos_lib_run_killall() {
   bl64_dbg_app_show_function "$@"
+  local verbose=''
   bl64_dbg_app_trace_start
+  bl64_msg_app_verbose_is_enabled && verbose='-v'
   # shellcheck disable=SC2086
   "$S64_MACOS_PATH_CLI_KILLALL" \
-    "$@"
+    $verbose "$@"
   bl64_dbg_app_trace_stop
 }
 
