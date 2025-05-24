@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Mac-App
+  - macos-app-get-bundleid
 - Mac-UI
+  - macos-ui-notification-reset
   - macos-ui-notification-restart
   - macos-ui-preferences-export-xml
 
