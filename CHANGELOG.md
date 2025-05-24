@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0]
+
+### Added
+
+- Mac-App
+  - macos-app-get-bundleid
+- Mac-UI
+  - macos-ui-notification-reset
+  - macos-ui-notification-restart
+  - macos-ui-preferences-export-xml
+
 ## [1.9.0]
 
 ### Added

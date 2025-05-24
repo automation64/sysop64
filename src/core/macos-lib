@@ -31,13 +31,25 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_MACOS_VERSION='1.2.0'
+  declare S64_MACOS_VERSION='1.3.0'
+
+
   declare S64_MACOS_PATH_CLI_CODESIGN=''
   declare S64_MACOS_PATH_CLI_DEFAULTS=''
   declare S64_MACOS_PATH_CLI_DSCACHEUTIL=''
+  declare S64_MACOS_PATH_CLI_DSCL=''
+  declare S64_MACOS_PATH_CLI_KILLALL=''
   declare S64_MACOS_PATH_CLI_LSOF=''
-  declare S64_MACOS_PATH_CLI_SYSADMINCTL=''
+  declare S64_MACOS_PATH_CLI_OSASCRIPT=''
   declare S64_MACOS_PATH_CLI_PKGUTIL=''
+  declare S64_MACOS_PATH_CLI_PLISTBUDDY=''
+  declare S64_MACOS_PATH_CLI_PLUTIL=''
+  declare S64_MACOS_PATH_CLI_SYSADMINCTL=''
+
+  declare S64_MACOS_PATH_CFG_APPLICATION_SUPPORT=''
+  declare S64_MACOS_PATH_CFG_PREFERENCES=''
+
+  declare S64_MACOS_PATH_PLIST_NCENTER=''
 }
 
 #
@@ -48,12 +60,23 @@ function s64_macos_lib_setup() {
   bl64_dbg_app_show_function
   case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_MACOS")
+
     S64_MACOS_PATH_CLI_CODESIGN='/usr/bin/codesign'
     S64_MACOS_PATH_CLI_DEFAULTS='/usr/bin/defaults'
     S64_MACOS_PATH_CLI_DSCACHEUTIL='/usr/bin/dscacheutil'
+    S64_MACOS_PATH_CLI_DSCL='/usr/bin/dscl'
+    S64_MACOS_PATH_CLI_KILLALL='/usr/bin/killall'
     S64_MACOS_PATH_CLI_LSOF='/usr/sbin/lsof'
-    S64_MACOS_PATH_CLI_SYSADMINCTL='/usr/sbin/sysadminctl'
+    S64_MACOS_PATH_CLI_OSASCRIPT='/usr/bin/osascript'
     S64_MACOS_PATH_CLI_PKGUTIL='/usr/sbin/pkgutil'
+    S64_MACOS_PATH_CLI_PLISTBUDDY='/usr/libexec/PlistBuddy'
+    S64_MACOS_PATH_CLI_PLUTIL='/usr/bin/plutil'
+    S64_MACOS_PATH_CLI_SYSADMINCTL='/usr/sbin/sysadminctl'
+
+    S64_MACOS_PATH_CFG_APPLICATION_SUPPORT='Library/Application Support'
+    S64_MACOS_PATH_CFG_PREFERENCES='Library/Preferences'
+
+    S64_MACOS_PATH_PLIST_NCENTER="${S64_MACOS_PATH_CFG_PREFERENCES}/com.apple.ncprefs.plist"
     ;;
   *) bl64_check_alert_unsupported ;;
   esac
@@ -81,7 +104,6 @@ function s64_macos_lib_run_codesign() {
 
 function s64_macos_lib_run_pkgutil() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_MACOS_PATH_CLI_PKGUTIL" "$BL64_VAR_DEFAULT" 'S64_MACOS_PATH_CLI_PKGUTIL' || return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_MACOS_PATH_CLI_PKGUTIL" \
@@ -101,7 +123,6 @@ function s64_macos_lib_run_dscacheutil() {
 
 function s64_macos_lib_run_sysadminctl() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_MACOS_PATH_CLI_SYSADMINCTL" "$BL64_VAR_DEFAULT" 'S64_MACOS_PATH_CLI_SYSADMINCTL' || return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_MACOS_PATH_CLI_SYSADMINCTL" \
@@ -111,10 +132,56 @@ function s64_macos_lib_run_sysadminctl() {
 
 function s64_macos_lib_run_defaults() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_MACOS_PATH_CLI_DEFAULTS" "$BL64_VAR_DEFAULT" 'S64_MACOS_PATH_CLI_DEFAULTS' || return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_MACOS_PATH_CLI_DEFAULTS" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_osascript() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_OSASCRIPT" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_killall() {
+  bl64_dbg_app_show_function "$@"
+  local verbose=''
+  bl64_dbg_app_trace_start
+  bl64_msg_app_verbose_is_enabled && verbose='-v'
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_KILLALL" \
+    $verbose "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_plutil() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_PLUTIL" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_plistbuddy() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_PLISTBUDDY" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_dscl() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_DSCL" \
     "$@"
   bl64_dbg_app_trace_stop
 }
