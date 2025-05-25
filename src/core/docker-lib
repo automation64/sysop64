@@ -42,6 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_docker_lib_setup() {
   bl64_dbg_app_show_function
+  # shellcheck disable=SC2119
   bl64_cnt_setup &&
     bl64_check_command "$BL64_CNT_CMD_DOCKER" "$BL64_VAR_DEFAULT" 'BL64_CNT_CMD_DOCKER'
 }

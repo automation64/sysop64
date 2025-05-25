@@ -45,6 +45,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_unix_lib_setup() {
   bl64_dbg_app_show_function
+  # shellcheck disable=SC2154,SC2034
   case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_ALPINE")
     S64_UNIX_PATH_CLI_DU='/usr/bin/du'

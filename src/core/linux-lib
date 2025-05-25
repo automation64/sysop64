@@ -69,7 +69,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 function s64_linux_lib_setup() {
   bl64_dbg_app_show_function
-  # shellcheck disable=SC2154
+  # shellcheck disable=SC2154,SC2034
   case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_DEBIAN")
     S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
