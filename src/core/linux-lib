@@ -38,15 +38,17 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='2.3.0'
+  declare S64_LINUX_VERSION='2.4.0'
+
 
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
   declare S64_LINUX_PATH_CLI_BLKID=''
   declare S64_LINUX_PATH_CLI_CRYPTSETUP=''
   declare S64_LINUX_PATH_CLI_DMSETUP=''
-  declare S64_LINUX_PATH_CLI_GRUB2MKCONFIG=''
   declare S64_LINUX_PATH_CLI_FSCK=''
+  declare S64_LINUX_PATH_CLI_GRUB2MKCONFIG=''
   declare S64_LINUX_PATH_CLI_JOURNALCTL=''
+  declare S64_LINUX_PATH_CLI_LDD=''
   declare S64_LINUX_PATH_CLI_LSBLK=''
   declare S64_LINUX_PATH_CLI_LSPCI=''
   declare S64_LINUX_PATH_CLI_LSUSB=''
@@ -57,7 +59,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_PVS=''
   declare S64_LINUX_PATH_CLI_UDISKSCTL=''
   declare S64_LINUX_PATH_CLI_VGS=''
-
   declare S64_LINUX_PATH_CFG_GRUB_OPTIONS=''
   declare S64_LINUX_PATH_CFG_GRUB_CONFIG=''
 }
@@ -75,9 +76,10 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
-    S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+    S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
     S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+    S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
     S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
     S64_LINUX_PATH_CLI_LSPCI='/bin/lspci'
     S64_LINUX_PATH_CLI_LSUSB='/bin/lsusb'
@@ -97,9 +99,10 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
-    S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+    S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
     S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+    S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
     S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
     S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
     S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
@@ -294,7 +297,6 @@ function s64_linux_lib_run_dmsetup() {
 
 function s64_linux_lib_run_lspci() {
   bl64_dbg_app_show_function "$@"
-
   bl64_check_command "$S64_LINUX_PATH_CLI_LSPCI" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_LSPCI' ||
     return $?
 
@@ -307,13 +309,22 @@ function s64_linux_lib_run_lspci() {
 
 function s64_linux_lib_run_grub2_mkconfig() {
   bl64_dbg_app_show_function "$@"
-
   bl64_check_command "$S64_LINUX_PATH_CLI_GRUB2MKCONFIG" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_GRUB2MKCONFIG' ||
     return $?
 
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_GRUB2MKCONFIG" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_ldd() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_LDD" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_LDD' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_LDD" \
     "$@"
   bl64_dbg_app_trace_stop
 }
