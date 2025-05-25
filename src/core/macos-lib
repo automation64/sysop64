@@ -58,6 +58,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_macos_lib_setup() {
   bl64_dbg_app_show_function
+  # shellcheck disable=SC2154,SC2034
   case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_MACOS")
 

@@ -111,10 +111,10 @@ function my_initialize() {
   bl64_check_parameter 'MY_COMMAND' || { help && return 1; }
 
   bl64_check_privilege_root &&
+    s64_linux_lib_setup &&
     bl64_os_check_compatibility \
       "${BL64_OS_UB}-22" "${BL64_OS_UB}-23" "${BL64_OS_UB}-24" \
-      "${BL64_OS_FD}-39" "${BL64_OS_FD}-40" "${BL64_OS_FD}-41" &&
-    s64_linux_lib_setup ||
+      "${BL64_OS_FD}-39" "${BL64_OS_FD}-40" "${BL64_OS_FD}-41" ||
     return $?
 
   if [[ "$MY_COMMAND" == 'upgrade' ]]; then
@@ -136,12 +136,12 @@ declare MY_COMMAND="$BL64_VAR_NULL"
 declare MY_OPTION=''
 declare MY_RELEASE="$BL64_VAR_NULL"
 
-bl64_lib_script_version_set '1.0.4'
+bl64_lib_script_version_set '1.0.5'
 bl64_msg_help_usage_set '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'Linux / Distro / Upgrade'
 # shellcheck disable=SC2016
 bl64_msg_help_parameters_set \
-'-p         : Prepare for Distro upgrade
+  '-p         : Prepare for Distro upgrade
 -u         : Perform for Distro upgrade
 -h         : Show help
 -r Release : Target release
