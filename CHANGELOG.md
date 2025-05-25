@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Linux-App
   - linux-app-lib-list
 
-## [1.10.1]
+## [1.10.0]
 
 ### Added
 
