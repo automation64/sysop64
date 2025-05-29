@@ -40,7 +40,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 {
   declare S64_LINUX_VERSION='2.6.0'
 
-
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
   declare S64_LINUX_PATH_CLI_BLKID=''
   declare S64_LINUX_PATH_CLI_CRYPTSETUP=''
@@ -59,6 +58,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_MOUNT=''
   declare S64_LINUX_PATH_CLI_PVS=''
   declare S64_LINUX_PATH_CLI_UDISKSCTL=''
+  declare S64_LINUX_PATH_CLI_RCSERVICE=''
+  declare S64_LINUX_PATH_CLI_SYSTEMCTL=''
   declare S64_LINUX_PATH_CLI_VGS=''
 
   declare S64_LINUX_PATH_CFG_GRUB_OPTIONS=''
@@ -92,6 +93,8 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+    S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
+    S64_LINUX_PATH_CLI_SYSTEMCTL='/bin/systemctl'
     S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
@@ -116,6 +119,8 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+    S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
+    S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
     S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/etc/grub2.cfg'
@@ -140,6 +145,8 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
     S64_LINUX_PATH_CLI_PVS='/sbin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+    S64_LINUX_PATH_CLI_RCSERVICE='/etc/init.d/rc-service'
+    S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
     S64_LINUX_PATH_CLI_VGS='/sbin/vgs'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
@@ -164,6 +171,8 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+    S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
+    S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
     S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub2/grub.cfg'
@@ -390,6 +399,26 @@ function s64_linux_lib_run_ip() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_IP" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_systemctl() {
+  return $?
+  bl64_check_command "$S64_LINUX_PATH_CLI_SYSTEMCTL" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_SYSTEMCTL' ||
+    bl64_dbg_app_show_function "$@"
+  "$@"
+  "$S64_LINUX_PATH_CLI_SYSTEMCTL" \
+    bl64_dbg_app_trace_start
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_rcservice() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_RCSERVICE" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_RCSERVICE' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_RCSERVICE" \
     "$@"
   bl64_dbg_app_trace_stop
 }

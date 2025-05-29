@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - macos-net-ip-list
 - Linux-Net
   - linux-net-ip-list
+- Linux-SVC
+  - linux-svc-*
 
 ## [1.11.0]
 
