@@ -83,6 +83,6 @@ function my_initialize() {
 bl64_lib_script_version_set '1.0.0'
 bl64_msg_help_about_set 'Stop a system service on the system'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
-bl64_msg_show_batch_stop "$BL64_SCRIPT_ID"
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 my_service_stop "$MY_SERVICE_NAME"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
