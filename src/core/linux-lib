@@ -38,7 +38,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='2.4.0'
+  declare S64_LINUX_VERSION='2.5.0'
 
 
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
@@ -47,6 +47,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_DMSETUP=''
   declare S64_LINUX_PATH_CLI_FSCK=''
   declare S64_LINUX_PATH_CLI_GRUB2MKCONFIG=''
+  declare S64_LINUX_PATH_CLI_IP=''
   declare S64_LINUX_PATH_CLI_JOURNALCTL=''
   declare S64_LINUX_PATH_CLI_LDD=''
   declare S64_LINUX_PATH_CLI_LSBLK=''
@@ -59,6 +60,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_PVS=''
   declare S64_LINUX_PATH_CLI_UDISKSCTL=''
   declare S64_LINUX_PATH_CLI_VGS=''
+
   declare S64_LINUX_PATH_CFG_GRUB_OPTIONS=''
   declare S64_LINUX_PATH_CFG_GRUB_CONFIG=''
 }
@@ -78,6 +80,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
+    S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
     S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
     S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
     S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
@@ -101,6 +104,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
+    S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
     S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
     S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
     S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
@@ -325,6 +329,16 @@ function s64_linux_lib_run_ldd() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_LDD" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_ip() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_IP" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_IP' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_IP" \
     "$@"
   bl64_dbg_app_trace_stop
 }
