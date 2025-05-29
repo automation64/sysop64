@@ -121,11 +121,59 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/etc/grub2.cfg'
     S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
     ;;
-    *)
-      bl64_check_alert_unsupported
-      return $?
-      ;;
-    esac
+  "$BL64_OS_FLAVOR_ALPINE")
+    S64_LINUX_PATH_CLI_BADBLOCKS='/sbin/badblocks'
+    S64_LINUX_PATH_CLI_BLKID='/sbin/blkid'
+    S64_LINUX_PATH_CLI_CRYPTSETUP='/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_DMSETUP='/sbin/dmsetup'
+    S64_LINUX_PATH_CLI_FSCK='/sbin/fsck'
+    S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub-mkconfig'
+    S64_LINUX_PATH_CLI_IP='/sbin/ip'
+    S64_LINUX_PATH_CLI_JOURNALCTL='/bin/journalctl'
+    S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
+    S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
+    S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
+    S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
+    S64_LINUX_PATH_CLI_LVS='/sbin/lvs'
+    S64_LINUX_PATH_CLI_MDADM='/sbin/mdadm'
+    S64_LINUX_PATH_CLI_MKFS='/sbin/mkfs'
+    S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+    S64_LINUX_PATH_CLI_PVS='/sbin/pvs'
+    S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+    S64_LINUX_PATH_CLI_VGS='/sbin/vgs'
+
+    S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
+    S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
+    ;;
+  "$BL64_OS_FLAVOR_SUSE")
+    S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
+    S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
+    S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
+    S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+    S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub2-mkconfig'
+    S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
+    S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+    S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
+    S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
+    S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
+    S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
+    S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
+    S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
+    S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+    S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+    S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+    S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+    S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
+
+    S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub2/grub.cfg'
+    S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
+    ;;
+  *)
+    bl64_check_alert_unsupported
+    return $?
+    ;;
+  esac
 }
 
 function s64_linux_lib_run_udisksctl() {
