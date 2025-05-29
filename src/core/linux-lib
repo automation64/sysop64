@@ -404,12 +404,12 @@ function s64_linux_lib_run_ip() {
 }
 
 function s64_linux_lib_run_systemctl() {
-  return $?
+  bl64_dbg_app_show_function "$@"
   bl64_check_command "$S64_LINUX_PATH_CLI_SYSTEMCTL" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_SYSTEMCTL' ||
-    bl64_dbg_app_show_function "$@"
-  "$@"
+    return $?
+  bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_SYSTEMCTL" \
-    bl64_dbg_app_trace_start
+    "$@"
   bl64_dbg_app_trace_stop
 }
 
