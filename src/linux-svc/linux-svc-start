@@ -19,43 +19,70 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/linux-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_REPOSITORY_ID="${1:-}"
+declare MY_SERVICE_NAME="${1:-}"
 
-function my_repo_disable_dnfv5() {
+function my_service_start_alpine() {
   bl64_dbg_app_show_function "$@"
-  local repo="$1"
-  bl64_pkg_run_dnf config-manager setopt "$repo.enabled=0"
+  local service="$1"
+  s64_linux_lib_run_rcservice "$service" start
 }
 
-function my_repo_disable() {
+function my_service_start_debian() {
   bl64_dbg_app_show_function "$@"
-  local repo="$1"
-  case "$BL64_OS_DISTRO" in
-  ${BL64_OS_FD}-4?.*) my_repo_disable_dnfv5 "$repo" ;;
-    *)
-      bl64_check_alert_unsupported
-      return $?
-      ;;
-    esac
+  local service="$1"
+  s64_linux_lib_run_systemctl start "$service"
+}
+
+function my_service_start_fedora() {
+  bl64_dbg_app_show_function "$@"
+  local service="$1"
+  s64_linux_lib_run_systemctl start "$service"
+}
+
+function my_service_start_redhat() {
+  bl64_dbg_app_show_function "$@"
+  local service="$1"
+  s64_linux_lib_run_systemctl start "$service"
+}
+
+function my_service_start_suse() {
+  bl64_dbg_app_show_function "$@"
+  local service="$1"
+  s64_linux_lib_run_systemctl start "$service"
+}
+
+function my_service_start() {
+  bl64_dbg_app_show_function "$@"
+  local service="$1"
+  case "$BL64_OS_FLAVOR" in
+  "$BL64_OS_FLAVOR_ALPINE") my_service_start_alpine "$service" ;;
+  "$BL64_OS_FLAVOR_DEBIAN") my_service_start_debian "$service" ;;
+  "$BL64_OS_FLAVOR_FEDORA") my_service_start_fedora "$service" ;;
+  "$BL64_OS_FLAVOR_REDHAT") my_service_start_redhat "$service" ;;
+  "$BL64_OS_FLAVOR_SUSE") my_service_start_suse "$service" ;;
+  *)
+    bl64_check_alert_unsupported
+    return $?
+    ;;
+  esac
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
-    bl64_check_privilege_root &&
-    bl64_check_parameter 'MY_REPOSITORY_ID' ||
+    bl64_check_parameter 'MY_SERVICE_NAME' &&
+    bl64_check_privilege_root ||
     return $?
   bl64_msg_show_about
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-    'MY_REPOSITORY_ID'
+    'MY_SERVICE_NAME'
 }
 
-bl64_lib_script_version_set '1.0.2'
-bl64_msg_help_about_set 'Disable Linux native package repository'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Start a system service on the system'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-my_repo_disable "$MY_REPOSITORY_ID"
+my_service_start "$MY_SERVICE_NAME"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

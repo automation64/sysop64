@@ -5,11 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0]
+
+### Added
+
+- MacOS-Net
+  - macos-net-ip-list
+- Linux-Net
+  - linux-net-ip-list
+- Linux-SVC
+  - linux-svc-*
+
 ## [1.11.0]
 
 ### Added
 
-- Mac-UI
+- MacOS-UI
   - macos-ui-preferences-show
 - Linux-App
   - linux-app-lib-list
@@ -18,9 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Mac-App
+- MacOS-App
   - macos-app-get-bundleid
-- Mac-UI
+- MacOS-UI
   - macos-ui-notification-reset
   - macos-ui-notification-restart
   - macos-ui-preferences-export-xml

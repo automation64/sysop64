@@ -31,15 +31,17 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_MACOS_VERSION='1.3.0'
-
+  declare S64_MACOS_VERSION='1.4.0'
 
   declare S64_MACOS_PATH_CLI_CODESIGN=''
   declare S64_MACOS_PATH_CLI_DEFAULTS=''
   declare S64_MACOS_PATH_CLI_DSCACHEUTIL=''
   declare S64_MACOS_PATH_CLI_DSCL=''
+  declare S64_MACOS_PATH_CLI_IFCONFIG=''
+  declare S64_MACOS_PATH_CLI_IPCONFIG=''
   declare S64_MACOS_PATH_CLI_KILLALL=''
   declare S64_MACOS_PATH_CLI_LSOF=''
+  declare S64_MACOS_PATH_CLI_NETWORKSETUP=''
   declare S64_MACOS_PATH_CLI_OSASCRIPT=''
   declare S64_MACOS_PATH_CLI_PKGUTIL=''
   declare S64_MACOS_PATH_CLI_PLISTBUDDY=''
@@ -59,15 +61,18 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 function s64_macos_lib_setup() {
   bl64_dbg_app_show_function
   # shellcheck disable=SC2154,SC2034
-  case "$BL64_OS_FLAVOR" in
-  "$BL64_OS_FLAVOR_MACOS")
+  case "$BL64_OS_DISTRO" in
+  ${BL64_OS_MCOS}-12.* | ${BL64_OS_MCOS}-13.* | ${BL64_OS_MCOS}-14.* | ${BL64_OS_MCOS}-15.*)
 
     S64_MACOS_PATH_CLI_CODESIGN='/usr/bin/codesign'
     S64_MACOS_PATH_CLI_DEFAULTS='/usr/bin/defaults'
     S64_MACOS_PATH_CLI_DSCACHEUTIL='/usr/bin/dscacheutil'
     S64_MACOS_PATH_CLI_DSCL='/usr/bin/dscl'
+    S64_MACOS_PATH_CLI_IFCONFIG='/sbin/ifconfig'
+    S64_MACOS_PATH_CLI_IPCONFIG='/usr/sbin/ipconfig'
     S64_MACOS_PATH_CLI_KILLALL='/usr/bin/killall'
     S64_MACOS_PATH_CLI_LSOF='/usr/sbin/lsof'
+    S64_MACOS_PATH_CLI_NETWORKSETUP='/usr/sbin/networksetup'
     S64_MACOS_PATH_CLI_OSASCRIPT='/usr/bin/osascript'
     S64_MACOS_PATH_CLI_PKGUTIL='/usr/sbin/pkgutil'
     S64_MACOS_PATH_CLI_PLISTBUDDY='/usr/libexec/PlistBuddy'
@@ -79,8 +84,11 @@ function s64_macos_lib_setup() {
 
     S64_MACOS_PATH_PLIST_NCENTER="${S64_MACOS_PATH_CFG_PREFERENCES}/com.apple.ncprefs.plist"
     ;;
-  *) bl64_check_alert_unsupported ;;
-  esac
+    *)
+      bl64_check_alert_unsupported
+      return $?
+      ;;
+    esac
 }
 
 function s64_macos_lib_run_lsof() {
@@ -183,6 +191,33 @@ function s64_macos_lib_run_dscl() {
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_MACOS_PATH_CLI_DSCL" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_ifconfig() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_IFCONFIG" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_networksetup() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_NETWORKSETUP" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_ipconfig() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_IPCONFIG" \
     "$@"
   bl64_dbg_app_trace_stop
 }
