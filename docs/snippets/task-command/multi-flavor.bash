@@ -14,6 +14,9 @@ function my_X_COMMAND_X() {
   "$BL64_OS_FLAVOR_MACOS") my_X_COMMAND_X_macos;;
   "$BL64_OS_FLAVOR_REDHAT") my_X_COMMAND_X_redhat;;
   "$BL64_OS_FLAVOR_SUSE") my_X_COMMAND_X_suse;;
-  *) bl64_check_alert_unsupported ;;
-  esac
+    *)
+      bl64_check_alert_unsupported
+      return $?
+      ;;
+    esac
 }
