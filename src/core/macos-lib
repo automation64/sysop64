@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_MACOS_VERSION='1.3.0'
+  declare S64_MACOS_VERSION='1.4.0'
 
   declare S64_MACOS_PATH_CLI_CODESIGN=''
   declare S64_MACOS_PATH_CLI_DEFAULTS=''
@@ -84,8 +84,11 @@ function s64_macos_lib_setup() {
 
     S64_MACOS_PATH_PLIST_NCENTER="${S64_MACOS_PATH_CFG_PREFERENCES}/com.apple.ncprefs.plist"
     ;;
-  *) bl64_check_alert_unsupported ;;
-  esac
+    *)
+      bl64_check_alert_unsupported
+      return $?
+      ;;
+    esac
 }
 
 function s64_macos_lib_run_lsof() {

@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_UNIX_VERSION='1.2.1'
+  declare S64_UNIX_VERSION='1.2.2'
   declare S64_UNIX_PATH_CLI_DU=''
   declare S64_UNIX_PATH_CLI_NETSTAT=''
   declare S64_UNIX_PATH_CLI_PS=''
@@ -75,8 +75,11 @@ function s64_unix_lib_setup() {
     S64_UNIX_PATH_CLI_SCREEN='/usr/bin/screen'
     S64_UNIX_PATH_CLI_SU='/usr/bin/su'
     ;;
-  *) bl64_check_alert_unsupported ;;
-  esac
+    *)
+      bl64_check_alert_unsupported
+      return $?
+      ;;
+    esac
 
 }
 

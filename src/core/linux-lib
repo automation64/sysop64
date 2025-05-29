@@ -38,7 +38,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='2.5.0'
+  declare S64_LINUX_VERSION='2.6.0'
 
 
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
@@ -121,8 +121,11 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/etc/grub2.cfg'
     S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
     ;;
-  *) bl64_check_alert_unsupported ;;
-  esac
+    *)
+      bl64_check_alert_unsupported
+      return $?
+      ;;
+    esac
 }
 
 function s64_linux_lib_run_udisksctl() {
