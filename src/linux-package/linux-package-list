@@ -45,6 +45,11 @@ function list() {
       'list' \
       --installed
     ;;
+  ${BL64_OS_ALP}-*)
+    bl64_pkg_run_apk \
+      'list' \
+      --installed
+    ;;
     *)
       bl64_check_alert_unsupported
       return $?
