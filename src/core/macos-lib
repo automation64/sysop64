@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_MACOS_VERSION='1.4.0'
+  declare S64_MACOS_VERSION='1.5.0'
 
   declare S64_MACOS_PATH_CLI_CODESIGN=''
   declare S64_MACOS_PATH_CLI_DEFAULTS=''
@@ -47,6 +47,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_MACOS_PATH_CLI_PLISTBUDDY=''
   declare S64_MACOS_PATH_CLI_PLUTIL=''
   declare S64_MACOS_PATH_CLI_SYSADMINCTL=''
+  declare S64_MACOS_PATH_CLI_INSTALLER=''
+  declare S64_MACOS_PATH_CLI_SOFTWAREUPDATE=''
+  declare S64_MACOS_PATH_CLI_SYSTEMSETUP=''
+  declare S64_MACOS_PATH_CLI_SW_VERS=''
 
   declare S64_MACOS_PATH_CFG_APPLICATION_SUPPORT=''
   declare S64_MACOS_PATH_CFG_PREFERENCES=''
@@ -78,6 +82,10 @@ function s64_macos_lib_setup() {
     S64_MACOS_PATH_CLI_PLISTBUDDY='/usr/libexec/PlistBuddy'
     S64_MACOS_PATH_CLI_PLUTIL='/usr/bin/plutil'
     S64_MACOS_PATH_CLI_SYSADMINCTL='/usr/sbin/sysadminctl'
+    S64_MACOS_PATH_CLI_INSTALLER='/usr/sbin/installer'
+    S64_MACOS_PATH_CLI_SOFTWAREUPDATE='/usr/sbin/softwareupdate'
+    S64_MACOS_PATH_CLI_SYSTEMSETUP='/usr/sbin/systemsetup'
+    S64_MACOS_PATH_CLI_SW_VERS='/usr/bin/sw_vers'
 
     S64_MACOS_PATH_CFG_APPLICATION_SUPPORT='Library/Application Support'
     S64_MACOS_PATH_CFG_PREFERENCES='Library/Preferences'
@@ -113,9 +121,12 @@ function s64_macos_lib_run_codesign() {
 
 function s64_macos_lib_run_pkgutil() {
   bl64_dbg_app_show_function "$@"
+  local verbose=''
+  bl64_msg_app_verbose_is_enabled && verbose='-v'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_MACOS_PATH_CLI_PKGUTIL" \
+    $verbose \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -160,8 +171,8 @@ function s64_macos_lib_run_osascript() {
 function s64_macos_lib_run_killall() {
   bl64_dbg_app_show_function "$@"
   local verbose=''
-  bl64_dbg_app_trace_start
   bl64_msg_app_verbose_is_enabled && verbose='-v'
+  bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_MACOS_PATH_CLI_KILLALL" \
     $verbose "$@"
@@ -218,6 +229,42 @@ function s64_macos_lib_run_ipconfig() {
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_MACOS_PATH_CLI_IPCONFIG" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_installer() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_INSTALLER" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_softwareupdate() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_SOFTWAREUPDATE" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_systemsetup() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_SYSTEMSETUP" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_macos_lib_run_sw_vers() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_MACOS_PATH_CLI_SW_VERS" \
     "$@"
   bl64_dbg_app_trace_stop
 }

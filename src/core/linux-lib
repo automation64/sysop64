@@ -38,12 +38,14 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='2.6.0'
+  declare S64_LINUX_VERSION='2.7.0'
 
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
   declare S64_LINUX_PATH_CLI_BLKID=''
   declare S64_LINUX_PATH_CLI_CRYPTSETUP=''
   declare S64_LINUX_PATH_CLI_DMSETUP=''
+  declare S64_LINUX_PATH_CLI_DPKG=''
+  declare S64_LINUX_PATH_CLI_DPKG_QUERY=''
   declare S64_LINUX_PATH_CLI_FSCK=''
   declare S64_LINUX_PATH_CLI_GRUB2MKCONFIG=''
   declare S64_LINUX_PATH_CLI_IP=''
@@ -57,6 +59,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_MKFS=''
   declare S64_LINUX_PATH_CLI_MOUNT=''
   declare S64_LINUX_PATH_CLI_PVS=''
+  declare S64_LINUX_PATH_CLI_RPM=''
   declare S64_LINUX_PATH_CLI_UDISKSCTL=''
   declare S64_LINUX_PATH_CLI_RCSERVICE=''
   declare S64_LINUX_PATH_CLI_SYSTEMCTL=''
@@ -79,6 +82,8 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
+    S64_LINUX_PATH_CLI_DPKG='/usr/bin/dpkg'
+    S64_LINUX_PATH_CLI_DPKG_QUERY='/usr/bin/dpkg-query'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
     S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
@@ -92,6 +97,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+    S64_LINUX_PATH_CLI_RPM="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
     S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_SYSTEMCTL='/bin/systemctl'
@@ -105,6 +111,8 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
+    S64_LINUX_PATH_CLI_DPKG="$BL64_VAR_INCOMPATIBLE"
+    S64_LINUX_PATH_CLI_DPKG_QUERY="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
     S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
@@ -118,6 +126,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+    S64_LINUX_PATH_CLI_RPM='/usr/bin/rpm'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
     S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
@@ -131,6 +140,8 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/sbin/blkid'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/sbin/cryptsetup'
     S64_LINUX_PATH_CLI_DMSETUP='/sbin/dmsetup'
+    S64_LINUX_PATH_CLI_DPKG="$BL64_VAR_INCOMPATIBLE"
+    S64_LINUX_PATH_CLI_DPKG_QUERY="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_FSCK='/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub-mkconfig'
     S64_LINUX_PATH_CLI_IP='/sbin/ip'
@@ -144,6 +155,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MKFS='/sbin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
     S64_LINUX_PATH_CLI_PVS='/sbin/pvs'
+    S64_LINUX_PATH_CLI_RPM="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
     S64_LINUX_PATH_CLI_RCSERVICE='/etc/init.d/rc-service'
     S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
@@ -157,6 +169,8 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
+    S64_LINUX_PATH_CLI_DPKG="$BL64_VAR_INCOMPATIBLE"
+    S64_LINUX_PATH_CLI_DPKG_QUERY="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub2-mkconfig'
     S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
@@ -170,6 +184,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+    S64_LINUX_PATH_CLI_RPM='/usr/bin/rpm'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
     S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
@@ -419,6 +434,30 @@ function s64_linux_lib_run_rcservice() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_RCSERVICE" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_dpkg() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_DPKG" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_rpm() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_RPM" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_dpkg_query() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_DPKG_QUERY" \
     "$@"
   bl64_dbg_app_trace_stop
 }
