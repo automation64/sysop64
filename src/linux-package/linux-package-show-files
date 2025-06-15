@@ -45,7 +45,7 @@ function my_task() {
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
-  bl64_check_parameter 'MY_PACKAGE_NAME' || return $?
+    bl64_check_parameter 'MY_PACKAGE_NAME' || return $?
   bl64_msg_show_about
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
     'MY_PACKAGE_NAME'

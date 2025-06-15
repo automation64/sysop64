@@ -27,9 +27,9 @@ declare MY_TARGET_REPLICAS="${3:-0}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_K8S_NAMESPACE' &&
-    bl64_check_parameter 'MY_TARGET_DEPLOYMENT' &&
-    s64_k8s_lib_setup ||
+  s64_k8s_lib_setup &&
+    bl64_check_parameter 'MY_K8S_NAMESPACE' &&
+    bl64_check_parameter 'MY_TARGET_DEPLOYMENT' ||
     return $?
   bl64_msg_show_about
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
