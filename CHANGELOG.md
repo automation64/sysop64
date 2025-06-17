@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Core-Lib
   - aws: bl64 module load typo
 
+### Added
+
+- Docker
+  - docker-container-list-all
+  - docker-container-list-running
+  - docker-container-stop-all
+  - docker-image-list
+
 ## [1.13.0]
 
 ### Added
