@@ -33,7 +33,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_DOCKER_VERSION='2.0.1'
+  declare S64_DOCKER_VERSION='2.1.0'
+
+  # Default output format
+  declare S64_DOCKER_SET_FORMAT="${S64_DOCKER_SET_FORMAT:-table}"
+  # Default timeout for docker commands
+  declare S64_DOCKER_SET_TIMEOUT="${S64_DOCKER_SET_TIMEOUT:-60}"
 }
 
 #

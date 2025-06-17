@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+[[ ! -d /project ]] && echo 'Fatal: test for lab container only' && exit 1
+
 export S64_CORE_PATH_ROOT="src"
 export S64_CORE_PATH_BL64="lib/bl64"
 declare cmd="$1"

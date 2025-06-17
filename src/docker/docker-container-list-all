@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # template-one: 3.2.0
+#   template-one-base: 2.1.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -17,25 +18,25 @@ declare S64_CORE_PATH_AT64="${HOME}/at64"
 [[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/macos-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/docker-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_PACKAGE_NAME=''
-
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_macos_lib_setup &&
-    bl64_check_parameter 'MY_PACKAGE_NAME' ||
+  s64_docker_lib_setup ||
     return $?
   bl64_msg_show_about
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Show OS package details'
+bl64_msg_help_about_set 'List all local containers'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_macos_lib_run_pkgutil \
-  --pkg-info \
-  "$MY_PACKAGE_NAME"
+bl64_cnt_run_docker \
+  ps \
+    --no-trunc \
+  --format "$S64_DOCKER_SET_FORMAT" \
+  --size \
+  --all
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -24,7 +24,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 
 function my_initialize() {
   bl64_dbg_app_show_function
-    s64_macos_lib_setup ||
+  s64_macos_lib_setup ||
     return $?
   bl64_msg_show_about
 }

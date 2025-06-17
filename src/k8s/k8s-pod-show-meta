@@ -32,9 +32,9 @@ declare MY_TARGET_POD="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_K8S_NAMESPACE' &&
+  s64_k8s_lib_setup &&
+    bl64_check_parameter 'MY_K8S_NAMESPACE' &&
     bl64_check_parameter 'MY_TARGET_POD' &&
-    s64_k8s_lib_setup &&
     bl64_xsv_setup ||
     return $?
   bl64_msg_show_about

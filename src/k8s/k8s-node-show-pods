@@ -31,8 +31,8 @@ declare MY_TARGET_NODE="${1:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_TARGET_NODE' &&
-    s64_k8s_lib_setup &&
+  s64_k8s_lib_setup &&
+    bl64_check_parameter 'MY_TARGET_NODE' &&
     bl64_xsv_setup ||
     return $?
   bl64_msg_show_about

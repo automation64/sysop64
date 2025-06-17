@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.1.0
+# template-one: 3.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -17,44 +17,45 @@ declare S64_CORE_PATH_AT64="${HOME}/at64"
 [[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/k8s-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/docker-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-function my_initialize() {
+function my_task() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_K8S_NAMESPACE' &&
-    bl64_check_parameter 'MY_TARGET_POD' &&
-    bl64_check_parameter 'MY_TARGET_CONTAINER' &&
-    s64_k8s_lib_setup ||
-    return $?
-  bl64_msg_show_about
-  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-    'MY_K8S_NAMESPACE' \
-    'MY_TARGET_POD' \
-    'MY_TARGET_CONTAINER'
-  bl64_msg_show_warning 'be aware that disruptive commands can shutdown the running container (e.g.: exit, CTRL+C, CTRL+D, etc.)'
-  bl64_msg_show_warning "once done, kill the current shell to exit without stopping the container: kill ${$})"
-  bl64_ui_ask_proceed 'do you want to proceed with the attachment operation?'
+  local container=''
+  local container_list=''
+
+  container_list="$(bl64_cnt_run_docker ps --quiet)" || {
+    bl64_msg_show_error 'unable to get container list'
+    return $BL64_LIB_ERROR_TASK_FAILED
+  }
+
+  [[ -z "$container_list" ]] &&
+    bl64_msg_show_warning 'there are no running containers to stop. No further action required.' &&
+    return 0
+
+  for container in $container_list; do
+    bl64_msg_show_task "stopping container: $container"
+    bl64_cnt_run_docker \
+      stop \
+      --timeout "$S64_DOCKER_SET_TIMEOUT" \
+      "$container"
+  done
 }
 
-declare MY_K8S_NAMESPACE="${1:-}"
-declare MY_TARGET_POD="${2:-}"
-declare MY_TARGET_CONTAINER="${3:-}"
+function my_initialize() {
+  bl64_dbg_app_show_function
+  s64_docker_lib_setup ||
+    return $?
+  bl64_msg_show_about
+  bl64_ui_ask_proceed 'do you want to stop all running containers'
+}
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'K8S / Container / Attach / Terminal'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Stop all running local containers'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_lib_var_is_default "$MY_TARGET_CONTAINER" && MY_TARGET_CONTAINER=''
-bl64_k8s_run_kubectl \
-  "$BL64_VAR_DEFAULT" \
-  attach \
-  --quiet \
-  --tty \
-  --stdin \
-  --namespace="$MY_K8S_NAMESPACE" \
-  --container="$MY_TARGET_CONTAINER" \
-  "$MY_TARGET_POD"
+my_task
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

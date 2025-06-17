@@ -18,8 +18,8 @@
 #
 
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" ||
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_AWS_VERSION='2.1.0'
+  declare S64_AWS_VERSION='2.1.1'
 
   # Access mode credentials
   declare S64_AWS_ACCESS_KEY_ID="${S64_AWS_ACCESS_KEY_ID:-}"

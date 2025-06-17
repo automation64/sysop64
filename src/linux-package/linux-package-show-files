@@ -30,7 +30,7 @@ function my_task() {
     s64_linux_lib_run_dpkg_query --listfiles "${MY_PACKAGE_NAME}"
     ;;
   ${BL64_OS_FD}-* | ${BL64_OS_AMZ}-* | ${BL64_OS_CNT}-* | ${BL64_OS_OL}-* | ${BL64_OS_RHEL}-* | ${BL64_OS_ALM}-* | ${BL64_OS_RCK}-* | ${BL64_OS_SLES}-*)
-    s64_linux_lib_run_rpm --query --list "${MY_PACKAGE_NAME}"
+    bl64_pkg_run_rpm --query --list "${MY_PACKAGE_NAME}"
     ;;
   ${BL64_OS_ALP}-*)
     bl64_pkg_run_apk info --contents "${MY_PACKAGE_NAME}"
@@ -45,7 +45,7 @@ function my_task() {
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
-  bl64_check_parameter 'MY_PACKAGE_NAME' || return $?
+    bl64_check_parameter 'MY_PACKAGE_NAME' || return $?
   bl64_msg_show_about
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
     'MY_PACKAGE_NAME'
