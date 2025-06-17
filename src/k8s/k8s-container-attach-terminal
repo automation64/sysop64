@@ -36,14 +36,14 @@ function my_initialize() {
     'MY_TARGET_CONTAINER'
   bl64_msg_show_warning 'be aware that disruptive commands can shutdown the running container (e.g.: exit, CTRL+C, CTRL+D, etc.)'
   bl64_msg_show_warning "once done, kill the current shell to exit without stopping the container: kill ${$})"
-  bl64_ui_ask_yesno 'do you want to proceed with the attachment operation?'
+  bl64_ui_ask_proceed 'do you want to proceed with the attachment operation?'
 }
 
 declare MY_K8S_NAMESPACE="${1:-}"
 declare MY_TARGET_POD="${2:-}"
 declare MY_TARGET_CONTAINER="${3:-}"
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'K8S / Container / Attach / Terminal'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

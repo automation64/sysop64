@@ -30,7 +30,7 @@ function my_task() {
     bl64_pkg_run_apt show "${MY_PACKAGE_NAME}"
     ;;
   ${BL64_OS_FD}-* | ${BL64_OS_AMZ}-* | ${BL64_OS_CNT}-* | ${BL64_OS_OL}-* | ${BL64_OS_RHEL}-* | ${BL64_OS_ALM}-* | ${BL64_OS_RCK}-* | ${BL64_OS_SLES}-*)
-    s64_linux_lib_run_rpm --query --info "${MY_PACKAGE_NAME}"
+    bl64_pkg_run_rpm --query --info "${MY_PACKAGE_NAME}"
     ;;
   ${BL64_OS_ALP}-*)
     bl64_pkg_run_apk info "${MY_PACKAGE_NAME}"
