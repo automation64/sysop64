@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_VERSION='2.1.0'
+  declare S64_OPENSSH_VERSION='3.0.0'
   declare S64_OPENSSH_PATH_SSH="${S64_OPENSSH_PATH_SSH:-}"
   declare S64_OPENSSH_PATH_SSH_ADD="${S64_OPENSSH_PATH_SSH_ADD:-}"
   declare S64_OPENSSH_PATH_SSH_KEYGEN="${S64_OPENSSH_PATH_SSH_KEYGEN:-}"
@@ -43,10 +43,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_openssh_lib_setup() {
   bl64_dbg_app_show_function
-  [[ -z "$S64_OPENSSH_PATH_SSH" ]] && S64_OPENSSH_PATH_SSH="$(bl64_bsh_command_locate 'ssh')"
-  [[ -z "$S64_OPENSSH_PATH_SSH_ADD" ]] && S64_OPENSSH_PATH_SSH_ADD="$(bl64_bsh_command_locate 'ssh-add')"
-  [[ -z "$S64_OPENSSH_PATH_SSH_KEYGEN" ]] && S64_OPENSSH_PATH_SSH_KEYGEN="$(bl64_bsh_command_locate 'ssh-keygen')"
-  return 0
+  s64_core_lib_command_assign 'S64_OPENSSH_PATH_SSH' 'ssh' &&
+    s64_core_lib_command_assign 'S64_OPENSSH_PATH_SSH_ADD' 'ssh-add' &&
+    s64_core_lib_command_assign 'S64_OPENSSH_PATH_SSH_KEYGEN' 'ssh-keygen'
 }
 
 function s64_openssh_lib_run_ssh_keygen() {

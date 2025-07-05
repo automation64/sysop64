@@ -33,7 +33,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_PGSQL_VERSION='2.0.2'
+  declare S64_PGSQL_VERSION='3.0.0'
   declare S64_PGSQL_SERVER_LAB_NAME="${S64_PGSQL_SERVER_LAB_NAME:-pgsql-lab}"
   declare S64_PGSQL_SERVER_LAB_PORT="${S64_PGSQL_SERVER_LAB_PORT:-5432}"
   declare S64_PGSQL_SERVER_LAB_PASSWORD="${S64_PGSQL_SERVER_LAB_PASSWORD:-Random-Password.${RANDOM}}"
@@ -48,10 +48,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_psql_lib_setup() {
   bl64_dbg_app_show_function
-  if [[ -z "$S64_PGSQL_PATH_CLI" ]]; then
-    S64_PGSQL_PATH_CLI="$(bl64_bsh_command_locate 'psql')"
-  fi
-  return 0
+  s64_core_lib_command_assign 'S64_PGSQL_PATH_CLI' 'psql'
 }
 
 function s64_psql_lib_run_psql() {

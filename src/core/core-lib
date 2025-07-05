@@ -53,3 +53,25 @@ function s64_core_lib_file_edit() {
     "$@"
   bl64_dbg_app_trace_stop
 }
+
+function s64_core_lib_command_assign() {
+  bl64_dbg_app_show_function "$@"
+  local command_variable="${1:-}"
+  local command_name="${2:-}"
+  local command_path=''
+
+  bl64_check_parameter 'command_variable' &&
+  bl64_check_parameter 'command_name' || 
+  return $?
+
+  if [[ -z "${!command_variable}" ]]; then
+    command_path="$(bl64_bsh_command_locate 'trivy')"
+    if [[ -n "$command_path" ]]; then
+      printf -v "${command_variable}" '%s' "${command_path}"
+      return 0
+    else
+      bl64_msg_show_error "Unable to find required command. Please install it and try again (command: ${command_name})"
+      return $BL64_LIB_ERROR_TASK_FAILED
+    fi
+  fi
+}

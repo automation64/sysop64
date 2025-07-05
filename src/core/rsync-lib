@@ -33,7 +33,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_RSYNC_VERSION='2.1.3'
+  declare S64_RSYNC_VERSION='3.0.0'
   declare S64_RSYNC_PATH_CLI="${S64_RSYNC_PATH_CLI:-}"
 
   declare S64_RSYNC_OPTIONS_COMMON=''
@@ -52,10 +52,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
 
 function s64_rsync_lib_setup() {
   bl64_dbg_app_show_function
-  if [[ -z "$S64_RSYNC_PATH_CLI" ]]; then
-    S64_RSYNC_PATH_CLI="$(bl64_bsh_command_locate 'rsync')"
-  fi
-  return 0
+  s64_core_lib_command_assign 'S64_RSYNC_PATH_CLI' 'rsync'
 }
 
 function s64_rsync_lib_run_rsync() {

@@ -38,7 +38,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='3.0.0'
+  declare S64_LINUX_VERSION='3.0.1'
 
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
   declare S64_LINUX_PATH_CLI_BLKID=''
@@ -369,6 +369,18 @@ function s64_linux_lib_run_lspci() {
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_LSPCI" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_lsusb() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_LSUSB" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_LSUSB' ||
+    return $?
+
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_LSUSB" \
     "$@"
   bl64_dbg_app_trace_stop
 }
