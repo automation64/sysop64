@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modules
   - Ansible
   - FlatPak
+  - Terraform
+  - OpenTofu
 - GIT
   - git-file-show-info
   - git-repo-grep-current
