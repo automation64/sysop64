@@ -19,7 +19,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='2.1.0'
+  declare S64_CORE_VERSION='2.1.1'
 
   # Default BL64 install path
   declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-${S64_CORE_PATH_AT64}/bl64}"
@@ -35,6 +35,10 @@
 
   # Common UI tools
   declare S64_CORE_PATH_VI="${S64_CORE_PATH_VI:-}"
+
+  # Custom command search paths paths
+  declare S64_CORE_SEARCH_USER="${S64_CORE_SEARCH_USER:-}"
+  declare S64_CORE_SEARCH_SYSTEM="${S64_CORE_SEARCH_SYSTEM:-}"
 }
 
 #
@@ -61,11 +65,19 @@ function s64_core_lib_command_assign() {
   local command_path=''
 
   bl64_check_parameter 'command_variable' &&
-  bl64_check_parameter 'command_name' || 
-  return $?
+    bl64_check_parameter 'command_name' ||
+    return $?
 
   if [[ -z "${!command_variable}" ]]; then
-    command_path="$(bl64_bsh_command_locate 'trivy')"
+    # shellcheck disable=SC2086
+    command_path="$(
+      bl64_bsh_command_locate \
+        "$command_name" \
+        "${HOME}/.local/bin" \
+        "${HOME}/node_modules/.bin" \
+        $S64_CORE_SEARCH_SYSTEM \
+        $S64_CORE_SEARCH_USER
+    )"
     if [[ -n "$command_path" ]]; then
       printf -v "${command_variable}" '%s' "${command_path}"
       return 0
