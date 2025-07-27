@@ -9,10 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Modules
+  - Ansible
+  - FlatPak
 - GIT
   - git-file-show-info
   - git-repo-grep-current
   - git-repo-grep-history
+- Lib-Core
+  - s64_core_lib_command_assign: added user paths
 
 ## [2.0.0]
 
