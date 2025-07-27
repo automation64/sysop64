@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 # template-module-lib: 2.2.0
-#   template-module-base: 2.2.0
-#   template-module-setup: 2.0.0
-#   template-module-cli: 1.2.0
-#   template-module-vars: 1.0.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -35,31 +31,42 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_X_MODULE_CAPS_X_VERSION='1.0.0'
-  declare S64_X_MODULE_CAPS_X_PATH_CLI="${S64_X_MODULE_CAPS_X_PATH_CLI:-}"
-  # X_GLOBALS_PLACEHOLDER_X
+  declare S64_TOFU_VERSION='1.0.0'
+  declare S64_TOFU_PATH_CLI="${S64_TOFU_PATH_CLI:-}"
 }
 
 #
 # Functions
 #
 
-function s64_X_MODULE_X_lib_setup() {
+function s64_tofu_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_X_MODULE_CAPS_X_PATH_CLI' 'X_CLI_COMMAND_X'
+  s64_core_lib_command_assign 'S64_TOFU_PATH_CLI' 'tofu'
 }
 
-function s64_X_MODULE_X_lib_run_X_CLI_COMMAND_X() {
+function s64_tofu_lib_run_tofu() {
   bl64_dbg_app_show_function "$@"
-  local verbose_flag='--verbose'
-  bl64_check_command "$S64_X_MODULE_CAPS_X_PATH_CLI" "$BL64_VAR_DEFAULT" 'S64_X_MODULE_CAPS_X_PATH_CLI' || return $?
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  s64_tofu_lib_harden
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_X_MODULE_CAPS_X_PATH_CLI" \
-    $verbose_flag \
+  "$S64_TOFU_PATH_CLI" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-# X_FUNCTIONS_PLACEHOLDER_X
+function s64_tofu_lib_harden() {
+  bl64_dbg_app_show_function
+  bl64_dbg_lib_trace_start
+  unset TF_LOG
+  unset TF_LOG_PATH
+  unset TF_CLI_CONFIG_FILE
+  unset TF_LOG
+  unset TF_LOG_PATH
+  unset TF_IN_AUTOMATION
+  unset TF_INPUT
+  unset TF_DATA_DIR
+  unset TF_PLUGIN_CACHE_DIR
+  unset TF_REGISTRY_DISCOVERY_RETRY
+  unset TF_REGISTRY_CLIENT_TIMEOUT
+  bl64_dbg_lib_trace_stop
+}

@@ -27,11 +27,15 @@ function my_initialize() {
     bl64_msg_show_about
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Show GIT CLI configuration'
+bl64_lib_script_version_set '1.0.2'
+bl64_msg_help_about_set 'Show commit history in a tree format.'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_vcs_run_git \
-  config \
-  --list
+  log \
+  --graph \
+  --all \
+  --decorate=short \
+  --topo-order \
+  --pretty=format:'%C(auto)%h%d%Creset %C(cyan)(%ci)%Creset %C(green)%cn <%ce>%Creset %s%n'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
