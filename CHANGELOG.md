@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Caddy
 - Linux
   - linux-package-install
+- Docker
+  - docker-image-build
+  - docker-container-run-service
 
 ## [2.1.0]
 
