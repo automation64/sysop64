@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # template-one: 3.2.0
+#   template-one-base: 2.1.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -21,34 +22,25 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_CONTAINER_IMAGE="${1:-alpine:latest}"
-declare MY_PUBLISHED_PORT="${2:-8080}"
-declare MY_ENTRY_POINT="${3:-}"
+declare MY_BAKE_FILE="${1:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_docker_lib_setup &&
-    bl64_cnt_check_not_in_container &&
+    bl64_check_parameter 'MY_BAKE_FILE' &&
     bl64_msg_show_about &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'MY_CONTAINER_IMAGE' \
-      'MY_ENTRY_POINT' \
-      'MY_PUBLISHED_PORT'
+      'MY_BAKE_FILE'
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Run service inside a container, with network access from the host to the container'
+bl64_msg_help_about_set 'Show interpreted docker bake file'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-shift
-shift
-shift
 bl64_cnt_run_docker \
-  run \
-  --rm \
-  --tty \
-  ${MY_ENTRY_POINT:+--entrypoint="$MY_ENTRY_POINT"} \
-  --publish "$MY_PUBLISHED_PORT:$MY_PUBLISHED_PORT" \
-  "$MY_CONTAINER_IMAGE" \
-  "$@"
+  buildx \
+  bake \
+  --print \
+  --progress=plain \
+  --file="$MY_BAKE_FILE"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
