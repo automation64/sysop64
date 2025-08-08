@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.0
+# template-one: 3.2.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -34,22 +34,21 @@ function my_repo_list() {
   case "$BL64_OS_DISTRO" in
   ${BL64_OS_CNT}-7.* | ${BL64_OS_OL}-7.*) bl64_check_alert_unsupported ;;
   ${BL64_OS_FD}-* | ${BL64_OS_AMZ}-* | ${BL64_OS_CNT}-* | ${BL64_OS_OL}-* | ${BL64_OS_RHEL}-* | ${BL64_OS_ALM}-* | ${BL64_OS_RCK}-*) my_repo_list_dnf ;;
-    *)
-      bl64_check_alert_unsupported
-      return $?
-      ;;
-    esac
+  *)
+    bl64_check_alert_unsupported
+    return $?
+    ;;
+  esac
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_linux_lib_setup &&
-    bl64_check_privilege_root ||
-    return $?
   bl64_msg_show_about
+  s64_linux_lib_setup &&
+    bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '1.0.2'
+bl64_lib_script_version_set '1.0.3'
 bl64_msg_help_about_set 'List enabled Linux native package repositories'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

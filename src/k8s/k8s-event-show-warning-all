@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.0
+# template-one: 3.2.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -25,19 +25,18 @@ declare MY_K8S_NAMESPACE="${1:-$BL64_VAR_DEFAULT}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_k8s_lib_setup ||
-    return $?
   bl64_msg_show_about
-  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-    'MY_K8S_NAMESPACE'
+  s64_k8s_lib_setup &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'MY_K8S_NAMESPACE'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'Show K8S Warning Events'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_k8s_lib_run_kubectl
-  get events \
+get events \
   $(s64_k8s_lib_cli_set_ns "$MY_K8S_NAMESPACE") \
   --field-selector='type=Warning' \
   --sort-by='lastTimestamp'

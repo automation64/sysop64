@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.0
+# template-one: 3.2.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -26,12 +26,11 @@ declare MY_POD_NAME="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_k8s_lib_setup ||
-    return $?
   bl64_msg_show_about
-  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-    'MY_K8S_NAMESPACE' \
-    'MY_POD_NAME'
+  s64_k8s_lib_setup &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'MY_K8S_NAMESPACE' \
+      'MY_POD_NAME'
 }
 
 bl64_lib_script_version_set '1.0.0'
