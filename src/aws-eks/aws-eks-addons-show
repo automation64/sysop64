@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.0.0
+# template-one: 3.2.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -21,6 +21,8 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
+declare MY_CLUSTER_NAME="${1:-}"
+
 function aws_eks_addons_list() {
   local cluster_name="$1"
   # shellchedk disable=SC2086
@@ -36,7 +38,6 @@ function aws_eks_addons_list() {
 function aws_eks_addons_show() {
   local cluster_name="$1"
   local addon_name=''
-  bl64_aws_run_aws
   for addon_name in $(aws_eks_addons_list "$cluster_name"); do
     bl64_aws_run_aws \
       eks \
@@ -48,14 +49,14 @@ function aws_eks_addons_show() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'CLUSTER_NAME' &&
+  bl64_msg_show_about
+  bl64_check_parameter 'MY_CLUSTER_NAME' &&
     s64_aws_lib_setup
 }
 
-declare CLUSTER_NAME="${1:-}"
-
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
+bl64_msg_help_about_set 'List AWS EKS Addons'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-aws_eks_addons_show "$CLUSTER_NAME"
+aws_eks_addons_show "$MY_CLUSTER_NAME"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
