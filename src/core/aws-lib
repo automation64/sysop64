@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_AWS_VERSION='2.1.1'
+  declare S64_AWS_VERSION='2.2.0'
 
   # Access mode credentials
   declare S64_AWS_ACCESS_KEY_ID="${S64_AWS_ACCESS_KEY_ID:-}"
@@ -40,7 +40,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
   declare S64_AWS_ACCESS_PROFILE="${S64_AWS_ACCESS_PROFILE:-}"
   declare S64_AWS_ACCESS_TOKEN="${S64_AWS_ACCESS_TOKEN:-}"
   declare S64_AWS_ACCESS_REGION="${S64_AWS_ACCESS_REGION:-}"
-  declare S64_AWS_ACCESS_MODE="${S64_AWS_ACCESS_MODE:-$BL64_AWS_ACCESS_MODE_KEY}"
+  declare S64_AWS_ACCESS_MODE="${S64_AWS_ACCESS_MODE:-}"
 
   # API Endpoints
   declare S64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD='amazon-linux-2023/x86_64/standard'
@@ -56,12 +56,19 @@ function s64_aws_lib_setup() {
   # shellcheck disable=SC2119
   bl64_xsv_setup &&
     bl64_aws_setup &&
-    s64_aws_lib_access_check
+    s64_aws_lib_setup_credentials &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'S64_AWS_ACCESS_KEY_ID' \
+      'S64_AWS_ACCESS_PROFILE' \
+      'S64_AWS_ACCESS_REGION' \
+      'S64_AWS_ACCESS_MODE'
 }
 
 # shellcheck disable=SC2154
-function s64_aws_lib_access_check() {
+function s64_aws_lib_setup_credentials() {
   bl64_dbg_app_show_function
+  bl64_check_export 'S64_AWS_ACCESS_MODE' ||
+    return $?
   if [[ -n "$S64_AWS_ACCESS_REGION" ]]; then
     bl64_aws_set_region "$S64_AWS_ACCESS_REGION"
   fi
