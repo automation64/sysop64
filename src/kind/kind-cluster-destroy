@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.0.0
+# template-one: 3.2.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -42,12 +42,14 @@ function network_destroy() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
+  bl64_msg_show_about
   s64_kind_lib_setup &&
     bl64_ui_ask_confirmation \
       'Do you want to completely destroy the cluster?. Confirm by typing:' 'YES'
 }
 
-bl64_lib_script_version_set '2.0.3'
+bl64_lib_script_version_set '2.0.4'
+bl64_msg_help_about_set 'Destroy cluster'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 cluster_destroy &&

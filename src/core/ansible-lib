@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_ANSIBLE_VERSION='1.0.0'
+  declare S64_ANSIBLE_VERSION='1.0.1'
   declare S64_ANSIBLE_PATH_CLI_ANSIBLE="${S64_ANSIBLE_PATH_CLI_ANSIBLE:-}"
   declare S64_ANSIBLE_PATH_CLI_DOC="${S64_ANSIBLE_PATH_CLI_DOC:-}"
   declare S64_ANSIBLE_PATH_CLI_GALAXY="${S64_ANSIBLE_PATH_CLI_GALAXY:-}"
@@ -51,7 +51,9 @@ function s64_ansible_lib_setup() {
   s64_core_lib_command_assign 'S64_ANSIBLE_PATH_CLI_ANSIBLE' 'ansible' &&
     s64_core_lib_command_assign 'S64_ANSIBLE_PATH_CLI_DOC' 'ansible-doc' &&
     s64_core_lib_command_assign 'S64_ANSIBLE_PATH_CLI_GALAXY' 'ansible-galaxy' &&
-    s64_core_lib_command_assign 'S64_ANSIBLE_PATH_CLI_PLAYBOOK' 'ansible-playbook'
+    s64_core_lib_command_assign 'S64_ANSIBLE_PATH_CLI_PLAYBOOK' 'ansible-playbook' &&
+    bl64_msg_show_setup 'module parameters' \
+      'S64_ANSIBLE_SET_OUTPUT_PLUGIN'
 }
 
 function s64_ansible_lib_set() {

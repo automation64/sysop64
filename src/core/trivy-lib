@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_TRIVY_VERSION='3.0.0'
+  declare S64_TRIVY_VERSION='3.0.1'
   # Global Paths
   declare S64_TRIVY_PATH_CLI="${S64_TRIVY_PATH_CLI:-}"
   # Global Settings
@@ -44,7 +44,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_trivy_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_TRIVY_PATH_CLI' 'trivy'
+  s64_core_lib_command_assign 'S64_TRIVY_PATH_CLI' 'trivy' &&
+    bl64_msg_show_setup 'module parameters' \
+      'S64_TRIVY_SET_FORMAT'
 }
 
 function s64_trivy_lib_run_trivy() {

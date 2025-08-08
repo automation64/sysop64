@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_ARGOCD_VERSION='1.3.0'
+  declare S64_ARGOCD_VERSION='1.3.1'
 
   declare S64_ARGOCD_PATH_CLI="${S64_ARGOCD_PATH_CLI:-}"
   # Global Settings
@@ -47,7 +47,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
 function s64_argocd_lib_setup() {
   bl64_dbg_app_show_function
   bl64_k8s_setup &&
-    s64_core_lib_command_assign 'S64_ARGOCD_PATH_CLI' 'argocd'
+    s64_core_lib_command_assign 'S64_ARGOCD_PATH_CLI' 'argocd' &&
+    bl64_msg_show_setup 'module parameters' \
+      'S64_ARGOCD_SET_CONTEXT_NAME'
 }
 
 function s64_argocd_lib_run_argocd() {

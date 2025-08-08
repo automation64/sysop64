@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.0
+# template-one: 3.2.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -24,11 +24,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_macos_lib_setup ||
-    return $?
   bl64_msg_show_about
-  bl64_ui_ask_proceed \
-    'Do you want to reset the MacOS Notification Center configuration?. Current settings will be replaced by defaults'
+  s64_macos_lib_setup &&
+    bl64_ui_ask_proceed \
+      'Do you want to reset the MacOS Notification Center configuration?. Current settings will be replaced by defaults'
 }
 
 bl64_lib_script_version_set '1.0.2'

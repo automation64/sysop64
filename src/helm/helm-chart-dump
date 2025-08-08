@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# template-one: 3.2.1
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+declare S64_CORE_PATH_AT64="${HOME}/at64"
+[[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/..
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/helm-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+
+declare MY_REPO_NAME="${1:-}"
+declare MY_CHART_NAME="${2:-}"
+
+function my_initialize() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_about
+  s64_helm_lib_setup &&
+    bl64_check_parameter 'MY_REPO_NAME' &&
+    bl64_check_parameter 'MY_CHART_NAME' &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'MY_REPO_NAME' \
+      'MY_CHART_NAME'
+}
+
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Show helm chart content'
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+s64_helm_lib_run_helm \
+  template \
+  --enable-dns \
+  --include-crds \
+  "${MY_REPO_NAME}/${MY_CHART_NAME}"
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
