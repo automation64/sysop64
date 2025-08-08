@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.1.0
+# template-one: 3.2.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -22,26 +22,25 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-function my_initialize() {
-  bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_K8S_NAMESPACE' &&
-    bl64_check_parameter 'MY_TARGET_POD' &&
-    bl64_check_parameter 'MY_TARGET_CONTAINER' &&
-    s64_k8s_lib_setup ||
-    return $?
-  bl64_msg_show_about
-  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-    'MY_K8S_NAMESPACE' \
-    'MY_TARGET_POD' \
-    'MY_TARGET_CONTAINER'
-}
-
 declare MY_K8S_NAMESPACE="${1:-}"
 declare MY_TARGET_POD="${2:-}"
 declare MY_TARGET_CONTAINER="${3:-}"
 
-bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'K8S / Container / Attach / Output'
+function my_initialize() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_about
+  bl64_check_parameter 'MY_K8S_NAMESPACE' &&
+    bl64_check_parameter 'MY_TARGET_POD' &&
+    bl64_check_parameter 'MY_TARGET_CONTAINER' &&
+    s64_k8s_lib_setup &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'MY_K8S_NAMESPACE' \
+      'MY_TARGET_POD' \
+      'MY_TARGET_CONTAINER'
+}
+
+bl64_lib_script_version_set '1.0.1'
+bl64_msg_help_about_set 'Attach to the STDOUT of a running container'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_lib_var_is_default "$MY_TARGET_CONTAINER" && MY_TARGET_CONTAINER=''
