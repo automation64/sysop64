@@ -57,7 +57,7 @@ function s64_aws_lib_setup() {
   bl64_xsv_setup &&
     bl64_aws_setup &&
     s64_aws_lib_setup_credentials &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    bl64_msg_show_setup 'module parameters' \
       'S64_AWS_ACCESS_KEY_ID' \
       'S64_AWS_ACCESS_PROFILE' \
       'S64_AWS_ACCESS_REGION' \
