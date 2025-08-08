@@ -31,12 +31,12 @@ function my_initialize() {
       'MY_K8S_NAMESPACE'
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
 bl64_msg_help_about_set 'Show K8S Warning Events'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_k8s_lib_run_kubectl
-get events \
+s64_k8s_lib_run_kubectl \
+  get events \
   $(s64_k8s_lib_cli_set_ns "$MY_K8S_NAMESPACE") \
   --field-selector='type=Warning' \
   --sort-by='lastTimestamp'
