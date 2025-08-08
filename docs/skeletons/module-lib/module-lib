@@ -43,7 +43,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_X_MODULE_X_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_X_MODULE_CAPS_X_PATH_CLI' 'X_CLI_COMMAND_X'
+  s64_core_lib_command_assign 'S64_X_MODULE_CAPS_X_PATH_CLI' 'X_CLI_COMMAND_X' &&
+    bl64_msg_show_setup 'module parameters' \
+      'X_MODULE_PARAMETER_X'
 }
 
 function s64_X_MODULE_X_lib_run_X_CLI_COMMAND_X() {
