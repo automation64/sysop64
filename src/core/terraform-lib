@@ -33,6 +33,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_TERRAFORM_VERSION='1.0.0'
+  declare S64_TERRAFORM_PATH_PROJECT="${S64_TERRAFORM_PATH_PROJECT:-}"
 }
 
 #
@@ -41,5 +42,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
 
 function s64_terraform_lib_setup() {
   bl64_dbg_app_show_function
-  bl64_tf_setup
+  bl64_tf_setup &&
+    bl64_check_parameter 'S64_TERRAFORM_PATH_PROJECT' &&
+    bl64_msg_show_setup 'module parameters' \
+      'S64_TERRAFORM_PATH_PROJECT'
+}
+
+function s64_terraform_lib_run_terraform() {
+  bl64_dbg_app_show_function "$@"
+  bl64_tf_run_terraform \
+    -chdir="$S64_TERRAFORM_PATH_PROJECT" \
+    "$@"
 }

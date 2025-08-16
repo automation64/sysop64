@@ -30,11 +30,11 @@ function my_initialize() {
 
 S64_OPENTOFU_PATH_PROJECT="${S64_OPENTOFU_PATH_PROJECT:-${1:-}}"
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Migrate OpenTofu state'
+bl64_msg_help_about_set 'Show project output variables'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_opentofu_lib_run_tofu \
-  init \
-  -migrate-state \
-  -force-copy
+  output \
+  -json \
+  -show-sensitive
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

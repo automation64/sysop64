@@ -33,6 +33,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 {
   declare S64_OPENTOFU_VERSION='1.0.0'
   declare S64_OPENTOFU_PATH_CLI="${S64_OPENTOFU_PATH_CLI:-}"
+  declare S64_OPENTOFU_PATH_PROJECT="${S64_OPENTOFU_PATH_PROJECT:-}"
 }
 
 #
@@ -41,7 +42,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_opentofu_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_OPENTOFU_PATH_CLI' 'tofu'
+  s64_core_lib_command_assign 'S64_OPENTOFU_PATH_CLI' 'tofu' &&
+    bl64_check_parameter 'S64_OPENTOFU_PATH_PROJECT' &&
+    bl64_msg_show_setup 'module parameters' \
+      'S64_OPENTOFU_PATH_PROJECT'
 }
 
 function s64_opentofu_lib_run_tofu() {
@@ -50,6 +54,7 @@ function s64_opentofu_lib_run_tofu() {
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_OPENTOFU_PATH_CLI" \
+    -chdir="$S64_OPENTOFU_PATH_PROJECT" \
     "$@"
   bl64_dbg_app_trace_stop
 }
