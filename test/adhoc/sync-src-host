@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+echo "======================================================================="
+echo "WARING: this will be ran on the local machine, not in the container."
+echo "======================================================================="
+
+export TEST_PROJECT_ROOT="./"
+export TEST_HOME_ROOT="/opt"
+export TEST_SO64_ROOT="$TEST_HOME_ROOT/sysop64"
+export TEST_SO64_SRC="$TEST_PROJECT_ROOT/src"
+
+sudo rm -Rf "$TEST_SO64_ROOT" &&
+sudo mkdir -p $TEST_SO64_ROOT &&
+sudo cp -Rf $TEST_SO64_SRC/* "$TEST_SO64_ROOT"
+sudo chmod 755 -Rf "$TEST_SO64_ROOT"
