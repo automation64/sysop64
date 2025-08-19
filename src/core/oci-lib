@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#   template-module-base: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
+  { echo 'Error: unable to load bashlib64' && exit 1; }
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_OCI_VERSION='1.0.0'
+
+  declare S64_OCI_AUTH_PROFILE="${S64_OCI_AUTH_PROFILE:-DEFAULT}"
+  declare S64_OCI_AUTH_TYPE="${S64_OCI_AUTH_TYPE:-security_token}"
+  declare S64_OCI_AUTH_TENANT="${S64_OCI_AUTH_TENANT:-}"
+
+  declare S64_OCI_CLI_CONFIG="${S64_OCI_CLI_CONFIG:-${HOME}/.oci/config}"
+  declare S64_OCI_CLI_OUTPUT="${S64_OCI_CLI_OUTPUT:-json}"
+
+  declare S64_OCI_PATH_CLI="${S64_OCI_PATH_CLI:-}"
+}
+
+#
+# Functions
+#
+
+function s64_oci_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_command_assign 'S64_OCI_PATH_CLI' 'oci' &&
+    bl64_msg_show_setup 'module parameters' \
+      'S64_OCI_AUTH_TYPE' \
+      'S64_OCI_AUTH_PROFILE' \
+      'S64_OCI_AUTH_TENANT' \
+      'S64_OCI_CLI_CONFIG' \
+      'S64_OCI_CLI_OUTPUT'
+}
+
+function s64_oci_lib_run_oci() {
+  bl64_dbg_app_show_function "$@"
+  s64_oci_lib_harden
+
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  OCI_CLI_TENANCY="$S64_OCI_AUTH_TENANT" "$S64_OCI_PATH_CLI" \
+    --auth="$S64_OCI_AUTH_TYPE" \
+    --profile="$S64_OCI_AUTH_PROFILE" \
+    --config-file="$S64_OCI_CLI_CONFIG" \
+    --output="$S64_OCI_CLI_OUTPUT" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_oci_lib_harden() {
+  bl64_dbg_app_show_function
+
+  bl64_dbg_lib_trace_start
+  unset OCI_CLI_AUTH
+  unset OCI_CLI_AUTO_PROMPT
+  unset OCI_CLI_CERT_BUNDLE
+  unset OCI_CLI_CONFIG_FILE
+  unset OCI_CLI_ENDPOINT
+  unset OCI_CLI_FINGERPRINT
+  unset OCI_CLI_KEY_CONTENT
+  unset OCI_CLI_KEY_FILE
+  unset OCI_CLI_PASSPHRASE
+  unset OCI_CLI_PROFILE
+  unset OCI_CLI_RC_FILE
+  unset OCI_CLI_REGION
+  unset OCI_CLI_SECURITY_TOKEN_FILE
+  unset OCI_CLI_TENANCY
+  unset OCI_CLI_USER
+  bl64_dbg_app_trace_stop
+}
