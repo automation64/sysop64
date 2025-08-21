@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # template-one: 3.2.1
+#   template-one-base: 2.1.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -17,22 +18,21 @@ declare S64_CORE_PATH_AT64="${HOME}/at64"
 [[ ! -d "$S64_CORE_PATH_AT64" ]] && S64_CORE_PATH_AT64='/opt'
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/aws-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/oci-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  s64_aws_lib_setup
+  s64_oci_lib_setup
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'List all AWS regions'
+bl64_msg_help_about_set 'Refresh a session token to extend its duration'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_aws_run_aws \
-  ec2 \
-  describe-regions \
-  --all-regions
+s64_oci_lib_run_oci \
+  session \
+  refresh
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
