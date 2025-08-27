@@ -23,17 +23,17 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_K8S_NAMESPACE="${1:-}"
+declare MY_NAMESPACE="${1:-}"
 declare MY_TARGET_POD="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  bl64_check_parameter 'MY_K8S_NAMESPACE' &&
+  bl64_check_parameter 'MY_NAMESPACE' &&
     bl64_check_parameter 'MY_TARGET_POD' &&
     s64_k8s_lib_setup &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'MY_K8S_NAMESPACE' \
+      'MY_NAMESPACE' \
       'MY_TARGET_POD'
 }
 
@@ -45,7 +45,7 @@ bl64_k8s_run_kubectl \
   "$BL64_VAR_DEFAULT" \
   exec \
   --tty \
-  --namespace="$MY_K8S_NAMESPACE" \
+  --namespace="$MY_NAMESPACE" \
   "$MY_TARGET_POD" \
   -- \
   'env' |

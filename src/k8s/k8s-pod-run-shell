@@ -36,7 +36,7 @@ declare MY_MEMORY_REQUEST='512Mi'
 declare MY_POD_NAME='sysop64-shell'
 declare MY_COMMAND='shell_run'
 declare MY_OPTION=''
-declare MY_K8S_NAMESPACE='default'
+declare MY_NAMESPACE='default'
 declare MY_CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
 declare MY_CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
 
@@ -103,7 +103,7 @@ function my_initialize() {
   [[ "$MY_CONTAINER_IMAGE" == "$BL64_VAR_DEFAULT" ]] && MY_CONTAINER_IMAGE='alpine'
   bl64_msg_show_about
   bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-    'MY_K8S_NAMESPACE' \
+    'MY_NAMESPACE' \
     'MY_CONTAINER_IMAGE' \
     'MY_CONTAINER_ENTRYPOINT' \
     'MY_CPU_REQUEST' \
@@ -133,7 +133,7 @@ bl64_msg_help_parameters_set \
 while getopts ':si:n:e:V:D:h' MY_OPTION; do
   case "$MY_OPTION" in
   s) MY_COMMAND='shell_run' ;;
-  n) MY_K8S_NAMESPACE="$OPTARG" ;;
+  n) MY_NAMESPACE="$OPTARG" ;;
   i) MY_CONTAINER_IMAGE="$OPTARG" ;;
   e) MY_CONTAINER_ENTRYPOINT="$OPTARG" ;;
   V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
@@ -145,5 +145,5 @@ done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
-"my_${MY_COMMAND}" "$MY_K8S_NAMESPACE" "$MY_CONTAINER_IMAGE" "$MY_CONTAINER_ENTRYPOINT"
+"my_${MY_COMMAND}" "$MY_NAMESPACE" "$MY_CONTAINER_IMAGE" "$MY_CONTAINER_ENTRYPOINT"
 bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"
