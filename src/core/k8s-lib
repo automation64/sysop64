@@ -28,8 +28,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='3.0.0'
-  declare S64_K8S_OUTPUT_FORMAT="${S64_K8S_OUTPUT_FORMAT:-json}"
+  declare S64_K8S_VERSION='3.1.0'
+  declare S64_K8S_OUTPUT_FORMAT="${S64_K8S_OUTPUT_FORMAT:-yaml}"
 }
 
 #
@@ -38,16 +38,13 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
 
 function s64_k8s_lib_setup() {
   bl64_dbg_app_show_function
-  bl64_k8s_setup &&
-    bl64_msg_show_setup 'module parameters' \
-      'S64_K8S_OUTPUT_FORMAT'
+  bl64_k8s_setup
 }
 
 function s64_k8s_lib_run_kubectl() {
   bl64_dbg_app_show_function "$@"
   bl64_k8s_run_kubectl \
     "$BL64_VAR_DEFAULT" \
-    --output="$S64_K8S_OUTPUT_FORMAT" \
     "$@"
 }
 
@@ -60,4 +57,13 @@ function s64_k8s_lib_cli_set_ns() {
   else
     printf -- '--namespace=%s' "${namespace}"
   fi
+}
+
+function s64_k8s_meta_strip_runtime() {
+  bl64_dbg_app_show_function
+  bl64_txt_run_awk '
+    /^[ ]+creationTimestamp:/ { next }
+    $0 == "status: {}" { next }
+    { print $0 }
+  '
 }

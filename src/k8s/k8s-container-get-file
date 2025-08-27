@@ -23,7 +23,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_K8S_NAMESPACE="${1:-}"
+declare MY_NAMESPACE="${1:-}"
 declare MY_TARGET_POD="${2:-}"
 declare MY_TARGET_CONTAINER="${3:-}"
 declare MY_SOURCE_FILE="${4:-}"
@@ -33,14 +33,14 @@ declare MY_RETRIES='5'
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  bl64_check_parameter 'MY_K8S_NAMESPACE' &&
+  bl64_check_parameter 'MY_NAMESPACE' &&
     bl64_check_parameter 'MY_TARGET_POD' &&
     bl64_check_parameter 'MY_TARGET_CONTAINER' &&
     bl64_check_parameter 'MY_SOURCE_FILE' &&
     bl64_check_parameter 'MY_TARGET_FILE' &&
     s64_k8s_lib_setup &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'MY_K8S_NAMESPACE' \
+      'MY_NAMESPACE' \
       'MY_TARGET_POD' \
       'MY_TARGET_CONTAINER' \
       'MY_SOURCE_FILE' \
@@ -56,7 +56,7 @@ bl64_k8s_run_kubectl \
   cp \
   --retries="$MY_RETRIES" \
   --container="$MY_TARGET_CONTAINER" \
-  --namespace="$MY_K8S_NAMESPACE" \
+  --namespace="$MY_NAMESPACE" \
   "${MY_TARGET_POD}:${MY_SOURCE_FILE}" \
   "$MY_TARGET_FILE"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

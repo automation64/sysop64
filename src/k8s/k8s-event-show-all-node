@@ -28,16 +28,19 @@ function my_initialize() {
   bl64_msg_show_about
   s64_k8s_lib_setup &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'S64_K8S_OUTPUT_FORMAT' \
       'MY_NODE_NAME'
 }
 
 bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Show K8S Events for Nodes'
+bl64_msg_help_about_set 'Show Kubernetes Events for Nodes'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_k8s_lib_run_kubectl \
-  get events \
-  "$(s64_k8s_lib_cli_set_ns "$MY_K8S_NAMESPACE")" \
+  get \
+  events \
+  "$(s64_k8s_lib_cli_set_ns "$MY_NAMESPACE")" \
   --field-selector="involvedObject.kind=Node${MY_NODE_NAME:+,involvedObject.name=$MY_NODE_NAME}" \
+  --output="$S64_K8S_OUTPUT_FORMAT" \
   --sort-by='lastTimestamp'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

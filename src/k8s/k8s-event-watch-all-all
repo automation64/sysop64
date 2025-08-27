@@ -19,38 +19,25 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-${S64_CORE_PATH_AT64}/sysop64}
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/k8s-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_NAMESPACE="${1:-}"
-declare MY_TARGET_POD="${2:-}"
-declare MY_TARGET_CONTAINER="${3:-}"
-declare MY_LIMIT_SINCE="${4:-}"
+declare MY_NAMESPACE="${1:-$BL64_VAR_DEFAULT}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  bl64_check_parameter 'MY_NAMESPACE' &&
-    bl64_check_parameter 'MY_TARGET_POD' &&
-    bl64_check_parameter 'MY_TARGET_CONTAINER' &&
-    s64_k8s_lib_setup &&
+  s64_k8s_lib_setup &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'MY_NAMESPACE' \
-      'MY_TARGET_POD' \
-      'MY_TARGET_CONTAINER' \
-      'MY_LIMIT_SINCE'
+      'MY_NAMESPACE'
 }
 
-bl64_lib_script_version_set '1.0.2'
-bl64_msg_help_about_set 'Show container logs for a pod'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Continuously show Kubernetes Events'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_k8s_run_kubectl \
-  "$BL64_VAR_DEFAULT" \
-  logs \
-  --namespace="$MY_NAMESPACE" \
-  --container="$MY_TARGET_CONTAINER" \
-  ${MY_LIMIT_SINCE:+--since-time="$MY_LIMIT_SINCE"} \
-  "$MY_TARGET_POD"
+# shellcheck disable=SC2046
+s64_k8s_lib_run_kubectl \
+  get events \
+  --watch=true \
+  $(s64_k8s_lib_cli_set_ns "$MY_NAMESPACE")
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

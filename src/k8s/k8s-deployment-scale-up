@@ -21,7 +21,7 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_K8S_NAMESPACE="${1:-}"
+declare MY_NAMESPACE="${1:-}"
 declare MY_TARGET_DEPLOYMENT="${2:-}"
 declare MY_TARGET_REPLICAS="${3:-1}"
 
@@ -29,10 +29,10 @@ function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
   s64_k8s_lib_setup &&
-    bl64_check_parameter 'MY_K8S_NAMESPACE' &&
+    bl64_check_parameter 'MY_NAMESPACE' &&
     bl64_check_parameter 'MY_TARGET_DEPLOYMENT' &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'MY_K8S_NAMESPACE' \
+      'MY_NAMESPACE' \
       'MY_TARGET_DEPLOYMENT' \
       'MY_TARGET_REPLICAS'
 }
@@ -45,7 +45,7 @@ bl64_k8s_run_kubectl \
   "$BL64_VAR_DEFAULT" \
   scale \
   --replicas="$MY_TARGET_REPLICAS" \
-  --namespace="$MY_K8S_NAMESPACE" \
+  --namespace="$MY_NAMESPACE" \
   deployment \
   "$MY_TARGET_DEPLOYMENT"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
