@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - kind-kubectl-setup
 - OpenSSH
   - openssh-server-*
+- MacOS-Net
+  - macos-net-dns-*
+  - macos-net-service-*
+- Unix-Net
+  - unix-net-dns-*
 
 ## [2.5.0]
 
