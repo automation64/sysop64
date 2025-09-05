@@ -21,15 +21,44 @@ source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-function my_show() {
+function my_service_status_alpine() {
   bl64_dbg_app_show_function
-  # shellcheck disable=SC2249
+  s64_linux_lib_run_rcservice sshd status
+}
+
+function my_service_status_debian() {
+  bl64_dbg_app_show_function
+  s64_linux_lib_run_systemctl status ssh
+}
+
+function my_service_status_fedora() {
+  bl64_dbg_app_show_function
+  s64_linux_lib_run_systemctl status sshd
+}
+
+function my_service_status_redhat() {
+  bl64_dbg_app_show_function
+  s64_linux_lib_run_systemctl status sshd
+}
+
+function my_service_status_suse() {
+  bl64_dbg_app_show_function
+  s64_linux_lib_run_systemctl status sshd
+}
+
+function my_service_status() {
+  bl64_dbg_app_show_function
   case "$BL64_OS_FLAVOR" in
-    "$BL64_OS_FLAVOR_FEDORA")
-      s64_linux_lib_run_systemctl status sshd
+    "$BL64_OS_FLAVOR_ALPINE") my_service_status_alpine ;;
+    "$BL64_OS_FLAVOR_DEBIAN") my_service_status_debian ;;
+    "$BL64_OS_FLAVOR_FEDORA") my_service_status_fedora ;;
+    "$BL64_OS_FLAVOR_REDHAT") my_service_status_redhat ;;
+    "$BL64_OS_FLAVOR_SUSE") my_service_status_suse ;;
+    *)
+      bl64_check_alert_unsupported
+      return $?
       ;;
   esac
-  return 0
 }
 
 function my_initialize() {
@@ -37,17 +66,21 @@ function my_initialize() {
   bl64_msg_show_about
   s64_openssh_lib_setup &&
     bl64_check_privilege_root &&
-    bl64_os_check_compatibility \
-      "${BL64_OS_FD}"
+    bl64_os_check_flavor \
+      "$BL64_OS_FLAVOR_ALPINE" \
+      "$BL64_OS_FLAVOR_DEBIAN" \
+      "$BL64_OS_FLAVOR_FEDORA" \
+      "$BL64_OS_FLAVOR_REDHAT" \
+      "$BL64_OS_FLAVOR_SUSE"
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'Show SSH server status'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
-bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+bl64_msg_show_batch_status "$BL64_SCRIPT_ID"
 if [[ "$BL64_OS_TYPE" == "$BL64_OS_TYPE_LINUX" ]]; then
   source "${S64_CORE_PATH_ROOT}/core/linux-lib" &&
     s64_linux_lib_setup
 fi &&
-  my_show
+  my_service_status
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
