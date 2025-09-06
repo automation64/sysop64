@@ -38,7 +38,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='3.0.1'
+  declare S64_LINUX_VERSION='3.1.0'
 
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
   declare S64_LINUX_PATH_CLI_BLKID=''
@@ -423,6 +423,7 @@ function s64_linux_lib_run_systemctl() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_SYSTEMCTL" \
+    --no-pager \
     "$@"
   bl64_dbg_app_trace_stop
 }
