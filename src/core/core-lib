@@ -19,9 +19,13 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='2.1.1'
+  declare S64_CORE_VERSION='2.2.0'
 
-  # Default BL64 install path
+  # Default Automation64 install path
+  declare S64_CORE_PATH_AT64='/opt'
+  [[ ! -d "${S64_CORE_PATH_AT64}/bl64" ]] && S64_CORE_PATH_AT64="${HOME}/at64"
+
+  # Default BashLib64 install path
   declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-${S64_CORE_PATH_AT64}/bl64}"
 
   # Default log repository
