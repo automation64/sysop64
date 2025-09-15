@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 1.7.0
+# template-task: 1.8.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -15,45 +15,45 @@
 
 # shellcheck source=bin/dev-set
 source ./bin/dev-set || { echo 'dev-set:Error: unable to load dev environment' 2>&1 && exit 1; }
+# shellcheck source-path=bin
+source ./bin/dev-env-bash || exit 1
 # shellcheck source-path=lib/bl64
-source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-ui.bash" &&
-  source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
+source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-txt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fmt.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-module-fs.bash" &&
   source "${DEV_LIB_BASHLIB64_TARGET}/bashlib64-core.bash" || exit 1
 
-declare MY_PROFILE="${1:-}"
+declare MY_DEPLOYER="${1:-}"
+declare MY_LOGS="${2:-${DEV_DEPLOY_BASH_LOG_PATH}}"
 
-function dev_remove() {
+function my_deploy() {
   bl64_dbg_app_show_function
-  bl64_fs_path_remove \
-    "${DEV_PATH_BUILD}/${DEV_BASE_PROFILE}/${MY_PROFILE}" \
-    "${DEV_PATH_ETC}/${DEV_BASE_PROFILE}/${MY_PROFILE}" \
-    "${DEV_PATH_LOGS}/${DEV_BASE_PROFILE}/${MY_PROFILE}" \
-    "${DEV_PATH_TMP}/${DEV_BASE_PROFILE}/${MY_PROFILE}" \
-    "${DEV_PATH_VAR}/${DEV_BASE_PROFILE}/${MY_PROFILE}" \
-    "${DEV_PATH_VAULT}/${DEV_BASE_PROFILE}/${MY_PROFILE}"
+
+  bl64_msg_show_task 'Prepare log store'
+  bl64_fs_path_remove "$MY_LOGS"
+  bl64_fs_dir_create \
+    "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$BL64_VAR_DEFAULT" "$MY_LOGS" ||
+    return $?
+
+  bl64_msg_show_task 'Deploy application'
+  "$MY_DEPLOYER" | "$BL64_OS_CMD_TEE" "${MY_LOGS}/${DEV_DEPLOY_BASH_LOG_FILE}" 2>&1
 }
 
-function dev_initialize() {
+function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  bl64_check_parameter 'MY_PROFILE' &&
-    bl64_ui_ask_confirmation \
-      "Warning: the operation will remove all content from the profile [${MY_PROFILE}]. If not tracked by GIT, it will be permanently lost. Confirm operation? Type:" \
-      'YES' ||
-    return $?
-  if [[ "$MY_PROFILE" == "$DEV_PROFILE" ]]; then
-    bl64_msg_show_error 'Target profile can not be the current one. Please change to a different profile before removing'
-    return $BL64_LIB_ERROR_PARAMETER_INVALID
-  fi
+  bl64_check_parameter 'MY_DEPLOYER' &&
+    bl64_check_command "$MY_DEPLOYER" &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'MY_DEPLOYER' \
+      'MY_LOGS'
 }
 
 [[ -n "$DEV_CICD_DEBUG" ]] && bl64_dbg_all_enable
-bl64_lib_script_version_set '2.1.1'
-bl64_msg_help_about_set 'Remove profile directory structure'
-bl64_msg_all_enable_verbose && dev_initialize || exit $?
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Deploy application'
+bl64_msg_all_enable_verbose && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-dev_remove
+my_deploy
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
