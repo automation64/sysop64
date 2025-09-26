@@ -25,7 +25,7 @@ declare MY_CLUSTER_NAME="${1:-}"
 function aws_eks_addons_list() {
   local cluster_name="$1"
   # shellchedk disable=SC2086
-  bl64_aws_run_aws \
+  s64_aws_lib_run_aws \
     eks \
     list-addons \
     $BL64_AWS_SET_FORMAT_JSON \
@@ -38,7 +38,7 @@ function aws_eks_addons_show() {
   local cluster_name="$1"
   local addon_name=''
   for addon_name in $(aws_eks_addons_list "$cluster_name"); do
-    bl64_aws_run_aws \
+    s64_aws_lib_run_aws \
       eks \
       describe-addon \
       --cluster-name "$cluster_name" \
@@ -49,8 +49,8 @@ function aws_eks_addons_show() {
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  bl64_check_parameter 'MY_CLUSTER_NAME' &&
-    s64_aws_lib_setup
+  s64_aws_lib_setup &&
+    bl64_check_parameter 'MY_CLUSTER_NAME'
 }
 
 bl64_lib_script_version_set '1.0.2'

@@ -27,10 +27,11 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'List AWS CLI profiles'
+bl64_msg_help_about_set 'Login to AWS SSO using AWS CLI and default browser'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_aws_lib_run_aws \
-  configure \
-  list-profiles
+  sso \
+  login \
+  --no-browser
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

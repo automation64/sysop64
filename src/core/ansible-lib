@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_ANSIBLE_VERSION='1.0.1'
+  declare S64_ANSIBLE_VERSION='1.0.2'
   declare S64_ANSIBLE_PATH_CLI_ANSIBLE="${S64_ANSIBLE_PATH_CLI_ANSIBLE:-}"
   declare S64_ANSIBLE_PATH_CLI_DOC="${S64_ANSIBLE_PATH_CLI_DOC:-}"
   declare S64_ANSIBLE_PATH_CLI_GALAXY="${S64_ANSIBLE_PATH_CLI_GALAXY:-}"
@@ -46,7 +46,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # Functions
 #
 
-function s64_ansible_lib_setup() {
+function s64_ansible_lib_cli_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_command_assign 'S64_ANSIBLE_PATH_CLI_ANSIBLE' 'ansible' &&
     s64_core_lib_command_assign 'S64_ANSIBLE_PATH_CLI_DOC' 'ansible-doc' &&
@@ -56,12 +56,12 @@ function s64_ansible_lib_setup() {
       'S64_ANSIBLE_SET_OUTPUT_PLUGIN'
 }
 
-function s64_ansible_lib_set() {
+function s64_ansible_lib_cli_set() {
   bl64_dbg_app_show_function
   ANSIBLE_STDOUT_CALLBACK="$S64_ANSIBLE_SET_OUTPUT_PLUGIN"
 }
 
-function s64_ansible_lib_harden() {
+function s64_ansible_lib_cli_harden() {
   bl64_dbg_app_show_function
 
   bl64_dbg_lib_trace_start
@@ -88,8 +88,8 @@ function s64_ansible_lib_run_playbook() {
   local verbose_flag='--verbose'
 
   bl64_msg_app_verbose_is_enabled || verbose_flag=' '
-  s64_ansible_lib_harden
-  s64_ansible_lib_set
+  s64_ansible_lib_cli_harden
+  s64_ansible_lib_cli_set
 
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
@@ -104,8 +104,8 @@ function s64_ansible_lib_run_ansible() {
   local verbose_flag='--verbose'
 
   bl64_msg_app_verbose_is_enabled || verbose_flag=' '
-  s64_ansible_lib_harden
-  s64_ansible_lib_set
+  s64_ansible_lib_cli_harden
+  s64_ansible_lib_cli_set
 
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
@@ -118,7 +118,7 @@ function s64_ansible_lib_run_ansible() {
 function s64_ansible_lib_run_doc() {
   bl64_dbg_app_show_function "$@"
 
-  s64_ansible_lib_harden
+  s64_ansible_lib_cli_harden
 
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
@@ -132,7 +132,7 @@ function s64_ansible_lib_run_galaxy() {
   local verbose_flag='--verbose'
 
   bl64_msg_app_verbose_is_enabled || verbose_flag=' '
-  s64_ansible_lib_harden
+  s64_ansible_lib_cli_harden
 
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
