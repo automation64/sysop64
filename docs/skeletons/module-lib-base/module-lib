@@ -32,6 +32,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 }
 
 #
+# External
+#
+
+# shellcheck disable=SC2034
+{
+  : # X_GLOBALS_PLACEHOLDER_X
+}
+
+#
 # Functions
 #
 

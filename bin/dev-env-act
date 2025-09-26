@@ -21,14 +21,19 @@
 
 # shellcheck disable=SC2154
 {
-  # Env / GitLeaks / Module environment definition version
-  export DEV_ENV_GITLEAKS_VERSION='1.1.0'
-  # Lib / GitLeaks / Installer
-  export DEV_LIB_GITLEAKS_INSTALLER="${DEV_LIB_INSTALLER64_TARGET}/install-gitleaks"
-  # Lib / GitLeaks / Target
-  export DEV_LIB_GITLEAKS_TARGET="${DEV_LIB_GITLEAKS_TARGET:-${DEV_PATH_LIB}/glk}"
-  # SAST / GitLeaks / Format
-  export DEV_SAST_GITLEAKS_FORMAT="${DEV_SAST_GITLEAKS_FORMAT:-sarif}"
+  # Env / Act / Module environment definition version
+  export DEV_ENV_ACT_VERSION='1.0.0'
+
+  # Lib / Act / Installer
+  export DEV_LIB_ACT_INSTALLER="${DEV_LIB_INSTALLER64_TARGET}/install-act"
+  # Lib / Act / Target
+  export DEV_LIB_ACT_TARGET="${DEV_LIB_ACT_TARGET:-${DEV_PATH_LIB}/act}"
+
+  # Test / Act / List of workflows. Format: job-id, separated by spaces
+  export DEV_TEST_ACT_WORKFLOWS="${DEV_TEST_ACT_WORKFLOWS:-}"
+
+  # Test / Act / Max concurrent jobs
+  export DEV_TEST_ACT_JOBS_MAX="${DEV_TEST_ACT_JOBS_MAX:-2}"
 }
 
 #
@@ -39,26 +44,6 @@
 
 # shellcheck disable=SC2154
 {
-  # Lib / GitLeaks / Command
-  export DEV_LIB_GITLEAKS_BIN="${DEV_LIB_GITLEAKS_BIN:-${DEV_LIB_GITLEAKS_TARGET}/gitleaks}"
-}
-
-#
-# Secrets
-#
-# * Use .secrets.env file or CICD secrets to override values
-#
-
-# shellcheck disable=SC2154
-{
-  :
-}
-
-#
-# External
-#
-
-# shellcheck disable=SC2154
-{
-  :
+  # Lib / Act / Command
+  export DEV_LIB_ACT_BIN="${DEV_LIB_ACT_BIN:-${DEV_LIB_ACT_TARGET}/act}"
 }
