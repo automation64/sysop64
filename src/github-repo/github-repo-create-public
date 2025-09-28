@@ -22,6 +22,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to l
 
 declare MY_REPO_OWNER="${1:-}"
 declare MY_REPO_NAME="${2:-}"
+declare MY_REPO_DESCRIPTION="${3:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
@@ -29,20 +30,23 @@ function my_initialize() {
   s64_github_lib_setup &&
     bl64_check_parameter 'MY_REPO_OWNER' &&
     bl64_check_parameter 'MY_REPO_NAME' &&
+    bl64_check_parameter 'MY_REPO_DESCRIPTION' &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
       'MY_REPO_OWNER' \
-      'MY_REPO_NAME'
+      'MY_REPO_NAME' \
+      'MY_REPO_DESCRIPTION'
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Create private GitHub repository'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Create public GitHub repository'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_github_lib_run_gh \
   repo \
   create \
-  --private \
+  --public \
   --disable-issues \
   --disable-wiki \
+  --description "$MY_REPO_DESCRIPTION" \
   "${MY_REPO_OWNER}/${MY_REPO_NAME}"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
