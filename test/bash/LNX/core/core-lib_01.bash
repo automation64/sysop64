@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-source ./src/core/core-lib
+source ./src/core/core.lib

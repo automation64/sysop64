@@ -16,23 +16,26 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/airflow-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/airflow.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015 source-path=/opt/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-module-cnt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MAIN_HOST_PORT="${1:-8080}"
-declare MAIN_CONTAINER_VERSION="${2:-latest}"
+declare MAIN_HOST_PORT="${1:-$S64_AIRFLOW_LAB_HOST_PORT}"
+declare MAIN_CONTAINER_TAG="${2:-$S64_AIRFLOW_LAB_IMAGE_TAG}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
   s64_airflow_lib_setup &&
+    bl64_cnt_setup &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'S64_AIRFLOW_LAB_IMAGE_NAME' \
       'MAIN_HOST_PORT' \
-      'MAIN_CONTAINER_VERSION'
+      'MAIN_CONTAINER_TAG'
 }
 
-bl64_lib_script_version_set '1.0.2'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_about_set 'Run AirFlow Standalone container for local lab testing'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
@@ -41,7 +44,8 @@ bl64_cnt_run_docker \
   --rm \
   --tty \
   --interactive \
-  --publish "$MAIN_HOST_PORT":"$MAIN_HOST_PORT" \
-  "apache/airflow:${MAIN_CONTAINER_VERSION}" \
+  --publish "$MAIN_HOST_PORT":"$S64_AIRFLOW_LAB_CONTAINER_PORT" \
+  --name "$S64_AIRFLOW_LAB_CONTAINER_NAME" \
+  "${S64_AIRFLOW_LAB_IMAGE_NAME}:${MAIN_CONTAINER_TAG}" \
   standalone
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

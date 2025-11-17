@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2015 source-path=/opt/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" ||
+  { echo 'Error: unable to load bashlib64' && exit 1; }
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_AUTH0_APP_NAME_IAC="${S64_AUTH0_APP_NAME_IAC:-iac}"
+  declare S64_AUTH0_AUTH_CLIENT_ID="${S64_AUTH0_AUTH_CLIENT_ID:-}"
+  declare S64_AUTH0_AUTH_CLIENT_SECRET="${S64_AUTH0_AUTH_CLIENT_SECRET:-}"
+  declare S64_AUTH0_AUTH_DOMAIN="${S64_AUTH0_AUTH_DOMAIN:-}"
+  declare S64_AUTH0_PATH_CLI_A0DEPLOY="${S64_AUTH0_PATH_CLI_A0DEPLOY:-}"
+  declare S64_AUTH0_PATH_CLI_AUTH0="${S64_AUTH0_PATH_CLI_AUTH0:-}"
+  declare S64_AUTH0_TENAND_ID="${S64_AUTH0_TENAND_ID:-}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_AUTH0_VERSION='1.0.0'
+
+  declare S64_AUTH0_SCOPES_CLIENT_GRANTS_CREATE='create:client_grants'
+}
+
+#
+# External
+#
+
+# shellcheck disable=SC2034
+{
+  export AUTH0_DOMAIN=''
+  export AUTH0_CLIENT_ID=''
+  export AUTH0_CLIENT_SECRET=''
+}
+
+#
+# Functions
+#
+
+function s64_auth0_lib_setup() {
+  bl64_dbg_app_show_function
+  bl64_xsv_setup &&
+    s64_core_lib_command_assign 'S64_AUTH0_PATH_CLI_AUTH0' 'auth0' &&
+    s64_core_lib_command_assign 'S64_AUTH0_PATH_CLI_A0DEPLOY' 'a0deploy' &&
+    bl64_msg_show_setup 'module parameters' \
+      'S64_AUTH0_APP_NAME_IAC' \
+      'S64_AUTH0_TENAND_ID' \
+      'S64_AUTH0_AUTH_DOMAIN' \
+      'S64_AUTH0_AUTH_CLIENT_ID'
+}
+
+function s64_auth0_lib_run_auth0() {
+  bl64_dbg_app_show_function "$@"
+  local debug_flag='--debug'
+  bl64_dbg_app_command_is_enabled || debug_flag=' '
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_AUTH0_PATH_CLI_AUTH0" \
+    $debug_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_auth0_lib_run_a0deploy() {
+  bl64_dbg_app_show_function "$@"
+  local debug_flag='--debug'
+  bl64_dbg_app_command_is_enabled || debug_flag=' '
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_AUTH0_PATH_CLI_A0DEPLOY" \
+    $debug_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_auth0_api_get_id() {
+  bl64_dbg_app_show_function
+  s64_auth0_lib_run_auth0 \
+    apis \
+    list \
+    --json |
+    bl64_xsv_run_jq \
+      -r \
+      'map(
+        select(
+          .name == "Auth0 Management API"
+        )
+      )[0].id'
+}
+
+function s64_auth0_api_get_identifier() {
+  bl64_dbg_app_show_function
+  s64_auth0_lib_run_auth0 \
+    apis \
+    list \
+    --json |
+    bl64_xsv_run_jq \
+      -r \
+      'map(
+        select(
+          .name == "Auth0 Management API"
+        )
+      )[0].identifier'
+}
+
+function s64_auth0_api_get_scopes() {
+  bl64_dbg_app_show_function "$@"
+  local api_id="${1:-}"
+  bl64_check_parameter 'api_id' &&
+    s64_auth0_lib_run_auth0 \
+      apis \
+      scopes \
+      list \
+      --json \
+      "$api_id" |
+    bl64_xsv_run_jq \
+      -r \
+      '.[].value' |
+      bl64_xsv_run_jq \
+        -ncR \
+        '[inputs]'
+}

@@ -4,32 +4,30 @@
 ![GitHub stars](https://img.shields.io/github/stars/automation64/sysop64?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/automation64/sysop64?style=social)
 
-🚀 **SysOpt64** is a collection of Unix/Linux Infrastructure Systems Operations scripts
+🚀 **SysOp64** is a collection of Unix/Linux Infrastructure Systems Operations scripts
 
 ---
 
 ## 📌 Overview
 
-This repository provides a curated collection of Unix/Linux infrastructure systems operations scripts designed to automate common administrative tasks, streamline routine operations, and facilitate efficient system management. It focuses on enhancing operational workflows by automating tasks such as log analysis, system monitoring, resource management, and configuration maintenance, ultimately improving overall system stability and operational efficiency
+**SysOp64** purpose is to provide the devops/sre/sysadmin with a collection of curated and opinionated set of single-task Bash scripts for systems administration and operation.
+
+Most importantly, it serves as a knowledge base to save the time and effort invested in determining the right execution sequence and command line parameters for operational tasks, regardles of their complexity or frequency.
 
 ---
 
 ## 📦 Installation
 
-Install SysOp64 and make available system-wide (requires root privilege): `/opt/sysop64`
+**SysOp64** can be installed using the **Installer64** tool:
 
-```sh
-INST64_RELEASE="$(curl -s "https://api.github.com/repos/automation64/installer64/releases/latest" | grep '"tag_name":' | cut -d '"' -f 4)" &&
-test -n "$INST64_RELEASE" && curl -LO https://github.com/automation64/installer64/releases/download/${INST64_RELEASE}/install-installer64 &&
-chmod 755 ./install-installer64 && sudo ./install-installer64 &&
+```shell
+curl -sL https://raw.githubusercontent.com/automation64/installer64/main/src/bootstrap | sh
 sudo /opt/inst64/install-sysop64
 ```
 
 ---
 
 ## 🚀 Usage
-
-Run `sysop64` with the appropriate flags:
 
 ```sh
 # List modules
@@ -47,6 +45,12 @@ sysop64 <MODULE/TASK> [TASK_PARAMETERS]
 Contributions are welcome! Help us improve by submitting issues, feature requests, or pull requests.
 
 - [Code of Conduct](https://github.com/automation64/sysop64/blob/main/CODE_OF_CONDUCT.md)
+
+---
+
+## ⚠️ Disclaimer
+
+This repository is provided "as is" without any warranties. The author is not responsible for any damages or issues arising from its use. Additionally, this project is not affiliated with or endorsed by any organization or entity. Use at your own risk.
 
 ---
 

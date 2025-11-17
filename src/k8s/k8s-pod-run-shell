@@ -20,8 +20,8 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/k8s-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
-# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/k8s.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 #
@@ -78,8 +78,7 @@ function my_shell_run() {
   }
   ' "$MY_POD_NAME" "$image" "$entrypoint" "$MY_CPU_REQUEST" "$MY_MEMORY_REQUEST" "$MY_CPU_LIMIT" "$MY_MEMORY_LIMIT"
 
-  bl64_k8s_run_kubectl \
-    "$BL64_VAR_DEFAULT" \
+  bl64_k8s_run_kubectl "$BL64_VAR_DEFAULT" \
     run \
     --attach \
     --rm \
@@ -96,8 +95,8 @@ function my_shell_run() {
 function my_initialize() {
   bl64_dbg_app_show_function
   [[ -n "$MY_OPTION" ]] || { bl64_msg_help_show && return 1; }
-  s64_k8s_lib_setup || 
-  return $?
+  s64_k8s_lib_setup ||
+    return $?
   [[ "$MY_CONTAINER_ENTRYPOINT" == "$BL64_VAR_DEFAULT" ]] && MY_CONTAINER_ENTRYPOINT='sh'
   [[ "$MY_CONTAINER_IMAGE" == "$BL64_VAR_DEFAULT" ]] && MY_CONTAINER_IMAGE='alpine'
   bl64_msg_show_about
@@ -131,14 +130,14 @@ bl64_msg_help_parameters_set \
 
 while getopts ':si:n:e:V:D:h' MY_OPTION; do
   case "$MY_OPTION" in
-  s) MY_COMMAND='shell_run' ;;
-  n) MY_NAMESPACE="$OPTARG" ;;
-  i) MY_CONTAINER_IMAGE="$OPTARG" ;;
-  e) MY_CONTAINER_ENTRYPOINT="$OPTARG" ;;
-  V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
-  D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) bl64_msg_help_show && exit 0 ;;
-  *) bl64_msg_help_show && exit 1 ;;
+    s) MY_COMMAND='shell_run' ;;
+    n) MY_NAMESPACE="$OPTARG" ;;
+    i) MY_CONTAINER_IMAGE="$OPTARG" ;;
+    e) MY_CONTAINER_ENTRYPOINT="$OPTARG" ;;
+    V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
+    D) S64_CORE_SET_DEBUG="$OPTARG" ;;
+    h) bl64_msg_help_show && exit 0 ;;
+    *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?

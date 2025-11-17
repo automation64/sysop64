@@ -16,13 +16,13 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/k8s-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/k8s.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_NAMESPACE="${1:-$BL64_VAR_DEFAULT}"
-declare MY_TYPE="${2:-$BL64_VAR_DEFAULT}"
-declare MY_OBJECT="${3:-$BL64_VAR_DEFAULT}"
+declare MY_TYPE="${1:-$BL64_VAR_DEFAULT}"
+declare MY_OBJECT="${2:-$BL64_VAR_DEFAULT}"
+declare MY_NAMESPACE="${3:-$BL64_VAR_DEFAULT}"
 
 function my_get_type() {
   bl64_dbg_app_show_function
@@ -30,11 +30,10 @@ function my_get_type() {
   local object="$2"
 
   # shellcheck disable=SC2086,SC2046
-  bl64_k8s_run_kubectl \
-    "$BL64_VAR_DEFAULT" \
+  bl64_k8s_run_kubectl "$BL64_VAR_DEFAULT" \
     get \
     --output="$S64_K8S_OUTPUT_FORMAT" \
-  $(s64_k8s_lib_cli_set_ns "$MY_NAMESPACE") \
+    $(s64_k8s_lib_cli_set_ns "$MY_NAMESPACE") \
     "$type" $object
 }
 
@@ -44,8 +43,7 @@ function my_list() {
 
   bl64_lib_var_is_default "$MY_OBJECT" && MY_OBJECT=''
   if bl64_lib_var_is_default "$MY_TYPE"; then
-    MY_TYPE="$(bl64_k8s_run_kubectl \
-      "$BL64_VAR_DEFAULT" \
+    MY_TYPE="$(bl64_k8s_run_kubectl "$BL64_VAR_DEFAULT" \
       api-resources \
       --namespaced=true \
       --sort-by='name' \
@@ -65,11 +63,10 @@ function my_initialize() {
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
       'MY_NAMESPACE' \
       'MY_TYPE' \
-      'MY_OBJECT' \
-      'S64_K8S_OUTPUT_FORMAT'
+      'MY_OBJECT'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '2.0.0'
 bl64_msg_help_about_set 'Show deployed Kubernetes objects manifest'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

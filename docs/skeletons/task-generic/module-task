@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 3.3.0
-#   template-task-base: 2.3.0
+# template-task-base: 2.3.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -17,30 +16,25 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/X_MODULE_X-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/X_MODULE_X.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 declare MY_COMMAND="$BL64_VAR_NULL"
 declare MY_OPTION=''
-# X_GLOBALS_PLACEHOLDER_X
 
 function my_X_COMMAND_X() {
-  bl64_dbg_app_show_function "$@"
-  # X_COMMAND_PLACEHOLDER_X
+  bl64_dbg_app_show_function
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
+  [[ -n "$MY_OPTION" && -n "$MY_COMMAND" ]] || { bl64_msg_help_show && return 1; }
   bl64_msg_show_about
-  # X_INIT_PARAMETER_PLACEHOLDER_X
-  [[ -n "$MY_OPTION" && -n "$MY_COMMAND" ]] &&
-    bl64_check_parameter 'MY_PARAMETERX' ||
-    { bl64_msg_help_show && return 1; }
-  s64_X_MODULE_X_lib_setup
-  # X_INIT_PARAMETER_PLACEHOLDER_X
-  # X_INIT_PLACEHOLDER_X
-  # X_INIT_INFO_PLACEHOLDER_X
+  s64_X_MODULE_X_lib_setup &&
+    bl64_check_parameter 'MY_PARAMETERX' &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'X_PARAMETER_X'
 }
 
 bl64_lib_script_version_set '1.0.0'
@@ -53,11 +47,11 @@ bl64_msg_help_parameters_set \
 
 while getopts ':xV:D:h' MY_OPTION; do
   case "$MY_OPTION" in
-  x) MY_COMMAND='X_COMMAND_X' ;;
-  V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
-  D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) bl64_msg_help_show && exit 0 ;;
-  *) bl64_msg_help_show && exit 1 ;;
+    x) MY_COMMAND='X_COMMAND_X' ;;
+    V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
+    D) S64_CORE_SET_DEBUG="$OPTARG" ;;
+    h) bl64_msg_help_show && exit 0 ;;
+    *) bl64_msg_help_show && exit 1 ;;
   esac
 done
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
