@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # template-one: 3.2.1
-#   template-one-base: 2.1.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -17,8 +16,8 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/helm-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/helm.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
 declare MY_PATTERN="${1:-}"
@@ -29,11 +28,11 @@ function my_initialize() {
   s64_helm_lib_setup
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '2.0.0'
 bl64_msg_help_about_set 'Search for charts in locally installed Helm repositories. Show all chart versions'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_helm_lib_run_helm \
+bl64_hlm_run_helm \
   search \
   repo \
   --output "$S64_HELM_OUTPUT_FORMAT" \

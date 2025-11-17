@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2015 source-path=/opt/bl64
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
+  { echo 'Error: unable to load bashlib64' && exit 1; }
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_SHELLCHECK_PATH_CLI="${S64_SHELLCHECK_PATH_CLI:-}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_SHELLCHECK_VERSION='2.0.0'
+}
+
+#
+# Functions
+#
+
+function s64_shellcheck_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_command_assign 'S64_SHELLCHECK_PATH_CLI' 'shellcheck'
+}
+
+function s64_shellcheck_lib_run_shellcheck() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_SHELLCHECK_PATH_CLI" "$BL64_VAR_DEFAULT" 'S64_SHELLCHECK_PATH_CLI' || return $?
+  unset SHELLCHECK_OPTS
+  bl64_dbg_app_trace_start
+  "$S64_SHELLCHECK_PATH_CLI" \
+    --norc \
+    "$@"
+  bl64_dbg_app_trace_stop
+}

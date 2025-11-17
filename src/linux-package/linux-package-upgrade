@@ -16,12 +16,11 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" && source "${S64_CORE_PATH_ROOT}/core/linux-lib" ||
-  { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
-# shellcheck disable=SC2015,SC2154 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/linux.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-function upgrade_ubuntu() {
+function my_upgrade_ubuntu() {
   bl64_dbg_app_show_function
   bl64_msg_show_task 'prepare for upgrade'
   bl64_pkg_prepare &&
@@ -32,31 +31,33 @@ function upgrade_ubuntu() {
       "$BL64_PKG_SET_ASSUME_YES"
 }
 
-function upgrade_fedora() {
+function my_upgrade_fedora() {
   bl64_dbg_app_show_function
   bl64_msg_show_task 'upgrade all packages'
   bl64_pkg_upgrade
 }
 
-function upgrade() {
+function my_upgrade() {
   bl64_dbg_app_show_function
   case "$BL64_OS_DISTRO" in
-  ${BL64_OS_UB}-*) upgrade_ubuntu ;;
-  ${BL64_OS_FD}-*) upgrade_fedora ;;
-  *) bl64_check_alert_unsupported ;;
+    ${BL64_OS_UB}-*) my_upgrade_ubuntu ;;
+    ${BL64_OS_FD}-*) my_upgrade_fedora ;;
+    *) bl64_check_alert_unsupported ;;
   esac
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
+  bl64_msg_show_about
   bl64_check_privilege_root &&
     bl64_os_check_compatibility \
       "${BL64_OS_UB}" \
       "${BL64_OS_FD}"
 }
 
-bl64_lib_script_version_set '1.1.1'
+bl64_lib_script_version_set '1.1.2'
+bl64_msg_help_about_set 'Upgrade operating system packages'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-upgrade
+my_upgrade
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

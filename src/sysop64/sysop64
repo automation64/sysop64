@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 3.1.0
+# template-task-base: 2.3.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -16,16 +16,21 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core-lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/../../lib/bl64
+source "${S64_CORE_PATH_ROOT}/core/core.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+# shellcheck disable=SC2015 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
+declare MY_MODULE="${1:-}"
+declare MY_TASK="${2:-}"
+
 function my_module_list() {
+  bl64_dbg_app_show_function
   cd "$S64_CORE_PATH_ROOT" &&
     ls -1
 }
 
 function my_task_list() {
+  bl64_dbg_app_show_function
   local task=''
   [[ "$MY_MODULE" == 'core' || ! -d "${S64_CORE_PATH_ROOT}/${MY_MODULE}" ]] &&
     bl64_msg_show_fatal "invalid SysOp64 module name (${MY_MODULE})" &&
@@ -37,32 +42,42 @@ function my_task_list() {
 }
 
 function my_task_run() {
+  bl64_dbg_app_show_function
   local task="${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}"
   [[ ! -x "$task" ]] &&
     bl64_msg_show_fatal "Fatal: invalid SysOp64 module/task name (${task})" &&
     return 1
-  "$task" "$@"
+  S64_CORE_SET_DEBUG="$S64_CORE_SET_DEBUG" S64_CORE_SET_VERBOSE="$S64_CORE_SET_VERBOSE" "$task" "$@"
 }
 
-declare MY_MODULE="${1:-}"
-declare MY_TASK="${2:-}"
+# shellcheck disable=SC2120
+function my_command() {
+  bl64_dbg_app_show_function
+  if [[ -z "$MY_MODULE" ]]; then
+    my_module_list
+  elif [[ "$MY_MODULE" == 'help' ]]; then
+    bl64_msg_help_show
+  elif [[ -n "$MY_MODULE" && -z "$MY_TASK" ]]; then
+    my_task_list
+  elif [[ -n "$MY_MODULE" && -n "$MY_TASK" ]]; then
+    shift
+    shift
+    my_task_run "$@"
+  fi
+}
 
-bl64_lib_script_version_set '1.1.0'
+function my_initialize() {
+  bl64_dbg_app_show_function
+  bl64_lib_script_minver_check '22.5.0'
+}
+
+bl64_lib_script_version_set '1.2.0'
 bl64_msg_help_usage_set 'sysop64 [MODULE] [TASK] [TASK-PARAMETERS]'
 bl64_msg_help_about_set 'Run SysOp64 tasks'
 bl64_msg_help_parameters_set \
-  '
+  'Parameters:
   MODULE         : Module name. If none, list them all
   TASK           : Task name. If none, list them all. Requires MODULE to be set
-  TASK-PARAMETERS: Task parameters
-'
-bl64_msg_set_format "$BL64_MSG_FORMAT_PLAIN"
-if [[ -z "$MY_MODULE" ]]; then
-  my_module_list
-elif [[ -n "$MY_MODULE" && -z "$MY_TASK" ]]; then
-  my_task_list
-elif [[ -n "$MY_MODULE" && -n "$MY_TASK" ]]; then
-  shift
-  shift
-  my_task_run "$@"
-fi
+  TASK-PARAMETERS: Task parameters'
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
+my_command "$@"

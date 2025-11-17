@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  # Default Automation64 install path
+  declare S64_CORE_PATH_AT64='/opt'
+  [[ ! -d "${S64_CORE_PATH_AT64}/bl64" ]] && S64_CORE_PATH_AT64="${HOME}/at64"
+
+  # Default BashLib64 install path
+  declare S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-${S64_CORE_PATH_AT64}/bl64}"
+
+  # Default log repository
+  declare S64_CORE_PATH_LOGS="${S64_CORE_PATH_LOGS:-${HOME}/sysop64-logs}"
+
+  # Default debut level
+  declare S64_CORE_SET_DEBUG="${S64_CORE_SET_DEBUG:-NONE}"
+
+  # Default verbose level
+  declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
+
+  # Common UI tools
+  declare S64_CORE_PATH_VI="${S64_CORE_PATH_VI:-}"
+
+  # Custom command search paths paths
+  declare S64_CORE_SEARCH_USER="${S64_CORE_SEARCH_USER:-}"
+  declare S64_CORE_SEARCH_SYSTEM="${S64_CORE_SEARCH_SYSTEM:-}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_CORE_VERSION='2.2.0'
+}
+
+#
+# Functions
+#
+
+function s64_core_lib_file_edit() {
+  bl64_dbg_app_show_function "$@"
+  if [[ -z "$S64_CORE_PATH_VI" ]]; then
+    S64_CORE_PATH_VI="$(bl64_bsh_command_locate 'vi')"
+  fi
+  bl64_check_command "$S64_CORE_PATH_VI" "$BL64_VAR_DEFAULT" 'vi' || return $?
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_CORE_PATH_VI" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_core_lib_command_assign() {
+  bl64_dbg_app_show_function "$@"
+  local command_variable="${1:-}"
+  local command_name="${2:-}"
+  local command_path=''
+
+  bl64_check_parameter 'command_variable' &&
+    bl64_check_parameter 'command_name' ||
+    return $?
+
+  if [[ -z "${!command_variable}" ]]; then
+    # shellcheck disable=SC2086
+    command_path="$(
+      bl64_bsh_command_locate \
+        "$command_name" \
+        "${HOME}/.local/bin" \
+        "${HOME}/node_modules/.bin" \
+        $S64_CORE_SEARCH_SYSTEM \
+        $S64_CORE_SEARCH_USER
+    )"
+    if [[ -n "$command_path" ]]; then
+      printf -v "${command_variable}" '%s' "${command_path}"
+      return 0
+    else
+      bl64_msg_show_error "Unable to find required command. Please install it and try again (command: ${command_name})"
+      return $BL64_LIB_ERROR_TASK_FAILED
+    fi
+  fi
+}
