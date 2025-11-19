@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-task: 3.3.0
+# template-task-base: 2.3.1
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -21,9 +21,9 @@ source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_COMMAND="$BL64_VAR_NULL"
+declare MY_COMMAND=''
 declare MY_OPTION=''
-declare MY_RELEASE="$BL64_VAR_NULL"
+declare MY_RELEASE=''
 declare MY_CMD_RELEASE_UPGRADE=''
 
 function prepare_fedora() {
@@ -77,9 +77,9 @@ function prepare() {
   bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
-  ${BL64_OS_UB}-*) prepare_ubuntu ;;
-  ${BL64_OS_FD}-*) prepare_fedora ;;
-  *) bl64_check_alert_unsupported ;;
+    ${BL64_OS_UB}-*) prepare_ubuntu ;;
+    ${BL64_OS_FD}-*) prepare_fedora ;;
+    *) bl64_check_alert_unsupported ;;
   esac
 }
 
@@ -88,38 +88,40 @@ function upgrade() {
   bl64_ui_ask_confirmation 'Warning: the task will perform unattended OS upgrade to the next available distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
-  ${BL64_OS_UB}-*) upgrade_ubuntu ;;
-  ${BL64_OS_FD}-*) upgrade_fedora "$MY_RELEASE" ;;
-  *) bl64_check_alert_unsupported ;;
+    ${BL64_OS_UB}-*) upgrade_ubuntu ;;
+    ${BL64_OS_FD}-*) upgrade_fedora "$MY_RELEASE" ;;
+    *) bl64_check_alert_unsupported ;;
   esac
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
+  [[ -n "$MY_OPTION" && -n "$MY_COMMAND" ]] || { bl64_msg_help_show && return 1; }
   bl64_msg_show_about
-
-  [[ -n "$MY_OPTION" && -n "$MY_COMMAND" ]] &&
-    { bl64_msg_help_show && return 1; }
-
   bl64_check_privilege_root &&
     s64_linux_lib_setup &&
     bl64_os_check_compatibility \
-      "${BL64_OS_UB}-22" "${BL64_OS_UB}-23" "${BL64_OS_UB}-24" \
+      "${BL64_OS_UB}-22" "${BL64_OS_UB}-23" "${BL64_OS_UB}-24" "${BL64_OS_UB}-25" \
       "${BL64_OS_FD}-39" "${BL64_OS_FD}-40" "${BL64_OS_FD}-41" "${BL64_OS_FD}-42" ||
     return $?
 
   if [[ "$MY_COMMAND" == 'upgrade' ]]; then
+    # shellcheck disable=SC2249
     case "$BL64_OS_DISTRO" in
-    ${BL64_OS_UB}-*)
-      MY_CMD_RELEASE_UPGRADE='/bin/do-release-upgrade'
-      bl64_check_command "$MY_CMD_RELEASE_UPGRADE"
-      ;;
-    *) : ;;
+      ${BL64_OS_UB}-*)
+        MY_CMD_RELEASE_UPGRADE='/bin/do-release-upgrade'
+        bl64_check_command "$MY_CMD_RELEASE_UPGRADE"
+        ;;
+      ${BL64_OS_FD}-*)
+        bl64_check_parameter 'MY_RELEASE'
+        ;;
     esac
-  fi
+  fi || return $?
+  bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    'MY_RELEASE'
 }
 
-bl64_lib_script_version_set '1.0.6'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_usage_set '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_about_set 'Upgrade Linux distribution release'
 # shellcheck disable=SC2016
@@ -133,16 +135,16 @@ bl64_msg_help_parameters_set \
 
 while getopts ':pur:V:D:h' MY_OPTION; do
   case "$MY_OPTION" in
-  p) MY_COMMAND='prepare' ;;
-  u) MY_COMMAND='upgrade' ;;
-  r) MY_RELEASE="$OPTARG" ;;
-  V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
-  D) S64_CORE_SET_DEBUG="$OPTARG" ;;
-  h) bl64_msg_help_show && exit 0 ;;
-  *) bl64_msg_help_show && exit 1 ;;
+    p) MY_COMMAND='prepare' ;;
+    u) MY_COMMAND='upgrade' ;;
+    r) MY_RELEASE="$OPTARG" ;;
+    V) S64_CORE_SET_VERBOSE="$OPTARG" ;;
+    D) S64_CORE_SET_DEBUG="$OPTARG" ;;
+    h) bl64_msg_help_show && exit 0 ;;
+    *) bl64_msg_help_show && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
 "${MY_COMMAND}"

@@ -31,11 +31,11 @@ sudo /opt/inst64/install-sysop64
 
 ```sh
 # List modules
-sysop64
+so64
 # List module tasks
-sysop64 <MODULE>
+so64 <MODULE>
 # Run module task
-sysop64 <MODULE/TASK> [TASK_PARAMETERS]
+so64 <MODULE/TASK> [TASK_PARAMETERS]
 ```
 
 ---

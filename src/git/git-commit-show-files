@@ -20,21 +20,23 @@ source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
+declare MY_COMMIT="${1:-HEAD}"
+
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  s64_git_lib_setup
+  s64_git_lib_setup &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'MY_COMMIT'
 }
 
-bl64_lib_script_version_set '1.0.3'
-bl64_msg_help_about_set 'Show commit history in a tree format.'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Show what files changed in a specific commit'
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_vcs_run_git \
-  log \
-  --graph \
-  --all \
-  --decorate=short \
-  --topo-order \
-  --pretty=format:'%C(auto)%h%d%Creset %C(cyan)(%ci)%Creset %C(green)%cn <%ce>%Creset %s%n'
+  show \
+  --pretty=format:"%Cred%H%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" \
+  --stat \
+  "$MY_COMMIT"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

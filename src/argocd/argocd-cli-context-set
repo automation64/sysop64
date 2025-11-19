@@ -31,15 +31,14 @@ function my_initialize() {
     bl64_check_parameter 'MY_K8S_CONTEXT_USER' &&
     s64_argocd_lib_setup &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'S64_ARGOCD_SET_CONTEXT_NAME' \
       'MY_K8S_CONTEXT_CLUSTER' \
       'MY_K8S_CONTEXT_USER' \
       'MY_K8S_CONTEXT_NAMESPACE'
 }
 
-bl64_lib_script_version_set '1.0.2'
+bl64_lib_script_version_set '1.0.3'
 bl64_msg_help_about_set 'Configure KubeCTL context for ArgoCD CLI'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 
 bl64_k8s_run_kubectl "$BL64_VAR_DEFAULT" \
@@ -47,9 +46,9 @@ bl64_k8s_run_kubectl "$BL64_VAR_DEFAULT" \
   --cluster="$MY_K8S_CONTEXT_CLUSTER" \
   --user="$MY_K8S_CONTEXT_USER" \
   --namespace="$MY_K8S_CONTEXT_NAMESPACE" \
-  "$S64_ARGOCD_SET_CONTEXT_NAME" &&
+  "$S64_ARGOCD_SET_CONTEXT" &&
   bl64_k8s_run_kubectl "$BL64_VAR_DEFAULT" \
     config use-context \
-    "$S64_ARGOCD_SET_CONTEXT_NAME"
+    "$S64_ARGOCD_SET_CONTEXT"
 
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

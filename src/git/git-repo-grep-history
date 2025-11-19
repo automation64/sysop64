@@ -31,7 +31,7 @@ declare MY_PATTERN="${1:-}"
 
 bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'Search for a pattern in the git commit history'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_vcs_run_git \
   grep \

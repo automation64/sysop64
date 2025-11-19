@@ -79,5 +79,5 @@ bl64_msg_help_parameters_set \
   MODULE         : Module name. If none, list them all
   TASK           : Task name. If none, list them all. Requires MODULE to be set
   TASK-PARAMETERS: Task parameters'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
 my_command "$@"

@@ -35,6 +35,9 @@
   # Default verbose level
   declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
 
+  # Default verbose format
+  declare S64_CORE_SET_FORMAT="${S64_CORE_SET_FORMAT:-TIME}"
+
   # Common UI tools
   declare S64_CORE_PATH_VI="${S64_CORE_PATH_VI:-}"
 
@@ -49,7 +52,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='2.2.0'
+  declare S64_CORE_VERSION='2.3.0'
 }
 
 #
