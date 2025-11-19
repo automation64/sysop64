@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_ARGOCD_VERSION='1.4.0'
+  declare S64_ARGOCD_VERSION='1.4.1'
 
   # Cluster / Admin ID
   declare S64_ARGOCD_USER_ADMIN='admin'
@@ -89,7 +89,10 @@ function s64_argocd_lib_run_argocd() {
     "$S64_ARGOCD_SET_CONNECTION_PORT_FORWARD") connection="--port-forward --port-forward-namespace ${S64_ARGOCD_SET_NAMESPACE}" ;;
     "$S64_ARGOCD_SET_CONNECTION_CORE") connection='--core' ;;
     "$S64_ARGOCD_SET_CONNECTION_DIRECT") connection='' ;;
-    *) bl64_check_alert_parameter_invalid 'S64_ARGOCD_SET_CONNECTION' ;;
+    *)
+      bl64_check_alert_parameter_invalid 'S64_ARGOCD_SET_CONNECTION'
+      return $?
+      ;;
   esac
 
   bl64_dbg_app_trace_start
