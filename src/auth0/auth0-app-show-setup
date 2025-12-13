@@ -33,7 +33,7 @@ function my_initialize() {
 
 bl64_lib_script_version_set '1.0.0'
 bl64_msg_help_about_set 'Show tenant application details'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && s64_core_lib_set_verbose && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_auth0_lib_run_auth0 \
   apps \

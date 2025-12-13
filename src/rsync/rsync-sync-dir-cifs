@@ -20,38 +20,36 @@ source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/co
 # shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_RSYNC_CLONE_FROM="${1:-}"
-declare MY_RSYNC_CLONE_TO="${2:-}"
+declare MY_DIR_NAME="${1:-}"
+declare MY_BASE_FROM="${2:-}"
+declare MY_BASE_TO="${3:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
   s64_rsync_lib_setup &&
-    bl64_check_parameter 'MY_RSYNC_CLONE_FROM' &&
-    bl64_check_parameter 'MY_RSYNC_CLONE_TO' &&
-    bl64_check_directory "$MY_RSYNC_CLONE_FROM" &&
+    bl64_check_parameter 'MY_DIR_NAME' &&
+    bl64_check_parameter 'MY_BASE_FROM' &&
+    bl64_check_parameter 'MY_BASE_TO' &&
+    bl64_check_directory "$MY_BASE_FROM" &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'MY_RSYNC_CLONE_FROM' \
-      'MY_RSYNC_CLONE_TO' &&
-    bl64_ui_ask_confirmation "Warning: destination content will be replaced (${MY_RSYNC_CLONE_FROM} -> ${MY_RSYNC_CLONE_TO})"
+      'MY_DIR_NAME' \
+      'MY_BASE_FROM' \
+      'MY_BASE_TO' &&
+    bl64_ui_ask_confirmation 'Warning: destination content will be replaced'
 }
 
-bl64_lib_script_version_set '1.0.3'
+bl64_lib_script_version_set '2.0.0'
 bl64_msg_help_about_set 'Synchronize files between Linux and CIFS paths: delete destination differences, adapt linux files to CIFS'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && s64_core_lib_set_verbose && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 # shellcheck disable=SC2086
 s64_rsync_lib_run_rsync \
-  $S64_RSYNC_OPTIONS_COMMON \
+  $S64_RSYNC_SET_COMMON \
+  $S64_RSYNC_SET_CIFS \
   --recursive \
   --delete \
-  --no-links \
-  --no-perms \
-  --no-acls \
-  --no-owner \
-  --no-group \
-  --no-devices \
   --numeric-ids \
-  "$MY_RSYNC_CLONE_FROM" \
-  "$MY_RSYNC_CLONE_TO"
+  "${MY_BASE_FROM}/${MY_DIR_NAME}/" \
+  "${MY_BASE_TO}/${MY_DIR_NAME}"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

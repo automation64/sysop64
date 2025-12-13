@@ -49,15 +49,12 @@ function my_upgrade() {
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  bl64_check_privilege_root &&
-    bl64_os_check_compatibility \
-      "${BL64_OS_UB}" \
-      "${BL64_OS_FD}"
+  bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '1.1.2'
+bl64_lib_script_version_set '1.1.3'
 bl64_msg_help_about_set 'Upgrade operating system packages'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && s64_core_lib_set_verbose && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 my_upgrade
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -3,16 +3,17 @@
 ![License](https://img.shields.io/github/license/automation64/sysop64)
 ![GitHub stars](https://img.shields.io/github/stars/automation64/sysop64?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/automation64/sysop64?style=social)
+![Downloads](https://img.shields.io/github/downloads/automation64/installer64/total)
 
-🚀 **SysOp64** is a collection of Unix/Linux Infrastructure Systems Operations scripts
+🚀 **SysOp64** is a collection of Unix/Linux Systems Operations scripts
 
 ---
 
 ## 📌 Overview
 
-**SysOp64** purpose is to provide the devops/sre/sysadmin with a collection of curated and opinionated set of single-task Bash scripts for systems administration and operation.
+**SysOp64** purpose is to provide the DevOps/SRE/SysAdmin with a collection of curated and opinionated set of single-task scripts for systems administration and operation.
 
-Most importantly, it serves as a knowledge base to save the time and effort invested in determining the right execution sequence and command line parameters for operational tasks, regardles of their complexity or frequency.
+It serves as a knowledge base to save the time and effort invested in determining the right execution sequence and command line parameters for operational tasks, regardless of their complexity or frequency.
 
 ---
 

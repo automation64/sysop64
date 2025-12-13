@@ -44,10 +44,17 @@ function my_task_list() {
 function my_task_run() {
   bl64_dbg_app_show_function
   local task="${S64_CORE_PATH_ROOT}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}"
+
   [[ ! -x "$task" ]] &&
     bl64_msg_show_fatal "Fatal: invalid SysOp64 module/task name (${task})" &&
     return 1
-  S64_CORE_SET_DEBUG="$S64_CORE_SET_DEBUG" S64_CORE_SET_VERBOSE="$S64_CORE_SET_VERBOSE" "$task" "$@"
+
+  S64_CORE_SET_DEBUG="$S64_CORE_SET_DEBUG" \
+    S64_CORE_SET_VERBOSE="$S64_CORE_SET_VERBOSE" \
+    S64_CORE_SET_FORMAT="$S64_CORE_SET_FORMAT" \
+    S64_CORE_SET_OUTPUT="$S64_CORE_SET_OUTPUT" \
+    "$task" \
+    "$@"
 }
 
 # shellcheck disable=SC2120
@@ -68,10 +75,13 @@ function my_command() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_lib_script_minver_check '22.5.0'
+  bl64_msg_set_output "$S64_CORE_SET_OUTPUT" &&
+    bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
+    bl64_msg_set_format "$S64_CORE_SET_FORMAT" &&
+    bl64_lib_script_minver_check "$S64_BL64_VERSION"
 }
 
-bl64_lib_script_version_set '1.2.0'
+bl64_lib_script_version_set '1.3.0'
 bl64_msg_help_usage_set 'sysop64 [MODULE] [TASK] [TASK-PARAMETERS]'
 bl64_msg_help_about_set 'Run SysOp64 tasks'
 bl64_msg_help_parameters_set \
@@ -79,5 +89,5 @@ bl64_msg_help_parameters_set \
   MODULE         : Module name. If none, list them all
   TASK           : Task name. If none, list them all. Requires MODULE to be set
   TASK-PARAMETERS: Task parameters'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 my_command "$@"
