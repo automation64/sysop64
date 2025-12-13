@@ -42,16 +42,57 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_RSYNC_VERSION='3.0.0'
+  declare S64_RSYNC_VERSION='4.0.0'
 
-  declare S64_RSYNC_OPTIONS_COMMON=''
-  S64_RSYNC_OPTIONS_COMMON+=' --one-file-system'
-  S64_RSYNC_OPTIONS_COMMON+=' --checksum'
-  S64_RSYNC_OPTIONS_COMMON+=' --mkpath'
+  # RSync / Common parameters, regardless of the method
+  declare S64_RSYNC_SET_COMMON=''
+  S64_RSYNC_SET_COMMON+=' --checksum'    # skip based on checksum, not mod-time & size
+  S64_RSYNC_SET_COMMON+=' --mkpath'      # create destination's missing path components
+  S64_RSYNC_SET_COMMON+=' --preallocate' # allocate dest files before writing them
 
-  declare S64_RSYNC_OPTIONS_LOCAL=''
-  S64_RSYNC_OPTIONS_LOCAL+=' --links'
-  S64_RSYNC_OPTIONS_LOCAL+=' --perms'
+  # RSync / Common parameters for CIFS
+  declare S64_RSYNC_SET_CIFS=''
+  S64_RSYNC_SET_CIFS+=' --no-links'
+  S64_RSYNC_SET_CIFS+=' --no-perms'
+  S64_RSYNC_SET_CIFS+=' --no-acls'
+  S64_RSYNC_SET_CIFS+=' --no-owner'
+  S64_RSYNC_SET_CIFS+=' --no-group'
+  S64_RSYNC_SET_CIFS+=' --no-devices'
+
+  # RSync / Parameters for local operation
+  declare S64_RSYNC_SET_LOCAL=''
+  S64_RSYNC_SET_LOCAL+=' --one-file-system' # don't cross filesystem boundaries
+
+  # RSync / Parameters for remote operation
+  declare S64_RSYNC_SET_REMOTE=''
+  S64_RSYNC_SET_REMOTE+=' --compress'         # compress file data during the transfer
+  S64_RSYNC_SET_REMOTE+=' --compress-level=9' # explicitly set compression level
+
+  # RSync / Parameters for copy method
+  declare S64_RSYNC_SET_COPY=''
+  S64_RSYNC_SET_COPY+=' --recursive' # recurse into directories
+  S64_RSYNC_SET_COPY+=' --links'     # copy symlinks as symlinks
+  S64_RSYNC_SET_COPY+=' --perms'     # preserve permissions
+
+  # RSync / Parameters for sync method
+  declare S64_RSYNC_SET_SYNC=''
+  S64_RSYNC_SET_SYNC+=' --recursive' # recurse into directories
+  S64_RSYNC_SET_SYNC+=' --links'     # copy symlinks as symlinks
+  S64_RSYNC_SET_SYNC+=' --perms'     # preserve permissions
+  S64_RSYNC_SET_SYNC+=' --delete'    # delete extraneous files from dest dirs
+
+  # RSync / Parameters for clone method
+  declare S64_RSYNC_SET_CLONE=''
+  S64_RSYNC_SET_CLONE+=' --recursive'    # recurse into directories
+  S64_RSYNC_SET_CLONE+=' --delete'       # delete extraneous files from dest dirs
+  S64_RSYNC_SET_CLONE+=' --owner'        # preserve owner (super-user only)
+  S64_RSYNC_SET_CLONE+=' --group'        # preserve group
+  S64_RSYNC_SET_CLONE+=' --links'        # copy symlinks as symlinks
+  S64_RSYNC_SET_CLONE+=' --perms'        # preserve permissions
+  S64_RSYNC_SET_CLONE+=' --times'        # preserve modification times
+  S64_RSYNC_SET_CLONE+=' --atimes'       # preserve access (use) times
+  S64_RSYNC_SET_CLONE+=' --open-noatime' # avoid changing the atime on opened files
+  S64_RSYNC_SET_CLONE+=' --crtimes'      # preserve create times (newness)
 }
 
 #
@@ -65,7 +106,7 @@ function s64_rsync_lib_setup() {
 
 function s64_rsync_lib_run_rsync() {
   bl64_dbg_app_show_function "$@"
-  local verbose_flag='--human-readable --verbose --stats'
+  local verbose_flag='--human-readable --verbose --stats --progress'
   bl64_check_command "$S64_RSYNC_PATH_CLI" "$BL64_VAR_DEFAULT" 'S64_RSYNC_PATH_CLI' || return $?
   bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start

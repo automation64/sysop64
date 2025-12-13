@@ -36,7 +36,10 @@
   declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
 
   # Default verbose format
-  declare S64_CORE_SET_FORMAT="${S64_CORE_SET_FORMAT:-TIME}"
+  declare S64_CORE_SET_FORMAT="${S64_CORE_SET_FORMAT:-TIME2}"
+
+  # Default output format
+  declare S64_CORE_SET_OUTPUT="${S64_CORE_SET_OUTPUT:-EMOJI}"
 
   # Common UI tools
   declare S64_CORE_PATH_VI="${S64_CORE_PATH_VI:-}"
@@ -52,7 +55,9 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='2.3.0'
+  declare S64_CORE_VERSION='3.1.0'
+  # Minimal BashLib64 version required
+  declare S64_BL64_VERSION='22.10.0'
 }
 
 #
@@ -100,4 +105,11 @@ function s64_core_lib_command_assign() {
       return $BL64_LIB_ERROR_TASK_FAILED
     fi
   fi
+}
+
+function s64_core_lib_set_verbose() {
+  bl64_dbg_app_show_function
+  bl64_msg_set_output "$S64_CORE_SET_OUTPUT" &&
+    bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
+    bl64_msg_set_format "$S64_CORE_SET_FORMAT"
 }

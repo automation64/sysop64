@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # template-module-lib: 2.2.0
-#   template-module-base: 2.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -33,7 +32,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_X_MODULE_CAPS_X_PATH_CLI="${S64_X_MODULE_CAPS_X_PATH_CLI:-}"
-  # X_PARAMETERS_PLACEHOLDER_X
 }
 
 #
@@ -43,7 +41,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_X_MODULE_CAPS_X_VERSION='1.0.0'
-  # X_GLOBALS_PLACEHOLDER_X
 }
 
 #
@@ -52,7 +49,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  : # X_GLOBALS_PLACEHOLDER_X
+  :
 }
 
 #
@@ -77,5 +74,3 @@ function s64_X_MODULE_X_lib_run_X_CLI_COMMAND_X() {
     "$@"
   bl64_dbg_app_trace_stop
 }
-
-# X_FUNCTIONS_PLACEHOLDER_X
