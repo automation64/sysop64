@@ -16,27 +16,32 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/gosec.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/go.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
 # shellcheck disable=SC2015 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
 
-declare MY_TARGET_PATH="${1:-.}"
+declare MY_PATH_OUTPUT="${1:-}"
+declare MY_PATH_MAIN="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_msg_show_about
-  s64_gosec_lib_setup &&
+  s64_go_lib_setup &&
+    bl64_check_parameter 'MY_PATH_OUTPUT' &&
+    bl64_check_parameter 'MY_PATH_MAIN' &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'MY_TARGET_PATH'
+      'MY_PATH_OUTPUT' \
+      'MY_PATH_MAIN'
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Scan Go lang repository for security issues'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && s64_core_lib_set_verbose && my_initialize || exit $?
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Build Go Lang application'
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_gosec_lib_run_gosec \
-  -no-fail \
-  -sort \
-  -verbose "$S64_GOSEC_SET_FORMAT" \
-  "${MY_TARGET_PATH}/..."
+s64_go_lib_run_go \
+  build \
+  -v \
+  -trimpath \
+  -o "$MY_PATH_OUTPUT" \
+  "$MY_PATH_MAIN"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
