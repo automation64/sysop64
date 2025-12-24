@@ -1,6 +1,6 @@
 ---
-# template: 2.3.0
-name: "Test / Bash"
+# template: 2.4.1
+name: "Test/Bash"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
@@ -28,6 +28,7 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       fail-fast: false
+      max-parallel: 3
       matrix:
         target:
           - "ALM"
@@ -47,17 +48,19 @@ jobs:
         uses: "actions/checkout@main"
 
       - name: "Cache local tools"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
-          path: ./lib
-          key: ${{ runner.os }}-lib-cache
-          restore-keys: |
-            ${{ runner.os }}-lib-cache
+          path: \
+            ./lib/bl64
+            ./lib/inst64
+          key: "lib-base"
 
-      - name: "Prepare environment"
+      - name: "Download tools"
         run: |
-          ./bin/dev-lib-base &&
-          ./bin/dev-prep-project
+          ./bin/dev-lib-base
+
+      - name: "Prepare for testing"
+        run: "./bin/dev-prep-project"
 
       - name: "Run OS specific tests"
         run: |
@@ -88,17 +91,19 @@ jobs:
           ./bin/dev-lib-bash
 
       - name: "Cache local tools"
-        uses: "actions/cache@v4"
+        uses: "actions/cache@v5"
         with:
-          path: ./lib
-          key: ${{ runner.os }}-lib-cache
-          restore-keys: |
-            ${{ runner.os }}-lib-cache
+          path: \
+            ./lib/bl64
+            ./lib/inst64
+          key: "lib-base"
 
-      - name: "Prepare environment"
+      - name: "Download tools"
         run: |
-          ./bin/dev-lib-base &&
-          ./bin/dev-prep-project
+          ./bin/dev-lib-base
+
+      - name: "Prepare for testing"
+        run: "./bin/dev-prep-project"
 
       - name: "Run OS specific tests"
         run: |

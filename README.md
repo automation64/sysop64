@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/github/license/automation64/sysop64)
 ![GitHub stars](https://img.shields.io/github/stars/automation64/sysop64?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/automation64/sysop64?style=social)
-![Downloads](https://img.shields.io/github/downloads/automation64/installer64/total)
+![Release Downloads](https://img.shields.io/github/downloads/automation64/sysop64/total)
 
 🚀 **SysOp64** is a collection of Unix/Linux Systems Operations scripts
 
