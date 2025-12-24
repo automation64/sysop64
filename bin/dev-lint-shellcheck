@@ -34,7 +34,6 @@ function my_lint_local() {
     --color=auto \
     --wiki-link-count=0 \
     --severity=info \
-    --rcfile="$DEV_LIB_SHELLCHECK_CFG" \
     --format="$DEV_LINT_SHELLCHECK_FORMAT" \
     "$target" >"$DEV_LINT_SHELLCHECK_PATH_REPORT"
 }
