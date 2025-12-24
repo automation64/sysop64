@@ -34,8 +34,7 @@ jobs:
 
       - name: "Download tools"
         run: |
-          ./bin/dev-lib-base &&
-          # X_TOOLS_PLACEHOLDER_X
+          ./bin/dev-lib-base
 
       - name: "Run Linter"
         run: "./bin/dev-lint-shellcheck"
