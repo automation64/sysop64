@@ -16,15 +16,15 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/argocd.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/argocd.lib" || { s64_core_lib_check_module_load && exit 1; }
 # shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
 
 declare MY_APP_NAME="${1:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_msg_show_about
+  s64_core_lib_show_about
   bl64_check_parameter 'MY_APP_NAME' &&
     s64_argocd_lib_setup &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
@@ -33,7 +33,8 @@ function my_initialize() {
 
 bl64_lib_script_version_set '1.0.0'
 bl64_msg_help_about_set 'Show latest application logs'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && s64_core_lib_set_verbose && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
+
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_argocd_lib_run_argocd \
   app \

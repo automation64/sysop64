@@ -24,7 +24,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
-  { echo 'Error: unable to load bashlib64' && exit 1; }
+  { s64_core_lib_check_bl64_load && exit 1; }
 
 #
 # Module parameters
