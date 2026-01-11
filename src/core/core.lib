@@ -55,9 +55,9 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='3.1.0'
+  declare S64_CORE_VERSION='3.2.0'
   # Minimal BashLib64 version required
-  declare S64_BL64_VERSION='22.10.0'
+  declare S64_BL64_VERSION='22.12.0'
 }
 
 #
@@ -107,9 +107,20 @@ function s64_core_lib_command_assign() {
   fi
 }
 
-function s64_core_lib_set_verbose() {
+function s64_core_lib_show_about() {
   bl64_dbg_app_show_function
   bl64_msg_set_output "$S64_CORE_SET_OUTPUT" &&
     bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
-    bl64_msg_set_format "$S64_CORE_SET_FORMAT"
+    bl64_msg_set_format "$S64_CORE_SET_FORMAT" &&
+    bl64_msg_show_about
+}
+
+function s64_core_lib_check_module_load() {
+  echo "Error: unable to load SysOp64 module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" 1>&2
+  return 1
+}
+
+function s64_core_lib_check_bl64_load() {
+  echo "Error: unable to load BashLib64 library (S64_CORE_PATH_BL64=${S64_CORE_PATH_BL64})" 1>&2
+  return 1
 }

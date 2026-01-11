@@ -16,17 +16,17 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/airflow.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/airflow.lib" || { s64_core_lib_check_module_load && exit 1; }
 # shellcheck disable=SC2015 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-module-cnt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
 
 declare MAIN_HOST_PORT="${1:-$S64_AIRFLOW_LAB_HOST_PORT}"
 declare MAIN_CONTAINER_TAG="${2:-$S64_AIRFLOW_LAB_IMAGE_TAG}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_msg_show_about
+  s64_core_lib_show_about
   s64_airflow_lib_setup &&
     bl64_cnt_setup &&
     bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
@@ -37,7 +37,8 @@ function my_initialize() {
 
 bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_about_set 'Run AirFlow Standalone container for local lab testing'
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && s64_core_lib_set_verbose && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
+
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_cnt_run_docker \
   run \

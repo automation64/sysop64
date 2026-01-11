@@ -23,6 +23,10 @@
   # Env / Project / Module environment definition version
   export DEV_ENV_PROJECT_ID='project'
   export DEV_ENV_PROJECT_VERSION='2.0.0'
+
+  # Pack / Project / Paths
+  export DEV_PACK_PROJECT_PATH_STAGING="${DEV_PATH_BUILD_STAGING}/${DEV_ENV_PROJECT_ID}"
+  export DEV_PACK_PROJECT_PATH_TARGET="${DEV_PATH_BUILD_PACK}/${DEV_ENV_PROJECT_ID}"
 }
 
 #

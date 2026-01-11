@@ -16,9 +16,9 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 # shellcheck disable=SC2015 source-path=SCRIPTDIR/..
-source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/X_MODULE_X.lib" || { echo "Error: unable to load module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" && exit 1; }
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/X_MODULE_X.lib" || { s64_core_lib_check_module_load && exit 1; }
 # shellcheck disable=SC2015 source-path=/opt/bl64
-source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { echo 'Error: unable to load bashlib64' && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
 
 declare MY_COMMAND="$BL64_VAR_NULL"
 declare MY_OPTION=''
@@ -28,9 +28,8 @@ declare MY_OPTION=''
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_msg_show_about
-  # X_INIT_PARAMETER_PLACEHOLDER_X
   [[ -n "$MY_OPTION" && -n "$MY_COMMAND" ]] || { bl64_msg_help_show && return 1; }
+  s64_core_lib_show_about
   s64_X_MODULE_X_lib_setup
   # X_INIT_PARAMETER_PLACEHOLDER_X
   # X_INIT_PLACEHOLDER_X
@@ -54,7 +53,7 @@ while getopts ':xV:D:h' MY_OPTION; do
     *) bl64_msg_help_show && exit 1 ;;
   esac
 done
-bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && bl64_msg_set_level "$S64_CORE_SET_VERBOSE" && bl64_msg_set_format "$S64_CORE_SET_FORMAT" && my_initialize || exit $?
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
 "my_${MY_COMMAND}"

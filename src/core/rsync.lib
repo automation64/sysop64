@@ -25,7 +25,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
-  { echo 'Error: unable to load bashlib64' && exit 1; }
+  { s64_core_lib_check_bl64_load && exit 1; }
 
 #
 # Module parameters
