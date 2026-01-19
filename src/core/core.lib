@@ -55,7 +55,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='3.2.0'
+  declare S64_CORE_VERSION='3.3.0'
   # Minimal BashLib64 version required
   declare S64_BL64_VERSION='22.12.0'
 }

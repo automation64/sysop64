@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_RSYNC_VERSION='4.0.0'
+  declare S64_RSYNC_VERSION='4.1.0'
 
   # RSync / Common parameters, regardless of the method
   declare S64_RSYNC_SET_COMMON=''
@@ -92,7 +92,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
   S64_RSYNC_SET_CLONE+=' --times'        # preserve modification times
   S64_RSYNC_SET_CLONE+=' --atimes'       # preserve access (use) times
   S64_RSYNC_SET_CLONE+=' --open-noatime' # avoid changing the atime on opened files
-  S64_RSYNC_SET_CLONE+=' --crtimes'      # preserve create times (newness)
+
+  # RSync / Optional parameters. Must be enabled at compile time
+  S64_RSYNC_SET_CLONE_OPT+=' --crtimes'  # preserve create times (newness)
 }
 
 #
@@ -108,7 +110,7 @@ function s64_rsync_lib_run_rsync() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--human-readable --verbose --stats --progress'
   bl64_check_command "$S64_RSYNC_PATH_CLI" "$BL64_VAR_DEFAULT" 'S64_RSYNC_PATH_CLI' || return $?
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_RSYNC_PATH_CLI" \

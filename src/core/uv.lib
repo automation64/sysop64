@@ -40,7 +40,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_UV_VERSION='1.0.0'
+  declare S64_UV_VERSION='1.0.1'
 }
 
 #
@@ -55,7 +55,7 @@ function s64_uv_lib_setup() {
 function s64_uv_lib_run_uv() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   # shellcheck disable=SC2086
   bl64_dbg_app_trace_start
   "$S64_UV_PATH_CLI" \

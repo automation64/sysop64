@@ -26,11 +26,12 @@ function my_initialize() {
   s64_linux_lib_setup
 }
 
-bl64_lib_script_version_set '1.0.3'
+bl64_lib_script_version_set '1.0.4'
 bl64_msg_help_about_set 'List USB devices in tree format'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_linux_lib_run_lsusb \
+  --verbose \
   --tree
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

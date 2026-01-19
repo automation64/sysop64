@@ -27,7 +27,7 @@ function my_initialize() {
     bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '1.0.3'
+bl64_lib_script_version_set '1.0.4'
 bl64_msg_help_about_set 'List block device paths'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
@@ -36,6 +36,5 @@ s64_linux_lib_run_lsblk \
   --all \
   --nodeps \
   --paths \
-  --list \
-  --shell
+  --list
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -45,7 +45,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_ANSIBLE_VERSION='1.0.2'
+  declare S64_ANSIBLE_VERSION='1.0.3'
   export ANSIBLE_STDOUT_CALLBACK=''
 }
 
@@ -94,7 +94,7 @@ function s64_ansible_lib_run_playbook() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
 
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   s64_ansible_lib_cli_harden
   s64_ansible_lib_cli_set
 
@@ -110,7 +110,7 @@ function s64_ansible_lib_run_ansible() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
 
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   s64_ansible_lib_cli_harden
   s64_ansible_lib_cli_set
 
@@ -138,7 +138,7 @@ function s64_ansible_lib_run_galaxy() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
 
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   s64_ansible_lib_cli_harden
 
   bl64_dbg_app_trace_start
