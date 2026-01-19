@@ -38,13 +38,14 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='3.4.0'
+  declare S64_LINUX_VERSION='3.6.0'
 
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
   declare S64_LINUX_PATH_CLI_BLKID=''
   declare S64_LINUX_PATH_CLI_BTRFS=''
   declare S64_LINUX_PATH_CLI_CRYPTSETUP=''
   declare S64_LINUX_PATH_CLI_DMSETUP=''
+  declare S64_LINUX_PATH_CLI_DMIDECODE=''
   declare S64_LINUX_PATH_CLI_DPKG_QUERY=''
   declare S64_LINUX_PATH_CLI_FSCK=''
   declare S64_LINUX_PATH_CLI_GRUB2MKCONFIG=''
@@ -66,6 +67,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_SYSTEMCTL=''
   declare S64_LINUX_PATH_CLI_VGS=''
   declare S64_LINUX_PATH_CLI_SYSCTL=''
+  declare S64_LINUX_PATH_CLI_SMARTCTL=''
 
   declare S64_LINUX_PATH_CFG_GRUB_OPTIONS=''
   declare S64_LINUX_PATH_CFG_GRUB_CONFIG=''
@@ -80,31 +82,33 @@ function s64_linux_lib_setup() {
   # shellcheck disable=SC2154,SC2034
   case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_ARCH")
-    S64_LINUX_PATH_CLI_BADBLOCKS='/bin/badblocks'
-    S64_LINUX_PATH_CLI_BLKID='/bin/blkid'
-    S64_LINUX_PATH_CLI_BTRFS='/bin/btrfs'
-    S64_LINUX_PATH_CLI_CRYPTSETUP='/bin/cryptsetup'
-    S64_LINUX_PATH_CLI_DMSETUP='/bin/dmsetup'
-    S64_LINUX_PATH_CLI_FSCK='/bin/fsck'
-    S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/bin/grub2-mkconfig'
-    S64_LINUX_PATH_CLI_IP='/bin/ip'
-    S64_LINUX_PATH_CLI_JOURNALCTL='/bin/journalctl'
-    S64_LINUX_PATH_CLI_LDD='/bin/ldd'
-    S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
-    S64_LINUX_PATH_CLI_LSPCI='/bin/lspci'
-    S64_LINUX_PATH_CLI_LSUSB='/bin/lsusb'
-    S64_LINUX_PATH_CLI_LVS='/bin/lvs'
-    S64_LINUX_PATH_CLI_MDADM='/bin/mdadm'
-    S64_LINUX_PATH_CLI_MKFS='/bin/mkfs'
-    S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
-    S64_LINUX_PATH_CLI_PARTED='/bin/parted'
-    S64_LINUX_PATH_CLI_PVS='/bin/pvs'
-    S64_LINUX_PATH_CLI_UDISKSCTL='/bin/udisksctl'
+    S64_LINUX_PATH_CLI_BADBLOCKS='/usr/bin/badblocks'
+    S64_LINUX_PATH_CLI_BLKID='/usr/bin/blkid'
+    S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
+    S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/bin/cryptsetup'
+    S64_LINUX_PATH_CLI_DMIDECODE='/usr/bin/dmidecode'
+    S64_LINUX_PATH_CLI_DMSETUP='/usr/bin/dmsetup'
+    S64_LINUX_PATH_CLI_FSCK='/usr/bin/fsck'
+    S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
+    S64_LINUX_PATH_CLI_IP='/usr/bin/ip'
+    S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+    S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
+    S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
+    S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
+    S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
+    S64_LINUX_PATH_CLI_LVS='/usr/bin/lvs'
+    S64_LINUX_PATH_CLI_MDADM='/usr/bin/mdadm'
+    S64_LINUX_PATH_CLI_MKFS='/usr/bin/mkfs'
+    S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+    S64_LINUX_PATH_CLI_PARTED='/usr/bin/parted'
+    S64_LINUX_PATH_CLI_PVS='/usr/bin/pvs'
+    S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
     S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
-    S64_LINUX_PATH_CLI_SWAPON='/bin/swapon'
-    S64_LINUX_PATH_CLI_SYSTEMCTL='/bin/systemctl'
-    S64_LINUX_PATH_CLI_VGS='/bin/vgs'
-    S64_LINUX_PATH_CLI_SYSCTL='/bin/sysctl'
+    S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
+    S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+    S64_LINUX_PATH_CLI_VGS='/usr/bin/vgs'
+    S64_LINUX_PATH_CLI_SYSCTL='/usr/bin/sysctl'
+    S64_LINUX_PATH_CLI_SMARTCTL='/usr/bin/smartctl'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
     S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
@@ -114,6 +118,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
     S64_LINUX_PATH_CLI_DPKG_QUERY='/usr/bin/dpkg-query'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
@@ -136,6 +141,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_SYSTEMCTL='/bin/systemctl'
     S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
     S64_LINUX_PATH_CLI_SYSCTL='/sbin/sysctl'
+    S64_LINUX_PATH_CLI_SMARTCTL='/sbin/smartctl'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
     S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
@@ -145,6 +151,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
@@ -166,6 +173,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
     S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
     S64_LINUX_PATH_CLI_SYSCTL='/usr/sbin/sysctl'
+    S64_LINUX_PATH_CLI_SMARTCTL='/usr/sbin/smartctl'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/etc/grub2.cfg'
     S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
@@ -175,6 +183,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/sbin/blkid'
     S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
     S64_LINUX_PATH_CLI_DMSETUP='/sbin/dmsetup'
     S64_LINUX_PATH_CLI_FSCK='/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub-mkconfig'
@@ -196,6 +205,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
     S64_LINUX_PATH_CLI_VGS='/sbin/vgs'
     S64_LINUX_PATH_CLI_SYSCTL='/sbin/sysctl'
+    S64_LINUX_PATH_CLI_SMARTCTL='/sbin/smartctl'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
     S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
@@ -205,6 +215,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
     S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
     S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+    S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
     S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
     S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
     S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub2-mkconfig'
@@ -226,6 +237,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
     S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
     S64_LINUX_PATH_CLI_SYSCTL='/usr/sbin/sysctl'
+    S64_LINUX_PATH_CLI_SMARTCTL='/usr/sbin/smartctl'
 
     S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub2/grub.cfg'
     S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
@@ -261,9 +273,9 @@ function s64_linux_lib_run_blkid() {
 function s64_linux_lib_run_cryptsetup() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_CRYPTSETUP" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_CRYPTSETUP' ||
     return $?
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_CRYPTSETUP" \
@@ -285,9 +297,9 @@ function s64_linux_lib_run_lsblk() {
 function s64_linux_lib_run_mount() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_MOUNT" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_MOUNT' ||
     return $?
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_MOUNT" \
@@ -299,9 +311,9 @@ function s64_linux_lib_run_mount() {
 function s64_linux_lib_run_fsck() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='-V'
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_FSCK" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_FSCK' ||
     return $?
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_FSCK" \
@@ -313,13 +325,11 @@ function s64_linux_lib_run_fsck() {
 function s64_linux_lib_run_badblocks() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='-v'
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_BADBLOCKS" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_BADBLOCKS' ||
-    rBTRFS $/usr/bin/btrfs|
     return $?
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_LINUX_PATH_CLI_BADBLOCKBTRFS"/usr/bin/btrfs\
   "$S64_LINUX_PATH_CLI_BADBLOCKS" \
     $verbose_flag \
     "$@"
@@ -339,9 +349,9 @@ function s64_linux_lib_run_journalctl() {
 function s64_linux_lib_run_mdadm() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_MDADM" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_MDADM' ||
     return $?
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_MDADM" \
@@ -383,9 +393,9 @@ function s64_linux_lib_run_pvs() {
 function s64_linux_lib_run_mkfs() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='-v'
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_MKFS" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_MKFS' ||
     return $?
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_MKFS" \
@@ -399,11 +409,11 @@ function s64_linux_lib_run_dmsetup() {
   local verbose_flag='--verbose'
   local command="$1"
 
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
   bl64_check_command "$S64_LINUX_PATH_CLI_DMSETUP" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_DMSETUP' ||
     return $?
   shift
 
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_DMSETUP" \
@@ -503,9 +513,9 @@ function s64_linux_lib_run_dpkg_query() {
 function s64_linux_lib_run_btrfs() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--quiet'
-  bl64_msg_app_verbose_is_enabled && verbose_flag='--verbose'
   bl64_check_command "$S64_LINUX_PATH_CLI_BTRFS" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_BTRFS' ||
     return $?
+  bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_BTRFS" \
@@ -517,9 +527,9 @@ function s64_linux_lib_run_btrfs() {
 function s64_linux_lib_run_swapon() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag=' '
-  bl64_msg_app_verbose_is_enabled && verbose_flag='--verbose'
   bl64_check_command "$S64_LINUX_PATH_CLI_SWAPON" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_SWAPON' ||
     return $?
+  bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_SWAPON" \
@@ -544,6 +554,29 @@ function s64_linux_lib_run_sysctl() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_SYSCTL" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_dmidecode() {
+  bl64_dbg_app_show_function "$@"
+  local verbose_flag='--quiet'
+  bl64_check_command "$S64_LINUX_PATH_CLI_DMIDECODE" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_DMIDECODE' ||
+    return $?
+  bl64_msg_app_detail_is_enabled && verbose_flag=' '
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_DMIDECODE" \
+    $verbose_flag "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_smartctl() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_SMARTCTL" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_SMARTCTL' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_SMARTCTL" \
     "$@"
   bl64_dbg_app_trace_stop
 }

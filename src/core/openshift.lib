@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSHIFT_VERSION='1.0.0'
+  declare S64_OPENSHIFT_VERSION='1.0.1'
 
   # WARNING: hardcoded path
   declare S64_OPENSHIFT_PATH_CFG_CRC="${HOME}/.crc"
@@ -70,7 +70,7 @@ function s64_openshift_lib_run_crc() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--log-level=error'
 
-  bl64_msg_app_verbose_is_enabled && verbose_flag='--log-level=info'
+  bl64_msg_app_detail_is_enabled && verbose_flag='--log-level=info'
   bl64_dbg_app_command_is_enabled && verbose_flag='--log-level=debug'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
@@ -83,7 +83,7 @@ function s64_openshift_lib_run_crc() {
 function s64_openshift_lib_run_oc() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--v=1'
-  bl64_msg_app_verbose_is_enabled || verbose_flag=' '
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_OPENSHIFT_PATH_CLI_OC" \
