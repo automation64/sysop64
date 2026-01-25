@@ -15,7 +15,6 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
-# shellcheck disable=SC2015 source-path=SCRIPTDIR/..
 source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/linux.lib" || { s64_core_lib_check_module_load && exit 1; }
 # shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
