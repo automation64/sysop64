@@ -17,7 +17,6 @@
 # Imports
 #
 
-# shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
@@ -38,7 +37,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='3.6.0'
+  declare S64_LINUX_VERSION='3.7.0'
 
   declare S64_LINUX_PATH_CLI_BADBLOCKS=''
   declare S64_LINUX_PATH_CLI_BLKID=''
@@ -59,6 +58,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_MDADM=''
   declare S64_LINUX_PATH_CLI_MKFS=''
   declare S64_LINUX_PATH_CLI_MOUNT=''
+  declare S64_LINUX_PATH_CLI_PACMAN_KEY=''
   declare S64_LINUX_PATH_CLI_PARTED=''
   declare S64_LINUX_PATH_CLI_PVS=''
   declare S64_LINUX_PATH_CLI_UDISKSCTL=''
@@ -100,6 +100,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MDADM='/usr/bin/mdadm'
     S64_LINUX_PATH_CLI_MKFS='/usr/bin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+    S64_LINUX_PATH_CLI_PACMAN_KEY='/usr/sbin/pacman-key'
     S64_LINUX_PATH_CLI_PARTED='/usr/bin/parted'
     S64_LINUX_PATH_CLI_PVS='/usr/bin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
@@ -133,6 +134,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
     S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+    S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
@@ -165,6 +167,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
     S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+    S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
@@ -197,6 +200,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MDADM='/sbin/mdadm'
     S64_LINUX_PATH_CLI_MKFS='/sbin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+    S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_PARTED='/sbin/parted'
     S64_LINUX_PATH_CLI_PVS='/sbin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
@@ -229,6 +233,7 @@ function s64_linux_lib_setup() {
     S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
     S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
     S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+    S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
     S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
     S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
     S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
@@ -578,5 +583,18 @@ function s64_linux_lib_run_smartctl() {
   bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_SMARTCTL" \
     "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_pacman_key() {
+  bl64_dbg_app_show_function "$@"
+  local verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_PACMAN_KEY" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_PACMAN_KEY' ||
+    return $?
+  bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_PACMAN_KEY" \
+    $verbose_flag "$@"
   bl64_dbg_app_trace_stop
 }

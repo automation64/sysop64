@@ -18,31 +18,39 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/linux.lib" || { s64_core_lib_check_module_load && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
 
-declare MY_DEVICE_PATH="${1:-}"
-declare MY_FILESYSTEM_LABEL="${2:-}"
+function my_check_arch() {
+  bl64_dbg_app_show_function
+
+  bl64_msg_show_task 'check package database'
+  bl64_pkg_run_pacman \
+    --database \
+    --check
+
+  bl64_msg_show_task 'check package database sync'
+  bl64_pkg_run_pacman \
+    --database \
+    --check \
+    --check
+}
+
+function my_check() {
+  bl64_dbg_app_show_function
+  case "$BL64_OS_FLAVOR" in
+    "$BL64_OS_FLAVOR_ARCH") my_check_arch ;;
+    *) bl64_check_alert_unsupported ;;
+  esac
+}
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_core_lib_show_about
-  s64_linux_lib_setup &&
-    bl64_check_privilege_root &&
-    bl64_check_parameter 'MY_DEVICE_PATH' &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
-      'MY_DEVICE_PATH' &&
-    bl64_ui_ask_confirmation "Warning: destination content will be destroyed (${MY_DEVICE_PATH})"
+  bl64_check_privilege_root
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Create BTRFS filesystem with options for maximum resiliency'
+bl64_msg_help_about_set 'Check operating system packages'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_linux_lib_run_mkfs \
-  --type btrfs \
-  --data dup \
-  --metadata dup \
-  --checksum sha256 \
-  --nodesize 32K \
-  ${MY_FILESYSTEM_LABEL:+--label "$MY_FILESYSTEM_LABEL"} \
-  "$MY_DEVICE_PATH"
+my_check
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
