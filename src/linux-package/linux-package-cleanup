@@ -16,7 +16,6 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/linux.lib" || { s64_core_lib_check_module_load && exit 1; }
-# shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
 
 function my_cleanup_arch() {
@@ -30,7 +29,7 @@ function my_cleanup_arch() {
       "$BL64_PKG_SET_ASSUME_YES" \
       -
 
-  bl64_msg_show_task 'auto-remove dependencies'
+  bl64_msg_show_task 'auto-remove orphan dependencies'
   BL64_MSG_VERBOSE="$BL64_MSG_VERBOSE_NONE" bl64_pkg_run_pacman \
     -Qqd |
     bl64_pkg_run_pacman \
@@ -41,14 +40,14 @@ function my_cleanup_arch() {
 
 function my_cleanup_debian() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task 'auto-remove unused packages'
+  bl64_msg_show_task 'auto-remove orphan packages'
   bl64_pkg_cleanup &&
     bl64_pkg_run_apt autoremove "$BL64_PKG_SET_ASSUME_YES"
 }
 
 function my_cleanup_fedora() {
   bl64_dbg_app_show_function
-  bl64_msg_show_task 'auto-remove unused packages'
+  bl64_msg_show_task 'auto-remove orphan packages'
   bl64_pkg_cleanup &&
     bl64_pkg_run_dnf \
       $BL64_PKG_SET_ASSUME_YES \
@@ -68,11 +67,10 @@ function my_cleanup() {
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_core_lib_show_about
-  bl64_check_privilege_root &&
-    bl64_ui_ask_confirmation 'Warning: the task will auto-cleanup packages'
+  bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '1.1.0'
+bl64_lib_script_version_set '1.1.1'
 bl64_msg_help_about_set 'Cleanup operating system packages'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 

@@ -17,7 +17,6 @@
 # Imports
 #
 
-# shellcheck disable=SC2015,SC2154 source-path=/opt/bl64
 source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
