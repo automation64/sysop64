@@ -22,14 +22,6 @@ function my_TASK_arch() {
   bl64_dbg_app_show_function
 }
 
-function my_TASK() {
-  bl64_dbg_app_show_function
-  case "$BL64_OS_FLAVOR" in
-    "$BL64_OS_FLAVOR_ARCH") my_TASK_arch ;;
-    *) bl64_check_alert_unsupported ;;
-  esac
-}
-
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_core_lib_show_about
@@ -43,5 +35,8 @@ bl64_msg_help_about_set 'X_HELP_ABOUT_X'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-my_TASK
+case "$BL64_OS_FLAVOR" in
+  "$BL64_OS_FLAVOR_ARCH") my_TASK_arch ;;
+  *) bl64_check_alert_unsupported ;;
+esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

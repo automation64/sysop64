@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# template-one: 3.2.1
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+[[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
+source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/nodejs.lib" || { s64_core_lib_check_module_load && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
+
+declare MY_MODULE="${1:-}"
+
+function my_initialize() {
+  bl64_dbg_app_show_function
+  s64_core_lib_show_about
+  s64_nodejs_lib_setup &&
+    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+      'MY_MODULE'
+}
+
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_about_set 'Update NPM modules - Current working directory only'
+bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
+
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+s64_nodejs_lib_run_npm \
+  update \
+  --save \
+  ${MY_MODULE:+"$MY_MODULE"}
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

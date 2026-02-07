@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0]
+
+### Added
+
+- New Modules
+  - LibVirt
+  - Incus
+  - NodeJS
+- Updated Modules
+  - FlatPak: permission management, app info
+  - Docker: net management
+  - Linux-IAM: list groups, users
+  - Linux-Net: route, link
+
+### Changed
+
+- Core
+  - **breaking-change** requires BashLib64 22.13
+- **breaking-change** Renamed module tasks to match the new `docs/reference/Naming-Convention`
+  - Docker
+  - Auth0
+  - FlatPak
+  - GIT
+  - GitHub
+  - Linux-Kernel
+
 ## [3.4.0]
 
 ### Added
