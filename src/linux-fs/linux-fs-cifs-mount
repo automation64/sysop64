@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -26,14 +26,13 @@ declare MY_CIFS_OPTIONS='nosetuids,cache=strict,mapchars'
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_linux_lib_setup &&
     bl64_check_privilege_root &&
     bl64_check_parameter 'MY_CIFS_SERVER_IP' &&
     bl64_check_parameter 'MY_CIFS_SHARE_NAME' &&
     bl64_check_parameter 'MY_MOUNT_PATH' &&
     bl64_check_directory "$MY_MOUNT_PATH" &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'MY_CIFS_SERVER_IP' \
       'MY_CIFS_SHARE_NAME' \
       'MY_MOUNT_PATH' \

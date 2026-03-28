@@ -41,7 +41,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_VERSION='3.0.1'
+  declare S64_OPENSSH_VERSION='3.1.0'
+  declare S64_OPENSSH_ABOUT_MODULE_MAIN='OpenSSH Secure Shell'
 }
 
 #
@@ -50,7 +51,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_openssh_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_OPENSSH_PATH_SSH' 'ssh' &&
+  s64_core_lib_show_about "$S64_OPENSSH_ABOUT_MODULE_MAIN" &&
+    s64_core_lib_command_assign 'S64_OPENSSH_PATH_SSH' 'ssh' &&
     s64_core_lib_command_assign 'S64_OPENSSH_PATH_SSH_ADD' 'ssh-add' &&
     s64_core_lib_command_assign 'S64_OPENSSH_PATH_SSH_KEYGEN' 'ssh-keygen'
 }

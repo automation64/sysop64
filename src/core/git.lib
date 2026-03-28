@@ -34,7 +34,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_GIT_VERSION='2.0.0'
+  declare S64_GIT_VERSION='2.1.0'
+  declare S64_GIT_ABOUT_MODULE_MAIN='Git Version Control System'
 }
 
 #
@@ -43,4 +44,5 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
 
 function s64_git_lib_setup() {
   bl64_dbg_app_show_function
+  s64_core_lib_show_about "$S64_GIT_ABOUT_MODULE_MAIN"
 }

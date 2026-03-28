@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -22,10 +22,9 @@ declare MY_LOCAL_PORT="${1:-8080}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_argocd_lib_setup &&
-  s64_k8s_lib_setup &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    s64_k8s_lib_setup &&
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'MY_LOCAL_PORT'
 }
 
@@ -34,7 +33,7 @@ bl64_msg_help_about_set 'Expose ArgoCD Web Console service via port-forwarding'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_k8s_run_kubectl "$BL64_VAR_DEFAULT" \
+bl64_k8s_run_kubectl \
   port-forward \
   --namespace="$S64_ARGOCD_SET_NAMESPACE" \
   "service/${S64_ARGOCD_SET_WUI_SERVICE}" \

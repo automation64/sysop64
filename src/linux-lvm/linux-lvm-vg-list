@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -23,7 +23,6 @@ readonly MY_FIELDS='vg_name,vg_uuid,vg_fmt,vg_attr,vg_extent_size,vg_extent_coun
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_linux_lib_setup &&
     bl64_check_privilege_root
 }

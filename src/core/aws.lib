@@ -25,22 +25,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   { s64_core_lib_check_bl64_load && exit 1; }
 
 #
-# Globals
-#
-
-# shellcheck disable=SC2034
-{
-  declare S64_AWS_VERSION='3.0.0'
-
-  # API Endpoints
-  declare S64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD='amazon-linux-2023/x86_64/standard'
-  declare S64_AWS_API_EKS_AMI_AL2='amazon-linux-2'
-
-  # Access mode
-  declare S64_AWS_ACCESS_TYPE_PROFILE='PROFILE'
-}
-
-#
 # Module parameters
 #
 
@@ -54,11 +38,38 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_AWS_ACCESS_TOKEN="${S64_AWS_ACCESS_TOKEN:-}"
 
   # Access mode
-  declare S64_AWS_ACCESS_MODE="${S64_AWS_ACCESS_MODE:-$S64_AWS_ACCESS_TYPE_PROFILE}"
+  declare S64_AWS_ACCESS_MODE="${S64_AWS_ACCESS_MODE:-PROFILE}"
 
   # CLI options
   declare S64_AWS_CLI_PROFILE="${S64_AWS_CLI_PROFILE:-default}"
   declare S64_AWS_CLI_REGION="${S64_AWS_CLI_REGION:-eu-central-1}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_AWS_VERSION='3.2.0'
+  declare S64_AWS_ABOUT_MODULE_MAIN='AWS Platform'
+  declare S64_AWS_ABOUT_SUBMODULE_AUR='Aurora Database'
+  declare S64_AWS_ABOUT_SUBMODULE_CF='CloudFormation'
+  declare S64_AWS_ABOUT_SUBMODULE_CLI='AWS CLI'
+  declare S64_AWS_ABOUT_SUBMODULE_COG='Cognito'
+  declare S64_AWS_ABOUT_SUBMODULE_DC='Data Centers and Regions'
+  declare S64_AWS_ABOUT_SUBMODULE_ECR='Elastic Container Registry'
+  declare S64_AWS_ABOUT_SUBMODULE_EKS='Elastic Kubernetes Service'
+  declare S64_AWS_ABOUT_SUBMODULE_SSO='Single Sign-On'
+  declare S64_AWS_ABOUT_SUBMODULE_STS='Security Token Service'
+  declare S64_AWS_ABOUT_SUBMODULE_VPC='Virtual Private Cloud'
+
+  # API Endpoints
+  declare S64_AWS_API_EKS_AMI_AL2023_X86_64_STANDARD='amazon-linux-2023/x86_64/standard'
+  declare S64_AWS_API_EKS_AMI_AL2='amazon-linux-2'
+
+  # Access mode
+  declare S64_AWS_ACCESS_TYPE_PROFILE='PROFILE'
 }
 
 #
@@ -77,8 +88,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_aws_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_AWS_PATH_CLI' 'aws' &&
-    bl64_msg_show_setup 'module parameters' \
+  s64_core_lib_show_about "$S64_AWS_ABOUT_MODULE_MAIN" &&
+    s64_core_lib_command_assign 'S64_AWS_PATH_CLI' 'aws' &&
+    bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
       'S64_AWS_ACCESS_KEY_ID' \
       'S64_AWS_CLI_PROFILE' \
       'S64_AWS_CLI_REGION' \

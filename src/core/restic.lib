@@ -41,7 +41,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_RESTIC_VERSION='3.0.2'
+  declare S64_RESTIC_VERSION='3.1.0'
+  declare S64_RESTIC_ABOUT_MODULE_MAIN='Restic Backup Tool'
 }
 
 #
@@ -60,11 +61,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_restic_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_RESTIC_PATH_CLI' 'restic' &&
+  s64_core_lib_show_about "$S64_RESTIC_ABOUT_MODULE_MAIN" &&
+    s64_core_lib_command_assign 'S64_RESTIC_PATH_CLI' 'restic' &&
     bl64_check_privilege_root &&
     bl64_check_export 'S64_RESTIC_PATH_REPOSITORY' &&
     bl64_check_export 'S64_RESTIC_PASSWORD' &&
-    bl64_msg_show_setup 'module parameters' \
+    bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
       'S64_RESTIC_PATH_REPOSITORY'
 }
 

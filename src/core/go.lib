@@ -40,7 +40,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_GO_VERSION='1.0.0'
+  declare S64_GO_VERSION='1.1.0'
+  declare S64_GO_ABOUT_MODULE_MAIN='Go Programming Language'
 }
 
 #
@@ -49,7 +50,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_go_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_GO_PATH_CLI_GO' 'go' &&
+  s64_core_lib_show_about "$S64_GO_ABOUT_MODULE_MAIN" &&
+    s64_core_lib_command_assign 'S64_GO_PATH_CLI_GO' 'go' &&
     s64_core_lib_command_assign 'S64_GO_PATH_CLI_GOFMT' 'gofmt'
 }
 

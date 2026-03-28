@@ -40,7 +40,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-hlm.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_HELM_VERSION='2.0.0'
+  declare S64_HELM_VERSION='2.1.0'
+  declare S64_HELM_ABOUT_MODULE_MAIN='Helm Package Manager'
 }
 
 #
@@ -49,7 +50,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-hlm.bash" &&
 
 function s64_helm_lib_setup() {
   bl64_dbg_app_show_function
-  bl64_hlm_setup
-  bl64_msg_show_setup 'module parameters' \
-    'S64_HELM_OUTPUT_FORMAT'
+  s64_core_lib_show_about "$S64_HELM_ABOUT_MODULE_MAIN" &&
+    bl64_hlm_setup &&
+    bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
+      'S64_HELM_OUTPUT_FORMAT'
 }

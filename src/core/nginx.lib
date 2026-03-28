@@ -41,7 +41,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_NGINX_VERSION='1.0.0'
+  declare S64_NGINX_VERSION='1.1.0'
+  declare S64_NGINX_ABOUT_MODULE_MAIN='NGINX Web Server'
   declare S64_NGINX_LAB_CONTAINER_NAME='lab-nginx'
   declare S64_NGINX_LAB_CONTAINER_NGINX_CONF='/etc/nginx/conf.d/proxy.conf'
 }
@@ -52,4 +53,5 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_nginx_lib_setup() {
   bl64_dbg_app_show_function
+  s64_core_lib_show_about "$S64_NGINX_ABOUT_MODULE_MAIN"
 }

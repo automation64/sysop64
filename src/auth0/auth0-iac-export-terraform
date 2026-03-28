@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -37,12 +37,11 @@ function my_export() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_auth0_lib_setup &&
     bl64_check_export 'S64_AUTH0_AUTH_DOMAIN' &&
     bl64_check_export 'S64_AUTH0_AUTH_CLIENT_ID' &&
     bl64_check_export 'S64_AUTH0_AUTH_CLIENT_SECRET' &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'MY_DESTINATION' \
       'MY_TF_VERSION'
 }

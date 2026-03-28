@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -25,11 +25,10 @@ declare MY_BACKUP_HOST="${4:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_restic_lib_setup &&
     bl64_check_parameter 'MY_BACKUP_TAG' &&
     bl64_check_parameter 'MY_BACKUP_DESTINATION' &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'S64_RESTIC_PATH_REPOSITORY' \
       'MY_BACKUP_TAG' \
       'MY_BACKUP_ID' \
