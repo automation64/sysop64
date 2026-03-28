@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.3.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+source "${S64_CORE_PATH_BL64}/bashlib64-module-gcp.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
+  { s64_core_lib_check_bl64_load && exit 1; }
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  # Target GCP Project ID
+  declare S64_GCP_SET_PROJECT_ID="${S64_GCP_SET_PROJECT_ID:-}"
+  # Target GCP Organization ID
+  declare S64_GCP_SET_ORGANIZATION_ID="${S64_GCP_SET_ORGANIZATION_ID:-}"
+  # Target GCP Location ID
+  declare S64_GCP_SET_LOCATION_ID="${S64_GCP_SET_LOCATION_ID:-}"
+  # Target GCP Billing Project ID
+  declare S64_GCP_SET_BILLING_PROJECT_ID="${S64_GCP_SET_BILLING_PROJECT_ID:-}"
+  # Output Format
+  declare S64_GCP_SET_OUTPUT_FORMAT="${S64_GCP_SET_OUTPUT_FORMAT:-default}"
+  declare S64_GCP_SET_OUTPUT_LIMIT="${S64_GCP_SET_OUTPUT_LIMIT:-}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_GCP_VERSION='1.0.0'
+  declare S64_GCP_ABOUT_MODULE_MAIN='Google Cloud Platform'
+  declare S64_GCP_ABOUT_SUBMODULE_AUTH='Authentication and Authorization'
+  declare S64_GCP_ABOUT_SUBMODULE_BILL='Billing'
+  declare S64_GCP_ABOUT_SUBMODULE_CE='Compute Engine'
+  declare S64_GCP_ABOUT_SUBMODULE_CLI='GCloud CLI'
+  declare S64_GCP_ABOUT_SUBMODULE_GKE='Kubernetes Platform'
+  declare S64_GCP_ABOUT_SUBMODULE_IAM='Identity and Access Management'
+  declare S64_GCP_ABOUT_SUBMODULE_LOG='Cloud Logging'
+  declare S64_GCP_ABOUT_SUBMODULE_RM='Resource Manager'
+  declare S64_GCP_ABOUT_SUBMODULE_STOR='Cloud Storage'
+
+  declare S64_GCP_API_URL_OAUTH2='https://oauth2.googleapis.com'
+}
+
+#
+# External
+#
+
+# shellcheck disable=SC2034
+{
+  export CLOUDSDK_CORE_PROJECT="$S64_GCP_SET_PROJECT_ID"
+  export CLOUDSDK_CORE_FORMAT="$S64_GCP_SET_OUTPUT_FORMAT"
+}
+
+#
+# Functions
+#
+
+function s64_gcp_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_show_about "$S64_GCP_ABOUT_MODULE_MAIN" &&
+    bl64_gcp_setup &&
+    bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
+      'S64_GCP_SET_BILLING_PROJECT_ID' \
+      'S64_GCP_SET_LOCATION_ID' \
+      'S64_GCP_SET_ORGANIZATION_ID' \
+      'S64_GCP_SET_OUTPUT_FORMAT' \
+      'S64_GCP_SET_OUTPUT_LIMIT' \
+      'S64_GCP_SET_PROJECT_ID'
+}
+
+function s64_gcp_lib_run_gcloud() {
+  bl64_dbg_app_show_function "$@"
+  bl64_gcp_run_gcloud \
+    "$@" \
+    --format="$S64_GCP_SET_OUTPUT_FORMAT" \
+    ${S64_GCP_SET_OUTPUT_LIMIT:+--limit="$S64_GCP_SET_OUTPUT_LIMIT"} \
+    ${S64_GCP_SET_BILLING_PROJECT_ID:+--billing-project="$S64_GCP_SET_BILLING_PROJECT_ID"}
+}
+
+function s64_gcp_lib_cli_set_format() {
+  bl64_dbg_app_show_function "$@"
+  local format="${1:-}"
+  [[ "$format" == 'default' || "$S64_GCP_SET_OUTPUT_FORMAT" != 'default' ]] && return 0
+  S64_GCP_SET_OUTPUT_FORMAT="$format"
+  CLOUDSDK_CORE_FORMAT="$S64_GCP_SET_OUTPUT_FORMAT"
+}

@@ -39,7 +39,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_SHELLCHECK_VERSION='2.0.0'
+  declare S64_SHELLCHECK_VERSION='2.1.0'
+  declare S64_SHELLCHECK_ABOUT_MODULE_MAIN='ShellCheck Linter'
 }
 
 #
@@ -48,7 +49,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_shellcheck_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_command_assign 'S64_SHELLCHECK_PATH_CLI' 'shellcheck'
+  s64_core_lib_show_about "$S64_SHELLCHECK_ABOUT_MODULE_MAIN" &&
+    s64_core_lib_command_assign 'S64_SHELLCHECK_PATH_CLI' 'shellcheck'
 }
 
 function s64_shellcheck_lib_run_shellcheck() {

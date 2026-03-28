@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -22,7 +22,6 @@ declare MY_CONNECTION="${1:-$S64_ARGOCD_SET_CONNECTION_PORT_FORWARD}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   S64_ARGOCD_SET_CONNECTION="$MY_CONNECTION"
   s64_argocd_lib_setup
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -31,21 +31,20 @@ function my_repo_disable() {
   bl64_dbg_app_show_function "$@"
   local repo="$1"
   case "$BL64_OS_DISTRO" in
-  ${BL64_OS_FD}-4?.*) my_repo_disable_dnfv5 "$repo" ;;
-  *)
-    bl64_check_alert_unsupported
-    return $?
-    ;;
+    ${BL64_OS_FD}-4?.*) my_repo_disable_dnfv5 "$repo" ;;
+    *)
+      bl64_check_alert_unsupported
+      return $?
+      ;;
   esac
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_linux_lib_setup &&
     bl64_check_privilege_root &&
     bl64_check_parameter 'MY_REPOSITORY_ID' &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'MY_REPOSITORY_ID'
 }
 

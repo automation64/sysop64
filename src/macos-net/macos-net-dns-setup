@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -24,11 +24,10 @@ declare MY_DNS_BACKUP="${3:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_macos_lib_setup &&
     bl64_check_parameter 'MY_NETWORK_SERVICE' &&
     bl64_check_parameter 'MY_DNS_PRIMARY' &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'MY_NETWORK_SERVICE' \
       'MY_DNS_PRIMARY' \
       'MY_DNS_BACKUP'

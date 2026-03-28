@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -47,14 +47,13 @@ function my_destroy() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   if [[ "$MY_BRANCH_NAME" =~ (main|master) ]]; then
     bl64_msg_show_error 'destroying the main branch is not supported'
     return 1
   fi
   s64_git_lib_setup &&
     bl64_check_parameter 'MY_BRANCH_NAME' &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'MY_BRANCH_NAME' \
       'MY_REMOTE_NAME' &&
     bl64_ui_ask_proceed 'destroy branch even if not fully merged?'

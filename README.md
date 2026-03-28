@@ -41,6 +41,48 @@ so64 <MODULE/TASK> [TASK_PARAMETERS]
 
 ---
 
+## 🏗️ Architecture
+
+## Task Naming convention
+
+### Scripts
+
+- Template: `MODULE-[OBJECT-]ACTION[-ATTRIBUTE]`
+- Format: [a-z0-9-]+
+- Fields
+  - `MODULE`: module name. For example: docker
+  - `OBJECT`: optional. Object module. For example: image
+  - `ACTION`: what the task will do. Use standard verbs defined below
+  - `ATTRIBUTE`: optional. Scope of the action
+
+### Actions
+
+- `cleanup`: remove temporary content
+- `edit`: edit content
+- `guide`: show technical documentation about the module or task
+- `init`: initialize component
+- `list`: list components
+- `reset`: reset component or content
+- `run`: run service
+- `scan`: scan component
+- `setup`: setup component
+- `show`: show component details
+- `tail`: show last lines of content
+
+- `add` / `delete`: add or delete component
+- `attach` / `detach`: attach or detach component
+- `backup` / `restore`: backup or restore content
+- `create` / `destroy`: create or destroy component
+- `grant` / `revoque`: grant or revoque component access permission
+- `import` / `export`: import or export component or content
+- `login` / `logout`: login to or logout from service
+- `push` / `pull`: push or pull content
+- `read` / `write`: read or write content
+- `set` / `unset`: set or unset configuration value
+- `start` / `stop`: start or stop service
+
+---
+
 ## 🛠 Contributing
 
 Contributions are welcome! Help us improve by submitting issues, feature requests, or pull requests.

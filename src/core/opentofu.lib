@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_OPENTOFU_PATH_CLI="${S64_OPENTOFU_PATH_CLI:-}"
-  declare S64_OPENTOFU_PATH_PROJECT="${S64_OPENTOFU_PATH_PROJECT:-}"
+  declare S64_OPENTOFU_PATH_PROJECT="${S64_OPENTOFU_PATH_PROJECT:-.}"
 }
 
 #
@@ -41,7 +41,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENTOFU_VERSION='2.0.0'
+  declare S64_OPENTOFU_VERSION='2.2.0'
+  declare S64_OPENTOFU_ABOUT_MODULE_MAIN='OpenTofu Infrastructure as Code'
 }
 
 #
@@ -50,9 +51,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
 
 function s64_opentofu_lib_setup() {
   bl64_dbg_app_show_function
-  bl64_tf_setup &&
+  s64_core_lib_show_about "$S64_OPENTOFU_ABOUT_MODULE_MAIN" &&
+    bl64_tf_setup &&
     s64_core_lib_command_assign 'S64_OPENTOFU_PATH_CLI' 'tofu' &&
-    bl64_check_parameter 'S64_OPENTOFU_PATH_PROJECT' &&
-    bl64_msg_show_setup 'module parameters' \
+    bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
       'S64_OPENTOFU_PATH_PROJECT'
 }

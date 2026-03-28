@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -27,14 +27,13 @@ function my_service_status() {
   esac
   bl64_msg_show_separator 'client and server info'
   bl64_cnt_run_docker info
-  
+
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   if [[ "$BL64_OS_TYPE" == "$BL64_OS_TYPE_LINUX" ]]; then
-      s64_linux_lib_setup ||
+    s64_linux_lib_setup ||
       return $?
   fi
 

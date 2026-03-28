@@ -40,7 +40,14 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='3.1.0'
+  declare S64_K8S_VERSION='4.0.0'
+  declare S64_K8S_ABOUT_MODULE_MAIN='Kubernetes Platform'
+  declare S64_K8S_ABOUT_SUBMODULE_CLI='Kubectl CLI'
+  declare S64_K8S_ABOUT_SUBMODULE_CLT='Cluster'
+  declare S64_K8S_ABOUT_SUBMODULE_NODE='Nodes'
+  declare S64_K8S_ABOUT_SUBMODULE_OBJ='Objects'
+  declare S64_K8S_ABOUT_SUBMODULE_SVC='Services'
+  declare S64_K8S_ABOUT_SUBMODULE_WKL='Workloads'
 }
 
 #
@@ -49,14 +56,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_k8s_lib_setup() {
   bl64_dbg_app_show_function
-  bl64_k8s_setup &&
-    bl64_msg_show_setup 'module parameters' \
+  s64_core_lib_show_about "$S64_K8S_ABOUT_MODULE_MAIN" &&
+    bl64_k8s_setup &&
+    bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
       'S64_K8S_OUTPUT_FORMAT'
 }
 
 function s64_k8s_lib_cli_set_ns() {
   bl64_dbg_app_show_function "$@"
-  local namespace="$1"
+  local namespace="${1:-$BL64_VAR_DEFAULT}"
   # shellcheck disable=SC2154
   if [[ "$namespace" == "$BL64_VAR_DEFAULT" ]]; then
     printf -- '--all-namespaces'
@@ -72,4 +80,13 @@ function s64_k8s_meta_strip_runtime() {
     $0 == "status: {}" { next }
     { print $0 }
   '
+}
+
+function s64_k8s_lib_cli_set_format() {
+  bl64_dbg_app_show_function "$@"
+  local format="${1:-}"
+  if [[ "$format" != 'yaml' ]]; then
+    S64_K8S_OUTPUT_FORMAT="$format"
+  fi
+  printf -- '--output=%s' "${S64_K8S_OUTPUT_FORMAT}"
 }

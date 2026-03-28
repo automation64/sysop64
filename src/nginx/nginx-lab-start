@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -23,10 +23,9 @@ declare MY_NGINX_CONF="${1:-S64_NGINX_LAB_HOST_NGINX_CONF}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_nginx_lib_setup &&
     bl64_cnt_setup &&
-    bl64_msg_show_setup "$BL64_VAR_DEFAULT" \
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'S64_NGINX_LAB_IMAGE_NAME' \
       'S64_NGINX_LAB_IMAGE_TAG' \
       'S64_NGINX_LAB_CONTAINER_NAME' \

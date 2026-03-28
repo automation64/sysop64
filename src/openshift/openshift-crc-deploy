@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# template-one: 3.2.1
+# template-one: 3.3.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
 #
@@ -31,7 +31,6 @@ function my_setup() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about
   s64_openshift_lib_setup &&
     bl64_ui_ask_proceed 'Warning: as part of the process, OS packages may be installed/updated. Do you want to continue?'
 }
