@@ -51,7 +51,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_AWS_VERSION='3.2.0'
+  declare S64_AWS_VERSION='3.2.1'
   declare S64_AWS_ABOUT_MODULE_MAIN='AWS Platform'
   declare S64_AWS_ABOUT_SUBMODULE_AUR='Aurora Database'
   declare S64_AWS_ABOUT_SUBMODULE_CF='CloudFormation'
@@ -115,7 +115,7 @@ function s64_aws_lib_run_aws() {
 
   bl64_dbg_app_command_is_enabled || debug_flag=' '
 
-  s64_aws_lib_cli_harden
+  _s64_aws_lib_cli_harden
   s64_aws_lib_cli_setup
 
   bl64_dbg_app_trace_start
@@ -127,7 +127,7 @@ function s64_aws_lib_run_aws() {
   bl64_dbg_app_trace_stop
 }
 
-function s64_aws_lib_cli_harden() {
+function _s64_aws_lib_cli_harden() {
   bl64_dbg_app_show_function
 
   bl64_dbg_lib_trace_start

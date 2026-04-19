@@ -23,7 +23,7 @@ function my_initialize() {
   s64_gcp_lib_setup
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'Show technical reference information'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
@@ -31,21 +31,21 @@ bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_show_doc 'Shell Environment Variables (https://docs.cloud.google.com/sdk/docs/properties#setting_properties_using_environment_variables):
   - CLOUDSDK_<SECTION_NAME>_<PROPERTY_NAME>=<VALUE>'
 bl64_msg_show_doc 'Format Types (https://docs.cloud.google.com/sdk/gcloud/reference/topic/formats):
-  - config
-  - csv
-  - default
-  - diff
-  - disable
-  - flattened
-  - get
+  - config: A dictionary of dictionaries in config style
+  - csv: Comma Separated Values with no keys
+  - default: An alias for the yaml format
+  - diff: A unified diff of the first two projection columns
+  - disable: Disables formatted output and does not consume the resources. Equivalent to the none format
+  - flattened: A flattened tree. Each output line contains one key:value pair
+  - get: Equivalent to the value[no-transforms] format
   - json
-  - list
-  - multi
-  - none
-  - object
-  - table(field1,field2,...)
-  - text
-  - value
+  - list: An ordered list of items
+  - multi: Each projection key must have a subformat defined by the :format=FORMAT-STRING attribute
+  - none: Disables formatted output and consumes the resources
+  - object: Bypasses JSON-serialization and prints the object representation of each resource
+  - table: Aligned left-adjusted columns with optional title, column headings and sorting
+  - text: An alias for the flattened format
+  - value: CSV with no heading and <TAB> separator instead of <COMMA>
   - yaml'
 bl64_msg_show_doc 'Filters (https://docs.cloud.google.com/sdk/gcloud/reference/topic/filters):
   - NOT term-1

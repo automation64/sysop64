@@ -46,7 +46,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OCI_VERSION='1.2.0'
+  declare S64_OCI_VERSION='1.2.1'
   declare S64_OCI_ABOUT_MODULE_MAIN='Oracle Cloud Infrastructure'
   declare S64_OCI_ABOUT_SUBMODULE_DC='Data Centers and Regions'
   declare S64_OCI_ABOUT_SUBMODULE_SSO='Single Sign-On'
@@ -70,7 +70,7 @@ function s64_oci_lib_setup() {
 
 function s64_oci_lib_run_oci() {
   bl64_dbg_app_show_function "$@"
-  s64_oci_lib_harden
+  _s64_oci_lib_harden
 
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
@@ -83,7 +83,7 @@ function s64_oci_lib_run_oci() {
   bl64_dbg_app_trace_stop
 }
 
-function s64_oci_lib_harden() {
+function _s64_oci_lib_harden() {
   bl64_dbg_app_show_function
 
   bl64_dbg_lib_trace_start

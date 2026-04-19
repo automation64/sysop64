@@ -42,6 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-gcp.bash" &&
   # Output Format
   declare S64_GCP_SET_OUTPUT_FORMAT="${S64_GCP_SET_OUTPUT_FORMAT:-default}"
   declare S64_GCP_SET_OUTPUT_LIMIT="${S64_GCP_SET_OUTPUT_LIMIT:-}"
+  declare S64_GCP_SET_OUTPUT_PAGE_SIZE="${S64_GCP_SET_OUTPUT_PAGE_SIZE:-}"
 }
 
 #
@@ -50,7 +51,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-gcp.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_GCP_VERSION='1.0.0'
+  declare S64_GCP_VERSION='1.2.0'
   declare S64_GCP_ABOUT_MODULE_MAIN='Google Cloud Platform'
   declare S64_GCP_ABOUT_SUBMODULE_AUTH='Authentication and Authorization'
   declare S64_GCP_ABOUT_SUBMODULE_BILL='Billing'
@@ -60,7 +61,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-gcp.bash" &&
   declare S64_GCP_ABOUT_SUBMODULE_IAM='Identity and Access Management'
   declare S64_GCP_ABOUT_SUBMODULE_LOG='Cloud Logging'
   declare S64_GCP_ABOUT_SUBMODULE_RM='Resource Manager'
+  declare S64_GCP_ABOUT_SUBMODULE_SM='Secrets Manager'
+  declare S64_GCP_ABOUT_SUBMODULE_SQL='Cloud SQL'
   declare S64_GCP_ABOUT_SUBMODULE_STOR='Cloud Storage'
+  declare S64_GCP_ABOUT_SUBMODULE_VPC='Cloud VPC'
 
   declare S64_GCP_API_URL_OAUTH2='https://oauth2.googleapis.com'
 }
@@ -89,6 +93,7 @@ function s64_gcp_lib_setup() {
       'S64_GCP_SET_ORGANIZATION_ID' \
       'S64_GCP_SET_OUTPUT_FORMAT' \
       'S64_GCP_SET_OUTPUT_LIMIT' \
+      'S64_GCP_SET_OUTPUT_PAGE_SIZE' \
       'S64_GCP_SET_PROJECT_ID'
 }
 
@@ -98,6 +103,7 @@ function s64_gcp_lib_run_gcloud() {
     "$@" \
     --format="$S64_GCP_SET_OUTPUT_FORMAT" \
     ${S64_GCP_SET_OUTPUT_LIMIT:+--limit="$S64_GCP_SET_OUTPUT_LIMIT"} \
+    ${S64_GCP_SET_OUTPUT_PAGE_SIZE:+--page-size="$S64_GCP_SET_OUTPUT_PAGE_SIZE"} \
     ${S64_GCP_SET_BILLING_PROJECT_ID:+--billing-project="$S64_GCP_SET_BILLING_PROJECT_ID"}
 }
 

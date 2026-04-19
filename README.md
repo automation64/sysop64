@@ -57,24 +57,30 @@ so64 <MODULE/TASK> [TASK_PARAMETERS]
 
 ### Actions
 
+- `check`: run component health-checking
 - `cleanup`: remove temporary content
 - `edit`: edit content
 - `guide`: show technical documentation about the module or task
 - `init`: initialize component
 - `list`: list components
+- `login`: login to service
+- `migrate`: migrate component or content
 - `reset`: reset component or content
 - `run`: run service
 - `scan`: scan component
 - `setup`: setup component
 - `show`: show component details
+- `status`: show component status
+- `update`: update component status or content
 - `tail`: show last lines of content
 
 - `add` / `delete`: add or delete component
 - `attach` / `detach`: attach or detach component
 - `backup` / `restore`: backup or restore content
-- `create` / `destroy`: create or destroy component
+- `create` / `destroy`: create or destroy (no undo) component
 - `grant` / `revoque`: grant or revoque component access permission
 - `import` / `export`: import or export component or content
+- `open` / `close`: open or close an object
 - `login` / `logout`: login to or logout from service
 - `push` / `pull`: push or pull content
 - `read` / `write`: read or write content

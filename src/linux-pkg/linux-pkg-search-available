@@ -20,12 +20,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_
 
 declare MY_PACKAGE_NAME="${1:-}"
 
-function my_search() {
+function my_search_arch() {
   bl64_dbg_app_show_function
-  case "$BL64_OS_FLAVOR" in
-    "$BL64_OS_FLAVOR_ARCH") bl64_pkg_run_pacman --sync --search "${MY_PACKAGE_NAME}" | bl64_txt_run_awk '/\[installed/ { getline; next } { print $0 }' ;;
-    *) bl64_check_alert_unsupported || return $? ;;
-  esac
+  bl64_pkg_run_pacman --sync --search "${MY_PACKAGE_NAME}" |
+    bl64_txt_run_awk '/\[installed/ { getline; next } { print $0 }'
 }
 
 function my_initialize() {
@@ -36,10 +34,13 @@ function my_initialize() {
       'MY_PACKAGE_NAME'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'Search for available OS packages'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-my_search
+case "$BL64_OS_FLAVOR" in
+  "$BL64_OS_FLAVOR_ARCH") my_search_arch ;;
+  *) bl64_check_alert_unsupported || return $? ;;
+esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

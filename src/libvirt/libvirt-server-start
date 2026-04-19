@@ -31,11 +31,10 @@ function my_start() {
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
-    s64_libvirt_lib_setup &&
     bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
 bl64_msg_help_about_set 'Start the LibVirt service'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 

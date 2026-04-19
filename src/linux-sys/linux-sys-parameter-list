@@ -25,10 +25,11 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Show mounted filesystems'
+bl64_msg_help_about_set 'List available kernel parameters'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_linux_lib_run_mount \
-  --show-labels
+s64_linux_lib_run_sysctl \
+  --all \
+  --names
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
