@@ -29,18 +29,18 @@ function my_initialize() {
     bl64_check_parameter 'MY_VOLUME' &&
     bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
       'MY_POOL' \
-      'MY_VOLUME'
+      'MY_VOLUME' &&
+    bl64_ui_ask_confirmation "destroy the volume definition and content?"
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Stop running VM'
+bl64_msg_help_about_set 'Remove storage volume definition and content'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_ui_ask_confirmation "destroy the volume definition and content?" &&
-  s64_libvirt_lib_run_virsh \
-    --connect="$S64_LIBVIRT_URI_QEMU_SYSTEM" \
-    vol-delete \
-    --pool "$MY_POOL" \
-    --vol "$MY_VOLUME"
+s64_libvirt_lib_run_virsh \
+  --connect="$S64_LIBVIRT_URI_QEMU_SYSTEM" \
+  vol-delete \
+  --pool "$MY_POOL" \
+  --vol "$MY_VOLUME"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

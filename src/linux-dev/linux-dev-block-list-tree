@@ -30,8 +30,8 @@ bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_linux_lib_run_lsblk \
+  --sort 'name' \
   --all \
-  --ascii \
-  --paths \
-  --tree
+  --tree \
+  --merge
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

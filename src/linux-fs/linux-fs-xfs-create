@@ -19,23 +19,29 @@ source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/co
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
 
 declare MY_DEVICE_PATH="${1:-}"
+declare MY_FS_LABEL="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
     bl64_check_privilege_root &&
     bl64_check_parameter 'MY_DEVICE_PATH' &&
+    bl64_check_parameter 'MY_FS_LABEL' &&
     bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
-      'MY_DEVICE_PATH' &&
+      'MY_DEVICE_PATH' \
+      'MY_FS_LABEL' &&
     bl64_ui_ask_confirmation "Warning: destination content will be destroyed (${MY_DEVICE_PATH})"
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '2.0.0'
 bl64_msg_help_about_set 'Create XFS filesystem'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_linux_lib_run_mkfs \
-  --type xfs \
-  "$MY_DEVICE_PATH"
+s64_linux_lib_run_mkfs_xfs \
+  -f \
+  -L "$MY_FS_LABEL" \
+  "$MY_DEVICE_PATH" &&
+  s64_linux_lib_run_udevadm \
+    settle
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

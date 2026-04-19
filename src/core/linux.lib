@@ -37,7 +37,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='3.12.0'
+  declare S64_LINUX_VERSION='3.13.0'
   declare S64_LINUX_ABOUT_MODULE_MAIN='Linux OS'
   declare S64_LINUX_ABOUT_SUBMODULE_APP='Applications'
   declare S64_LINUX_ABOUT_SUBMODULE_BOOT='Boot Manager'
@@ -64,6 +64,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_DPKG_QUERY=''
   declare S64_LINUX_PATH_CLI_FAILLOCK=''
   declare S64_LINUX_PATH_CLI_FSCK=''
+  declare S64_LINUX_PATH_CLI_FINDMNT=''
   declare S64_LINUX_PATH_CLI_GETENT=''
   declare S64_LINUX_PATH_CLI_GRUB2MKCONFIG=''
   declare S64_LINUX_PATH_CLI_IP=''
@@ -76,6 +77,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_LVS=''
   declare S64_LINUX_PATH_CLI_MDADM=''
   declare S64_LINUX_PATH_CLI_MKFS=''
+  declare S64_LINUX_PATH_CLI_MKFS_XFS=''
   declare S64_LINUX_PATH_CLI_MOUNT=''
   declare S64_LINUX_PATH_CLI_NFT=''
   declare S64_LINUX_PATH_CLI_PACMAN_KEY=''
@@ -88,7 +90,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_SWAPON=''
   declare S64_LINUX_PATH_CLI_SYSCTL=''
   declare S64_LINUX_PATH_CLI_SYSTEMCTL=''
+  declare S64_LINUX_PATH_CLI_UDEVADM=''
   declare S64_LINUX_PATH_CLI_UDISKSCTL=''
+  declare S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES=''
   declare S64_LINUX_PATH_CLI_VGS=''
 
   declare S64_LINUX_PATH_CFG_GRUB_OPTIONS=''
@@ -114,6 +118,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_DMIDECODE='/usr/bin/dmidecode'
         S64_LINUX_PATH_CLI_DMSETUP='/usr/bin/dmsetup'
         S64_LINUX_PATH_CLI_FAILLOCK='/usr/bin/faillock'
+        S64_LINUX_PATH_CLI_FINDMNT='/usr/bin/findmnt'
         S64_LINUX_PATH_CLI_FSCK='/usr/bin/fsck'
         S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
         S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
@@ -127,6 +132,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_LVS='/usr/bin/lvs'
         S64_LINUX_PATH_CLI_MDADM='/usr/bin/mdadm'
         S64_LINUX_PATH_CLI_MKFS='/usr/bin/mkfs'
+        S64_LINUX_PATH_CLI_MKFS_XFS='/usr/bin/mkfs.xfs'
         S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
         S64_LINUX_PATH_CLI_NFT='/usr/bin/nft'
         S64_LINUX_PATH_CLI_PACMAN_KEY='/usr/sbin/pacman-key'
@@ -139,7 +145,9 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
         S64_LINUX_PATH_CLI_SYSCTL='/usr/bin/sysctl'
         S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+        S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
         S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
         S64_LINUX_PATH_CLI_VGS='/usr/bin/vgs'
 
         S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
@@ -154,6 +162,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
         S64_LINUX_PATH_CLI_DPKG_QUERY='/usr/bin/dpkg-query'
         S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
+        S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
         S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
         S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
         S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
@@ -167,6 +176,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
         S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
         S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+        S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
         S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
         S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
         S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
@@ -179,7 +189,9 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
         S64_LINUX_PATH_CLI_SYSCTL='/sbin/sysctl'
         S64_LINUX_PATH_CLI_SYSTEMCTL='/bin/systemctl'
+        S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
         S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES='/usr/bin/update-alternatives'
         S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
         S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
@@ -193,6 +205,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
         S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
         S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
+        S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
         S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
         S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
         S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
@@ -206,6 +219,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
         S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
         S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+        S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
         S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
         S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
         S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
@@ -218,7 +232,9 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
         S64_LINUX_PATH_CLI_SYSCTL='/usr/sbin/sysctl'
         S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+        S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
         S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
         S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
         S64_LINUX_PATH_CFG_GRUB_CONFIG='/etc/grub2.cfg'
@@ -232,6 +248,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
         S64_LINUX_PATH_CLI_DMSETUP='/sbin/dmsetup'
         S64_LINUX_PATH_CLI_FAILLOCK='/usr/bin/faillock'
+        S64_LINUX_PATH_CLI_FINDMNT='/sbin/findmnt'
         S64_LINUX_PATH_CLI_FSCK='/sbin/fsck'
         S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
         S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub-mkconfig'
@@ -245,6 +262,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_LVS='/sbin/lvs'
         S64_LINUX_PATH_CLI_MDADM='/sbin/mdadm'
         S64_LINUX_PATH_CLI_MKFS='/sbin/mkfs'
+        S64_LINUX_PATH_CLI_MKFS_XFS='/sbin/mkfs.xfs'
         S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
         S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
         S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
@@ -257,7 +275,9 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
         S64_LINUX_PATH_CLI_SYSCTL='/sbin/sysctl'
         S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+        S64_LINUX_PATH_CLI_UDEVADM='/sbin/udevadm'
         S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
         S64_LINUX_PATH_CLI_VGS='/sbin/vgs'
 
         S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
@@ -271,6 +291,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
         S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
         S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
+        S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
         S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
         S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
         S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub2-mkconfig'
@@ -284,6 +305,7 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
         S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
         S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+        S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
         S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
         S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
         S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
@@ -296,7 +318,9 @@ function s64_linux_lib_setup() {
         S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
         S64_LINUX_PATH_CLI_SYSCTL='/usr/sbin/sysctl'
         S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+        S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
         S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
         S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
         S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub2/grub.cfg'
@@ -460,6 +484,17 @@ function s64_linux_lib_run_mkfs() {
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_MKFS" \
     $verbose_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_mkfs_xfs() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_MKFS_XFS" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_MKFS_XFS' ||
+    return $?
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_MKFS_XFS" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -711,6 +746,50 @@ function s64_linux_lib_run_faillock() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_FAILLOCK" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_update_alternatives() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_udevadm() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_UDEVADM" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_UDEVADM' ||
+    return $?
+  _s64_linux_lib_run_udevadm_harden
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_UDEVADM" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function _s64_linux_lib_run_udevadm_harden() {
+  bl64_dbg_app_show_function
+  bl64_dbg_app_trace_start
+  unset LSBLK_DEBUG
+  unset LIBBLKID_DEBUG
+  unset LIBMOUNT_DEBUG
+  unset LIBSMARTCOLS_DEBUG
+  unset LIBSMARTCOLS_DEBUG_PADDING
+  unset LIBSMARTCOLS_JSON
+  unset LSBLK_COLUMNS
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_findmnt() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_FINDMNT" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_FINDMNT' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_FINDMNT" \
     "$@"
   bl64_dbg_app_trace_stop
 }

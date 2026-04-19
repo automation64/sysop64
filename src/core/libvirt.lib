@@ -39,11 +39,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LIBVIRT_VERSION='1.2.0'
+  declare S64_LIBVIRT_VERSION='1.3.0'
   declare S64_LIBVIRT_ABOUT_MODULE_MAIN='LibVirt Virtual Machine Manager'
 
   declare S64_LIBVIRT_PATH_CLI_VIRSH='/usr/bin/virsh'
   declare S64_LIBVIRT_PATH_CLI_VIRTINSTALL='/usr/bin/virt-install'
+  declare S64_LIBVIRT_PATH_CLI_VIRTVIEWER='/usr/bin/virt-viewer'
 
   declare S64_LIBVIRT_GROUP_LIBVIRT='libvirt'
 
@@ -81,6 +82,16 @@ function s64_libvirt_lib_run_virtinstall() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LIBVIRT_PATH_CLI_VIRTINSTALL" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_libvirt_lib_run_virtviewer() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LIBVIRT_PATH_CLI_VIRTVIEWER" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_PATH_CLI_VIRTVIEWER' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LIBVIRT_PATH_CLI_VIRTVIEWER" \
     "$@"
   bl64_dbg_app_trace_stop
 }

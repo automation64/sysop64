@@ -18,14 +18,18 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/gcp.lib" || { s64_core_lib_check_module_load && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
 
+declare MY_FILTER_NAME="${1:-}"
+
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_gcp_lib_setup &&
     bl64_check_export 'S64_GCP_SET_PROJECT_ID' &&
-    s64_gcp_lib_cli_set_format 'table(config.name,config.title)'
+    s64_gcp_lib_cli_set_format 'table[no-heading](config.name,config.title)' &&
+    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+      'MY_FILTER_NAME'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_about_set 'List GCP services enabled for the project'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
@@ -34,6 +38,7 @@ s64_gcp_lib_run_gcloud \
   services \
   list \
   --enabled \
-  --filter='config.name~.*.googleapis.com$' \
-  --sort-by=config.name
+  --sort-by=config.name \
+  ${MY_FILTER_NAME:+--filter="config.name~${MY_FILTER_NAME}"} \
+  --project="${S64_GCP_SET_PROJECT_ID}"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
