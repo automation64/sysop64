@@ -57,6 +57,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-gcp.bash" &&
   declare S64_GCP_ABOUT_SUBMODULE_BILL='Billing'
   declare S64_GCP_ABOUT_SUBMODULE_CE='Compute Engine'
   declare S64_GCP_ABOUT_SUBMODULE_CLI='GCloud CLI'
+  declare S64_GCP_ABOUT_SUBMODULE_DC='Datacenter'
   declare S64_GCP_ABOUT_SUBMODULE_GKE='Kubernetes Platform'
   declare S64_GCP_ABOUT_SUBMODULE_IAM='Identity and Access Management'
   declare S64_GCP_ABOUT_SUBMODULE_LOG='Cloud Logging'

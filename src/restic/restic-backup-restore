@@ -28,7 +28,7 @@ function my_initialize() {
   s64_restic_lib_setup &&
     bl64_check_parameter 'MY_BACKUP_TAG' &&
     bl64_check_parameter 'MY_BACKUP_DESTINATION' &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'S64_RESTIC_PATH_REPOSITORY' \
       'MY_BACKUP_TAG' \
       'MY_BACKUP_ID' \

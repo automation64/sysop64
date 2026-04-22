@@ -54,7 +54,7 @@ function my_initialize() {
   s64_git_lib_setup &&
     bl64_check_parameter 'MY_BRANCH_OLD' &&
     bl64_check_parameter 'MY_BRANCH_NEW' &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'MY_BRANCH_OLD' \
       'MY_BRANCH_NEW' \
       'MY_REMOTE_NAME'

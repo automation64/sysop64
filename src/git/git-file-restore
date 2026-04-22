@@ -26,7 +26,7 @@ function my_initialize() {
   s64_git_lib_setup &&
     bl64_check_parameter 'MY_FILE_PATH' &&
     bl64_check_parameter 'MY_COMMIT_HASH' &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'MY_FILE_PATH' \
       'MY_COMMIT_HASH'
 }

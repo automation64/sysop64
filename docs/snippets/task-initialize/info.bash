@@ -1,3 +1,3 @@
 # X_INIT_INFO_PLACEHOLDER_X
-bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+s64_core_lib_show_setup \
   'X_PARAMETER_X'
