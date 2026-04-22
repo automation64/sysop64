@@ -44,8 +44,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_DOCKER_VERSION='2.2.0'
+  declare S64_DOCKER_VERSION='2.3.0'
   declare S64_DOCKER_ABOUT_MODULE_MAIN='Docker Platform'
+  declare S64_DOCKER_PATH_CLI_CONFIG="${HOME}/.docker/config.json"
 }
 
 #
@@ -59,6 +60,7 @@ function s64_docker_lib_setup() {
     bl64_cnt_setup &&
     bl64_check_command "$BL64_CNT_CMD_DOCKER" "$BL64_VAR_DEFAULT" 'BL64_CNT_CMD_DOCKER' &&
     bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
+      'S64_DOCKER_PATH_CLI_CONFIG' \
       'S64_DOCKER_SET_FORMAT' \
       'S64_DOCKER_SET_TIMEOUT'
 }

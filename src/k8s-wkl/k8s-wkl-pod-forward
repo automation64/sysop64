@@ -30,7 +30,7 @@ function my_initialize() {
     bl64_check_parameter 'MY_POD_NAME' &&
     bl64_check_parameter 'MY_POD_PORT' &&
     bl64_check_parameter 'MY_HOST_PORT' &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'MY_NAMESPACE' \
       'MY_POD_NAME' \
       'MY_POD_PORT' \

@@ -27,7 +27,7 @@ function my_initialize() {
   s64_k8s_lib_setup &&
     bl64_check_parameter 'MY_NAMESPACE' &&
     bl64_check_parameter 'MY_TARGET_DEPLOYMENT' &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'MY_NAMESPACE' \
       'MY_TARGET_DEPLOYMENT' \
       'MY_TARGET_REPLICAS'

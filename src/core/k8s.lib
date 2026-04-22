@@ -40,7 +40,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='4.0.0'
+  declare S64_K8S_VERSION='4.1.0'
   declare S64_K8S_ABOUT_MODULE_MAIN='Kubernetes Platform'
   declare S64_K8S_ABOUT_SUBMODULE_CLI='Kubectl CLI'
   declare S64_K8S_ABOUT_SUBMODULE_CLT='Cluster'
@@ -48,6 +48,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
   declare S64_K8S_ABOUT_SUBMODULE_OBJ='Objects'
   declare S64_K8S_ABOUT_SUBMODULE_SVC='Services'
   declare S64_K8S_ABOUT_SUBMODULE_WKL='Workloads'
+
+  declare S64_K8S_PATH_CFG_KUBE="${HOME}/.kube"
+  declare S64_K8S_PATH_CFG_CONFIG="${S64_K8S_PATH_CFG_KUBE}/config"
 }
 
 #
@@ -57,9 +60,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 function s64_k8s_lib_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_show_about "$S64_K8S_ABOUT_MODULE_MAIN" &&
-    bl64_k8s_setup &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
-      'S64_K8S_OUTPUT_FORMAT'
+    bl64_k8s_setup
 }
 
 function s64_k8s_lib_cli_set_ns() {

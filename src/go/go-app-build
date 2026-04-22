@@ -26,7 +26,7 @@ function my_initialize() {
   s64_go_lib_setup &&
     bl64_check_parameter 'MY_PATH_OUTPUT' &&
     bl64_check_parameter 'MY_PATH_MAIN' &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'MY_PATH_OUTPUT' \
       'MY_PATH_MAIN'
 }

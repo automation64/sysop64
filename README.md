@@ -78,6 +78,7 @@ so64 <MODULE/TASK> [TASK_PARAMETERS]
 - `attach` / `detach`: attach or detach component
 - `backup` / `restore`: backup or restore content
 - `create` / `destroy`: create or destroy (no undo) component
+- `expand` / `shrink`: expand or shrink component size
 - `grant` / `revoque`: grant or revoque component access permission
 - `import` / `export`: import or export component or content
 - `open` / `close`: open or close an object

@@ -30,7 +30,7 @@ function my_initialize() {
     bl64_check_parameter 'MY_BASE_FROM' &&
     bl64_check_parameter 'MY_BASE_TO' &&
     bl64_check_parameter 'MY_REMOTE_HOST' &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'MY_DIR_NAME' \
       'MY_BASE_FROM' \
       'MY_BASE_TO' \

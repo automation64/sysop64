@@ -32,7 +32,7 @@ function my_initialize() {
     bl64_check_parameter 'MY_CIFS_SHARE_NAME' &&
     bl64_check_parameter 'MY_MOUNT_PATH' &&
     bl64_check_directory "$MY_MOUNT_PATH" &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'MY_CIFS_SERVER_IP' \
       'MY_CIFS_SHARE_NAME' \
       'MY_MOUNT_PATH' \

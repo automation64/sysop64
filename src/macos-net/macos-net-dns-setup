@@ -27,7 +27,7 @@ function my_initialize() {
   s64_macos_lib_setup &&
     bl64_check_parameter 'MY_NETWORK_SERVICE' &&
     bl64_check_parameter 'MY_DNS_PRIMARY' &&
-    bl64_msg_show_setup "$S64_CORE_LABEL_TASK_PARAMETERS" \
+    s64_core_lib_show_setup \
       'MY_NETWORK_SERVICE' \
       'MY_DNS_PRIMARY' \
       'MY_DNS_BACKUP'
