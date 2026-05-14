@@ -23,8 +23,8 @@ declare MY_REMOTE="${2:-origin}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_REPOSITORY' &&
-    s64_git_lib_setup &&
+  s64_git_lib_setup &&
+    bl64_check_parameter 'MY_REPOSITORY' &&
     s64_core_lib_show_setup \
       'MY_REPOSITORY' \
       'MY_REMOTE'

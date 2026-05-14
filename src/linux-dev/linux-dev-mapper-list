@@ -32,7 +32,6 @@ bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_set_level "$BL64_MSG_VERBOSE_NONE"
 s64_linux_lib_run_dmsetup \
   ls \
-  --options 'device,blkdevname,active,open,rw,uuid' \
-  --tree
+  --options 'blkdevname'
 bl64_msg_set_level "$S64_CORE_SET_VERBOSE"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

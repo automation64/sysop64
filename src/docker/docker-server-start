@@ -28,18 +28,14 @@ function my_service_start() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  if [[ "$BL64_OS_TYPE" == "$BL64_OS_TYPE_LINUX" ]]; then
-    s64_linux_lib_setup ||
-      return $?
-  fi
-
   s64_docker_lib_setup &&
+    s64_linux_lib_setup_secondary &&
     bl64_check_privilege_root &&
     bl64_os_check_flavor \
       "$BL64_OS_FLAVOR_ARCH"
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'Start the Docker server'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 

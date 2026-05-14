@@ -32,18 +32,33 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   { s64_core_lib_check_bl64_load && exit 1; }
 
 #
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  # Journalctl / Filter by lines
+  declare S64_LINUX_SET_JOURNALCTL_LINES="${S64_LINUX_SET_JOURNALCTL_LINES:-100}"
+  # Journalctl / Filter by time
+  declare S64_LINUX_SET_JOURNALCTL_SINCE="${S64_LINUX_SET_JOURNALCTL_SINCE:-}"
+  # Journalctl / Output format
+  declare S64_LINUX_SET_JOURNALCTL_OUTPUT="${S64_LINUX_SET_JOURNALCTL_OUTPUT:-short-iso}"
+}
+
+#
 # Globals
 #
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='3.13.0'
+  declare S64_LINUX_VERSION='3.14.0'
   declare S64_LINUX_ABOUT_MODULE_MAIN='Linux OS'
   declare S64_LINUX_ABOUT_SUBMODULE_APP='Applications'
   declare S64_LINUX_ABOUT_SUBMODULE_BOOT='Boot Manager'
   declare S64_LINUX_ABOUT_SUBMODULE_DEV='Development Tools'
   declare S64_LINUX_ABOUT_SUBMODULE_DISTRO='Distribution'
   declare S64_LINUX_ABOUT_SUBMODULE_FS='File System'
+  declare S64_LINUX_ABOUT_SUBMODULE_FW='Firewall'
   declare S64_LINUX_ABOUT_SUBMODULE_GUI='Graphical Interface'
   declare S64_LINUX_ABOUT_SUBMODULE_IAM='Identity and Access Management'
   declare S64_LINUX_ABOUT_SUBMODULE_KRNL='Kernel'
@@ -84,10 +99,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   declare S64_LINUX_PATH_CLI_PARTED=''
   declare S64_LINUX_PATH_CLI_PVS=''
   declare S64_LINUX_PATH_CLI_RCSERVICE=''
+  declare S64_LINUX_PATH_CLI_RCSTATUS=''
   declare S64_LINUX_PATH_CLI_RESOLVCTL=''
   declare S64_LINUX_PATH_CLI_SMARTCTL=''
   declare S64_LINUX_PATH_CLI_STAT=''
   declare S64_LINUX_PATH_CLI_SWAPON=''
+  declare S64_LINUX_PATH_CLI_SWAPOFF=''
   declare S64_LINUX_PATH_CLI_SYSCTL=''
   declare S64_LINUX_PATH_CLI_SYSTEMCTL=''
   declare S64_LINUX_PATH_CLI_UDEVADM=''
@@ -107,230 +124,240 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
 
 function s64_linux_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_show_about "$S64_LINUX_ABOUT_MODULE_MAIN" &&
-    # shellcheck disable=SC2154,SC2034
-    case "$BL64_OS_FLAVOR" in
-      "$BL64_OS_FLAVOR_ARCH")
-        S64_LINUX_PATH_CLI_BADBLOCKS='/usr/bin/badblocks'
-        S64_LINUX_PATH_CLI_BLKID='/usr/bin/blkid'
-        S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
-        S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/bin/cryptsetup'
-        S64_LINUX_PATH_CLI_DMIDECODE='/usr/bin/dmidecode'
-        S64_LINUX_PATH_CLI_DMSETUP='/usr/bin/dmsetup'
-        S64_LINUX_PATH_CLI_FAILLOCK='/usr/bin/faillock'
-        S64_LINUX_PATH_CLI_FINDMNT='/usr/bin/findmnt'
-        S64_LINUX_PATH_CLI_FSCK='/usr/bin/fsck'
-        S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
-        S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
-        S64_LINUX_PATH_CLI_IP='/usr/bin/ip'
-        S64_LINUX_PATH_CLI_IPTABLES='/usr/bin/iptables'
-        S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
-        S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
-        S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
-        S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
-        S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
-        S64_LINUX_PATH_CLI_LVS='/usr/bin/lvs'
-        S64_LINUX_PATH_CLI_MDADM='/usr/bin/mdadm'
-        S64_LINUX_PATH_CLI_MKFS='/usr/bin/mkfs'
-        S64_LINUX_PATH_CLI_MKFS_XFS='/usr/bin/mkfs.xfs'
-        S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
-        S64_LINUX_PATH_CLI_NFT='/usr/bin/nft'
-        S64_LINUX_PATH_CLI_PACMAN_KEY='/usr/sbin/pacman-key'
-        S64_LINUX_PATH_CLI_PARTED='/usr/bin/parted'
-        S64_LINUX_PATH_CLI_PVS='/usr/bin/pvs'
-        S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
-        S64_LINUX_PATH_CLI_SMARTCTL='/usr/bin/smartctl'
-        S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
-        S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
-        S64_LINUX_PATH_CLI_SYSCTL='/usr/bin/sysctl'
-        S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
-        S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
-        S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
-        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_VGS='/usr/bin/vgs'
+  s64_core_lib_show_about "$S64_LINUX_ABOUT_MODULE_MAIN"
+  # shellcheck disable=SC2154,SC2034
+  case "$BL64_OS_FLAVOR" in
+    "$BL64_OS_FLAVOR_ARCH")
+      S64_LINUX_PATH_CLI_BADBLOCKS='/usr/bin/badblocks'
+      S64_LINUX_PATH_CLI_BLKID='/usr/bin/blkid'
+      S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
+      S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/bin/cryptsetup'
+      S64_LINUX_PATH_CLI_DMIDECODE='/usr/bin/dmidecode'
+      S64_LINUX_PATH_CLI_DMSETUP='/usr/bin/dmsetup'
+      S64_LINUX_PATH_CLI_FAILLOCK='/usr/bin/faillock'
+      S64_LINUX_PATH_CLI_FINDMNT='/usr/bin/findmnt'
+      S64_LINUX_PATH_CLI_FSCK='/usr/bin/fsck'
+      S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
+      S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
+      S64_LINUX_PATH_CLI_IP='/usr/bin/ip'
+      S64_LINUX_PATH_CLI_IPTABLES='/usr/bin/iptables'
+      S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+      S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
+      S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
+      S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
+      S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
+      S64_LINUX_PATH_CLI_LVS='/usr/bin/lvs'
+      S64_LINUX_PATH_CLI_MDADM='/usr/bin/mdadm'
+      S64_LINUX_PATH_CLI_MKFS='/usr/bin/mkfs'
+      S64_LINUX_PATH_CLI_MKFS_XFS='/usr/bin/mkfs.xfs'
+      S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+      S64_LINUX_PATH_CLI_NFT='/usr/bin/nft'
+      S64_LINUX_PATH_CLI_PACMAN_KEY='/usr/sbin/pacman-key'
+      S64_LINUX_PATH_CLI_PARTED='/usr/bin/parted'
+      S64_LINUX_PATH_CLI_PVS='/usr/bin/pvs'
+      S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_RCSTATUS="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
+      S64_LINUX_PATH_CLI_SMARTCTL='/usr/bin/smartctl'
+      S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
+      S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
+      S64_LINUX_PATH_CLI_SWAPOFF='/usr/bin/swapoff'
+      S64_LINUX_PATH_CLI_SYSCTL='/usr/bin/sysctl'
+      S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+      S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
+      S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+      S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_VGS='/usr/bin/vgs'
 
-        S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
-        S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
-        ;;
-      "$BL64_OS_FLAVOR_DEBIAN")
-        S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
-        S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
-        S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
-        S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
-        S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
-        S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
-        S64_LINUX_PATH_CLI_DPKG_QUERY='/usr/bin/dpkg-query'
-        S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
-        S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
-        S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
-        S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
-        S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
-        S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
-        S64_LINUX_PATH_CLI_IPTABLES='/usr/sbin/iptables'
-        S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
-        S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
-        S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
-        S64_LINUX_PATH_CLI_LSPCI='/bin/lspci'
-        S64_LINUX_PATH_CLI_LSUSB='/bin/lsusb'
-        S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
-        S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
-        S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
-        S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
-        S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
-        S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
-        S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
-        S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
-        S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
-        S64_LINUX_PATH_CLI_SMARTCTL='/sbin/smartctl'
-        S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
-        S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
-        S64_LINUX_PATH_CLI_SYSCTL='/sbin/sysctl'
-        S64_LINUX_PATH_CLI_SYSTEMCTL='/bin/systemctl'
-        S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
-        S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
-        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES='/usr/bin/update-alternatives'
-        S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
+      S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
+      S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
+      ;;
+    "$BL64_OS_FLAVOR_DEBIAN")
+      S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
+      S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
+      S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
+      S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+      S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
+      S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
+      S64_LINUX_PATH_CLI_DPKG_QUERY='/usr/bin/dpkg-query'
+      S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
+      S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
+      S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+      S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
+      S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
+      S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
+      S64_LINUX_PATH_CLI_IPTABLES='/usr/sbin/iptables'
+      S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+      S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
+      S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
+      S64_LINUX_PATH_CLI_LSPCI='/bin/lspci'
+      S64_LINUX_PATH_CLI_LSUSB='/bin/lsusb'
+      S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
+      S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
+      S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+      S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
+      S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+      S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
+      S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
+      S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+      S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_RCSTATUS="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
+      S64_LINUX_PATH_CLI_SMARTCTL='/sbin/smartctl'
+      S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
+      S64_LINUX_PATH_CLI_SWAPON='/usr/sbin/swapon'
+      S64_LINUX_PATH_CLI_SWAPOFF='/usr/sbin/swapoff'
+      S64_LINUX_PATH_CLI_SYSCTL='/sbin/sysctl'
+      S64_LINUX_PATH_CLI_SYSTEMCTL='/bin/systemctl'
+      S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
+      S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+      S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES='/usr/bin/update-alternatives'
+      S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
-        S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
-        S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
-        ;;
-      "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT")
-        S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
-        S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
-        S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
-        S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
-        S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
-        S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
-        S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
-        S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
-        S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
-        S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
-        S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
-        S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
-        S64_LINUX_PATH_CLI_IPTABLES='/usr/sbin/iptables'
-        S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
-        S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
-        S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
-        S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
-        S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
-        S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
-        S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
-        S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
-        S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
-        S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
-        S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
-        S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
-        S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
-        S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
-        S64_LINUX_PATH_CLI_SMARTCTL='/usr/sbin/smartctl'
-        S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
-        S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
-        S64_LINUX_PATH_CLI_SYSCTL='/usr/sbin/sysctl'
-        S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
-        S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
-        S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
-        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
+      S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
+      S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
+      ;;
+    "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT")
+      S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
+      S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
+      S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
+      S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+      S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
+      S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
+      S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
+      S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
+      S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+      S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
+      S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
+      S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
+      S64_LINUX_PATH_CLI_IPTABLES='/usr/sbin/iptables'
+      S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+      S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
+      S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
+      S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
+      S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
+      S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
+      S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
+      S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+      S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
+      S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+      S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
+      S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
+      S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+      S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_RCSTATUS="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
+      S64_LINUX_PATH_CLI_SMARTCTL='/usr/sbin/smartctl'
+      S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
+      S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
+      S64_LINUX_PATH_CLI_SWAPOFF='/usr/bin/swapoff'
+      S64_LINUX_PATH_CLI_SYSCTL='/usr/sbin/sysctl'
+      S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+      S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
+      S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+      S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
-        S64_LINUX_PATH_CFG_GRUB_CONFIG='/etc/grub2.cfg'
-        S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
-        ;;
-      "$BL64_OS_FLAVOR_ALPINE")
-        S64_LINUX_PATH_CLI_BADBLOCKS='/sbin/badblocks'
-        S64_LINUX_PATH_CLI_BLKID='/sbin/blkid'
-        S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
-        S64_LINUX_PATH_CLI_CRYPTSETUP='/sbin/cryptsetup'
-        S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
-        S64_LINUX_PATH_CLI_DMSETUP='/sbin/dmsetup'
-        S64_LINUX_PATH_CLI_FAILLOCK='/usr/bin/faillock'
-        S64_LINUX_PATH_CLI_FINDMNT='/sbin/findmnt'
-        S64_LINUX_PATH_CLI_FSCK='/sbin/fsck'
-        S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
-        S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub-mkconfig'
-        S64_LINUX_PATH_CLI_IP='/sbin/ip'
-        S64_LINUX_PATH_CLI_IPTABLES='/sbin/iptables'
-        S64_LINUX_PATH_CLI_JOURNALCTL='/bin/journalctl'
-        S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
-        S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
-        S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
-        S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
-        S64_LINUX_PATH_CLI_LVS='/sbin/lvs'
-        S64_LINUX_PATH_CLI_MDADM='/sbin/mdadm'
-        S64_LINUX_PATH_CLI_MKFS='/sbin/mkfs'
-        S64_LINUX_PATH_CLI_MKFS_XFS='/sbin/mkfs.xfs'
-        S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
-        S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
-        S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_PARTED='/sbin/parted'
-        S64_LINUX_PATH_CLI_PVS='/sbin/pvs'
-        S64_LINUX_PATH_CLI_RCSERVICE='/etc/init.d/rc-service'
-        S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
-        S64_LINUX_PATH_CLI_SMARTCTL='/sbin/smartctl'
-        S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
-        S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
-        S64_LINUX_PATH_CLI_SYSCTL='/sbin/sysctl'
-        S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
-        S64_LINUX_PATH_CLI_UDEVADM='/sbin/udevadm'
-        S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
-        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_VGS='/sbin/vgs'
+      S64_LINUX_PATH_CFG_GRUB_CONFIG='/etc/grub2.cfg'
+      S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
+      ;;
+    "$BL64_OS_FLAVOR_ALPINE")
+      S64_LINUX_PATH_CLI_BADBLOCKS='/sbin/badblocks'
+      S64_LINUX_PATH_CLI_BLKID='/sbin/blkid'
+      S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
+      S64_LINUX_PATH_CLI_CRYPTSETUP='/sbin/cryptsetup'
+      S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
+      S64_LINUX_PATH_CLI_DMSETUP='/sbin/dmsetup'
+      S64_LINUX_PATH_CLI_FAILLOCK='/usr/bin/faillock'
+      S64_LINUX_PATH_CLI_FINDMNT='/sbin/findmnt'
+      S64_LINUX_PATH_CLI_FSCK='/sbin/fsck'
+      S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
+      S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub-mkconfig'
+      S64_LINUX_PATH_CLI_IP='/sbin/ip'
+      S64_LINUX_PATH_CLI_IPTABLES='/sbin/iptables'
+      S64_LINUX_PATH_CLI_JOURNALCTL='/bin/journalctl'
+      S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
+      S64_LINUX_PATH_CLI_LSBLK='/bin/lsblk'
+      S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
+      S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
+      S64_LINUX_PATH_CLI_LVS='/sbin/lvs'
+      S64_LINUX_PATH_CLI_MDADM='/sbin/mdadm'
+      S64_LINUX_PATH_CLI_MKFS='/sbin/mkfs'
+      S64_LINUX_PATH_CLI_MKFS_XFS='/sbin/mkfs.xfs'
+      S64_LINUX_PATH_CLI_MOUNT='/bin/mount'
+      S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
+      S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_PARTED='/sbin/parted'
+      S64_LINUX_PATH_CLI_PVS='/sbin/pvs'
+      S64_LINUX_PATH_CLI_RCSERVICE='/sbin/rc-service'
+      S64_LINUX_PATH_CLI_RCSTATUS='/sbin/rc-status'
+      S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
+      S64_LINUX_PATH_CLI_SMARTCTL='/sbin/smartctl'
+      S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
+      S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
+      S64_LINUX_PATH_CLI_SWAPOFF='/usr/bin/swapoff'
+      S64_LINUX_PATH_CLI_SYSCTL='/sbin/sysctl'
+      S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+      S64_LINUX_PATH_CLI_UDEVADM='/sbin/udevadm'
+      S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+      S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_VGS='/sbin/vgs'
 
-        S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
-        S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
-        ;;
-      "$BL64_OS_FLAVOR_SUSE")
-        S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
-        S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
-        S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
-        S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
-        S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
-        S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
-        S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
-        S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
-        S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
-        S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
-        S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub2-mkconfig'
-        S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
-        S64_LINUX_PATH_CLI_IPTABLES='/usr/sbin/iptables'
-        S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
-        S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
-        S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
-        S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
-        S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
-        S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
-        S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
-        S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
-        S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
-        S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
-        S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
-        S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
-        S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
-        S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
-        S64_LINUX_PATH_CLI_SMARTCTL='/usr/sbin/smartctl'
-        S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
-        S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
-        S64_LINUX_PATH_CLI_SYSCTL='/usr/sbin/sysctl'
-        S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
-        S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
-        S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
-        S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
-        S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
+      S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub/grub.cfg'
+      S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
+      ;;
+    "$BL64_OS_FLAVOR_SUSE")
+      S64_LINUX_PATH_CLI_BADBLOCKS='/usr/sbin/badblocks'
+      S64_LINUX_PATH_CLI_BLKID='/usr/sbin/blkid'
+      S64_LINUX_PATH_CLI_BTRFS='/usr/bin/btrfs'
+      S64_LINUX_PATH_CLI_CRYPTSETUP='/usr/sbin/cryptsetup'
+      S64_LINUX_PATH_CLI_DMIDECODE='/usr/sbin/dmidecode'
+      S64_LINUX_PATH_CLI_DMSETUP='/usr/sbin/dmsetup'
+      S64_LINUX_PATH_CLI_FAILLOCK='/usr/sbin/faillock'
+      S64_LINUX_PATH_CLI_FINDMNT='/usr/sbin/findmnt'
+      S64_LINUX_PATH_CLI_FSCK='/usr/sbin/fsck'
+      S64_LINUX_PATH_CLI_GETENT='/usr/bin/getent'
+      S64_LINUX_PATH_CLI_GRUB2MKCONFIG='/usr/sbin/grub2-mkconfig'
+      S64_LINUX_PATH_CLI_IP='/usr/sbin/ip'
+      S64_LINUX_PATH_CLI_IPTABLES='/usr/sbin/iptables'
+      S64_LINUX_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+      S64_LINUX_PATH_CLI_LDD='/usr/bin/ldd'
+      S64_LINUX_PATH_CLI_LSBLK='/usr/bin/lsblk'
+      S64_LINUX_PATH_CLI_LSPCI='/usr/bin/lspci'
+      S64_LINUX_PATH_CLI_LSUSB='/usr/bin/lsusb'
+      S64_LINUX_PATH_CLI_LVS='/usr/sbin/lvs'
+      S64_LINUX_PATH_CLI_MDADM='/usr/sbin/mdadm'
+      S64_LINUX_PATH_CLI_MKFS='/usr/sbin/mkfs'
+      S64_LINUX_PATH_CLI_MKFS_XFS='/usr/sbin/mkfs.xfs'
+      S64_LINUX_PATH_CLI_MOUNT='/usr/bin/mount'
+      S64_LINUX_PATH_CLI_NFT='/usr/sbin/nft'
+      S64_LINUX_PATH_CLI_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_PARTED='/usr/sbin/parted'
+      S64_LINUX_PATH_CLI_PVS='/usr/sbin/pvs'
+      S64_LINUX_PATH_CLI_RCSERVICE="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_RCSTATUS="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_RESOLVCTL='/usr/bin/resolvectl'
+      S64_LINUX_PATH_CLI_SMARTCTL='/usr/sbin/smartctl'
+      S64_LINUX_PATH_CLI_STAT='/usr/bin/stat'
+      S64_LINUX_PATH_CLI_SWAPON='/usr/bin/swapon'
+      S64_LINUX_PATH_CLI_SWAPOFF='/usr/bin/swapoff'
+      S64_LINUX_PATH_CLI_SYSCTL='/usr/sbin/sysctl'
+      S64_LINUX_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+      S64_LINUX_PATH_CLI_UDEVADM='/usr/bin/udevadm'
+      S64_LINUX_PATH_CLI_UDISKSCTL='/usr/bin/udisksctl'
+      S64_LINUX_PATH_CLI_UPDATE_ALTERNATIVES="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_PATH_CLI_VGS='/usr/sbin/vgs'
 
-        S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub2/grub.cfg'
-        S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
-        ;;
-      *)
-        bl64_check_alert_unsupported
-        return $?
-        ;;
-    esac
+      S64_LINUX_PATH_CFG_GRUB_CONFIG='/boot/grub2/grub.cfg'
+      S64_LINUX_PATH_CFG_GRUB_OPTIONS='/etc/default/grub'
+      ;;
+    *)
+      bl64_check_alert_unsupported
+      return $?
+      ;;
+  esac
 }
 
 function s64_linux_lib_run_udisksctl() {
@@ -420,12 +447,24 @@ function s64_linux_lib_run_badblocks() {
   bl64_dbg_app_trace_stop
 }
 
+function s64_linux_lib_run_journalctl_filter() {
+  bl64_dbg_app_show_function "$@"
+  s64_linux_lib_run_journalctl \
+    ${S64_LINUX_SET_JOURNALCTL_SINCE:+--since="$S64_LINUX_SET_JOURNALCTL_SINCE"} \
+    --lines="$S64_LINUX_SET_JOURNALCTL_LINES" "$@"
+}
+
 function s64_linux_lib_run_journalctl() {
   bl64_dbg_app_show_function "$@"
   bl64_check_command "$S64_LINUX_PATH_CLI_JOURNALCTL" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_JOURNALCTL' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_PATH_CLI_JOURNALCTL" \
+    --utc \
+    --all \
+    --quiet \
+    --no-pager \
+    --output="$S64_LINUX_SET_JOURNALCTL_OUTPUT" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -595,6 +634,16 @@ function s64_linux_lib_run_rcservice() {
   bl64_dbg_app_trace_stop
 }
 
+function s64_linux_lib_run_rcstatus() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_LINUX_PATH_CLI_RCSTATUS" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_RCSTATUS' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_PATH_CLI_RCSTATUS" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
 function s64_linux_lib_run_dpkg_query() {
   bl64_dbg_app_show_function "$@"
   bl64_check_command "$S64_LINUX_PATH_CLI_DPKG_QUERY" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_DPKG_QUERY' ||
@@ -628,6 +677,20 @@ function s64_linux_lib_run_swapon() {
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_LINUX_PATH_CLI_SWAPON" \
+    $verbose_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_swapoff() {
+  bl64_dbg_app_show_function "$@"
+  local verbose_flag=' '
+  bl64_check_command "$S64_LINUX_PATH_CLI_SWAPOFF" "$BL64_VAR_DEFAULT" 'S64_LINUX_PATH_CLI_SWAPOFF' ||
+    return $?
+  bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_LINUX_PATH_CLI_SWAPOFF" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
@@ -792,4 +855,11 @@ function s64_linux_lib_run_findmnt() {
   "$S64_LINUX_PATH_CLI_FINDMNT" \
     "$@"
   bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_setup_secondary() {
+  bl64_dbg_app_show_function
+  bl64_dbg_app_show_comments 'use this function instead of s64_linux_lib_setup when not the primary module'
+  [[ "$BL64_OS_TYPE" != "$BL64_OS_TYPE_LINUX" ]] && return 0
+  S64_CORE_SET_MODULE_PRIMARY='NO' s64_linux_lib_setup
 }

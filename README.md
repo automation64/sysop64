@@ -65,28 +65,34 @@ so64 <MODULE/TASK> [TASK_PARAMETERS]
 - `list`: list components
 - `login`: login to service
 - `migrate`: migrate component or content
+- `rename`: rename component
+- `restart`: restart component
 - `reset`: reset component or content
 - `run`: run service
 - `scan`: scan component
 - `setup`: setup component
 - `show`: show component details
 - `status`: show component status
-- `update`: update component status or content
+- `sync`: synchronize component or content
 - `tail`: show last lines of content
+- `update`: update component status or content
+- `upgrade`: upgrade component
 
 - `add` / `delete`: add or delete component
 - `attach` / `detach`: attach or detach component
 - `backup` / `restore`: backup or restore content
 - `create` / `destroy`: create or destroy (no undo) component
+- `enable` / `disable`: enable or disable component
 - `expand` / `shrink`: expand or shrink component size
 - `grant` / `revoque`: grant or revoque component access permission
 - `import` / `export`: import or export component or content
-- `open` / `close`: open or close an object
 - `login` / `logout`: login to or logout from service
+- `open` / `close`: open or close an object
 - `push` / `pull`: push or pull content
 - `read` / `write`: read or write content
+- `send` / `receive`: send or receive content over the network
 - `set` / `unset`: set or unset configuration value
-- `start` / `stop`: start or stop service
+- `start` / `stop`: start or stop component
 
 ---
 

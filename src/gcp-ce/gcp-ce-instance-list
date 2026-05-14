@@ -25,6 +25,7 @@ function my_initialize() {
   s64_gcp_lib_setup &&
     bl64_check_export 'S64_GCP_SET_PROJECT_ID' &&
     s64_gcp_lib_cli_set_format 'table(name, status, machineType, zone, description)' &&
+    bl64_msg_show_doc "Reference: https://docs.cloud.google.com/compute/docs/machine-resource" &&
     s64_core_lib_show_setup \
       'MY_FILTER_NAME'
 }
@@ -34,7 +35,6 @@ bl64_msg_help_about_set 'List instances in the project'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_msg_show_doc "Reference: https://docs.cloud.google.com/compute/docs/machine-resource"
 s64_gcp_lib_run_gcloud \
   compute \
   instances \

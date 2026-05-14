@@ -31,12 +31,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_UNIX_VERSION='2.2.0'
+  declare S64_UNIX_VERSION='2.4.0'
   declare S64_UNIX_ABOUT_MODULE_MAIN='Unix OS'
+  declare S64_UNIX_ABOUT_SUBMODULE_BKP='Backup and Archive'
   declare S64_UNIX_ABOUT_SUBMODULE_FS='File System'
   declare S64_UNIX_ABOUT_SUBMODULE_NET='Networking'
+  declare S64_UNIX_ABOUT_SUBMODULE_SVC='Services'
 
   declare S64_UNIX_PATH_CLI_DF=''
+  declare S64_UNIX_PATH_CLI_DD=''
   declare S64_UNIX_PATH_CLI_DU=''
   declare S64_UNIX_PATH_CLI_KILL=''
   declare S64_UNIX_PATH_CLI_LS=''
@@ -45,6 +48,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_UNIX_PATH_CLI_NSLOOKUP=''
   declare S64_UNIX_PATH_CLI_PING=''
   declare S64_UNIX_PATH_CLI_PS=''
+  declare S64_UNIX_PATH_CLI_SHUTDOWN=''
   declare S64_UNIX_PATH_CLI_SU=''
   declare S64_UNIX_PATH_CLI_UMOUNT=''
 }
@@ -60,6 +64,7 @@ function s64_unix_lib_setup() {
     case "$BL64_OS_FLAVOR" in
       "$BL64_OS_FLAVOR_ALPINE")
         S64_UNIX_PATH_CLI_DF='/bin/df'
+        S64_UNIX_PATH_CLI_DD='/usr/bin/dd'
         S64_UNIX_PATH_CLI_DU='/usr/bin/du'
         S64_UNIX_PATH_CLI_KILL='/bin/kill'
         S64_UNIX_PATH_CLI_LS='/bin/ls'
@@ -68,11 +73,13 @@ function s64_unix_lib_setup() {
         S64_UNIX_PATH_CLI_NSLOOKUP='/usr/bin/nslookup'
         S64_UNIX_PATH_CLI_PING='/bin/ping'
         S64_UNIX_PATH_CLI_PS='/bin/ps'
+        S64_UNIX_PATH_CLI_SHUTDOWN='/sbin/shutdown'
         S64_UNIX_PATH_CLI_SU='/bin/su'
         S64_UNIX_PATH_CLI_UMOUNT='/bin/umount'
         ;;
       "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_SUSE")
         S64_UNIX_PATH_CLI_DF='/bin/df'
+        S64_UNIX_PATH_CLI_DD='/usr/bin/dd'
         S64_UNIX_PATH_CLI_DU='/usr/bin/du'
         S64_UNIX_PATH_CLI_KILL='/bin/kill'
         S64_UNIX_PATH_CLI_LS='/bin/ls'
@@ -81,11 +88,13 @@ function s64_unix_lib_setup() {
         S64_UNIX_PATH_CLI_NSLOOKUP='/usr/bin/nslookup'
         S64_UNIX_PATH_CLI_PING='/bin/ping'
         S64_UNIX_PATH_CLI_PS='/bin/ps'
+        S64_UNIX_PATH_CLI_SHUTDOWN='/sbin/shutdown'
         S64_UNIX_PATH_CLI_SU='/bin/su'
         S64_UNIX_PATH_CLI_UMOUNT='/bin/umount'
         ;;
       "$BL64_OS_FLAVOR_ARCH")
         S64_UNIX_PATH_CLI_DF='/usr/bin/df'
+        S64_UNIX_PATH_CLI_DD='/usr/bin/dd'
         S64_UNIX_PATH_CLI_DU='/usr/bin/du'
         S64_UNIX_PATH_CLI_KILL='/usr/bin/kill'
         S64_UNIX_PATH_CLI_LS='/usr/bin/ls'
@@ -94,11 +103,13 @@ function s64_unix_lib_setup() {
         S64_UNIX_PATH_CLI_NSLOOKUP='/usr/bin/nslookup'
         S64_UNIX_PATH_CLI_PING='/usr/bin/ping'
         S64_UNIX_PATH_CLI_PS='/usr/bin/ps'
+        S64_UNIX_PATH_CLI_SHUTDOWN='/usr/sbin/shutdown'
         S64_UNIX_PATH_CLI_SU='/usr/bin/su'
         S64_UNIX_PATH_CLI_UMOUNT='/usr/bin/umount'
         ;;
       "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT")
         S64_UNIX_PATH_CLI_DF='/usr/bin/df'
+        S64_UNIX_PATH_CLI_DD='/usr/bin/dd'
         S64_UNIX_PATH_CLI_DU='/usr/bin/du'
         S64_UNIX_PATH_CLI_KILL='/usr/bin/kill'
         S64_UNIX_PATH_CLI_LS='/usr/bin/ls'
@@ -107,11 +118,13 @@ function s64_unix_lib_setup() {
         S64_UNIX_PATH_CLI_NSLOOKUP='/usr/bin/nslookup'
         S64_UNIX_PATH_CLI_PING='/usr/bin/ping'
         S64_UNIX_PATH_CLI_PS='/bin/ps'
+        S64_UNIX_PATH_CLI_SHUTDOWN='/usr/sbin/shutdown'
         S64_UNIX_PATH_CLI_SU='/usr/bin/su'
         S64_UNIX_PATH_CLI_UMOUNT='/usr/bin/umount'
         ;;
       "$BL64_OS_FLAVOR_MACOS")
         S64_UNIX_PATH_CLI_DF='/bin/df'
+        S64_UNIX_PATH_CLI_DD='/usr/bin/dd'
         S64_UNIX_PATH_CLI_DU='/usr/bin/du'
         S64_UNIX_PATH_CLI_KILL='/bin/kill'
         S64_UNIX_PATH_CLI_LS='/bin/ls'
@@ -120,6 +133,7 @@ function s64_unix_lib_setup() {
         S64_UNIX_PATH_CLI_NSLOOKUP='/usr/bin/nslookup'
         S64_UNIX_PATH_CLI_PING='/sbin/ping'
         S64_UNIX_PATH_CLI_PS='/bin/ps'
+        S64_UNIX_PATH_CLI_SHUTDOWN='/usr/sbin/shutdown'
         S64_UNIX_PATH_CLI_SU='/usr/bin/su'
         S64_UNIX_PATH_CLI_UMOUNT='/sbin/umount'
         ;;
@@ -224,6 +238,24 @@ function s64_unix_lib_run_nslookup() {
   bl64_check_command "$S64_UNIX_PATH_CLI_NSLOOKUP" "$BL64_VAR_DEFAULT" 'S64_UNIX_PATH_CLI_NSLOOKUP' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_PATH_CLI_NSLOOKUP" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_unix_lib_run_dd() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_UNIX_PATH_CLI_DD" "$BL64_VAR_DEFAULT" 'S64_UNIX_PATH_CLI_DD' || return $?
+  bl64_dbg_app_trace_start
+  "$S64_UNIX_PATH_CLI_DD" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_unix_lib_run_shutdown() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_UNIX_PATH_CLI_SHUTDOWN" "$BL64_VAR_DEFAULT" 'S64_UNIX_PATH_CLI_SHUTDOWN' || return $?
+  bl64_dbg_app_trace_start
+  "$S64_UNIX_PATH_CLI_SHUTDOWN" \
     "$@"
   bl64_dbg_app_trace_stop
 }

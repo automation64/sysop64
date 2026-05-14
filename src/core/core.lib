@@ -36,7 +36,7 @@
   declare S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
 
   # Default verbose format
-  declare S64_CORE_SET_FORMAT="${S64_CORE_SET_FORMAT:-TIME2}"
+  declare S64_CORE_SET_FORMAT="${S64_CORE_SET_FORMAT:-FULL}"
 
   # Default output format
   declare S64_CORE_SET_OUTPUT="${S64_CORE_SET_OUTPUT:-EMOJI}"
@@ -55,12 +55,14 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='3.5.0'
+  declare S64_CORE_VERSION='3.6.0'
   # Minimal BashLib64 version required
   declare S64_BL64_VERSION='23.0.0'
 
   # Common labels
   declare S64_CORE_LABEL_MODULE_PARAMETERS='Module parameters:'
+
+  declare S64_CORE_SET_MODULE_PRIMARY='YES'
 }
 
 #
@@ -113,10 +115,14 @@ function s64_core_lib_command_assign() {
 function s64_core_lib_show_about() {
   bl64_dbg_app_show_function
   local module_full_name="${1:-}"
+
+  bl64_dbg_app_show_comments 'no need to show about if the module is not primary'
+  bl64_lib_flag_is_enabled "$S64_CORE_SET_MODULE_PRIMARY" || return 0
+
   bl64_msg_set_output "$S64_CORE_SET_OUTPUT" &&
     bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
     bl64_msg_set_format "$S64_CORE_SET_FORMAT" &&
-    bl64_msg_show_doc "Module name: $module_full_name"
+    BL64_MSG_HELP_ABOUT="${module_full_name} / ${BL64_MSG_HELP_ABOUT}" bl64_msg_show_about
 }
 
 function s64_core_lib_check_module_load() {
@@ -131,8 +137,6 @@ function s64_core_lib_check_bl64_load() {
 
 function s64_core_lib_show_setup() {
   bl64_dbg_app_show_function
-  BL64_MSG_HELP_ABOUT="Task: ${BL64_MSG_HELP_ABOUT}"
-  bl64_msg_show_about &&
-    bl64_msg_show_setup "Task parameters:" \
-      "$@"
+  bl64_msg_show_setup "Task parameters:" \
+    "$@"
 }

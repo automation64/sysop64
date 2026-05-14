@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENTOFU_VERSION='2.2.0'
+  declare S64_OPENTOFU_VERSION='2.3.0'
   declare S64_OPENTOFU_ABOUT_MODULE_MAIN='OpenTofu Infrastructure as Code'
 }
 
@@ -56,4 +56,11 @@ function s64_opentofu_lib_setup() {
     s64_core_lib_command_assign 'S64_OPENTOFU_PATH_CLI' 'tofu' &&
     bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
       'S64_OPENTOFU_PATH_PROJECT'
+}
+
+function s64_opentofu_lib_check_project() {
+  bl64_dbg_app_show_function
+  [[ -d '.terraform' ]] && return 0
+  bl64_msg_show_fatal 'The current project was not initialzed. Verify that this is the correct path, run the initialization task and try again.'
+  return 1
 }

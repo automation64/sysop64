@@ -33,7 +33,13 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
   declare S64_OPENSSH_PATH_CLI_SCP="${S64_OPENSSH_PATH_CLI_SCP:-}"
   declare S64_OPENSSH_PATH_CLI_SSH="${S64_OPENSSH_PATH_CLI_SSH:-}"
   declare S64_OPENSSH_PATH_CLI_SSH_ADD="${S64_OPENSSH_PATH_CLI_SSH_ADD:-}"
+  declare S64_OPENSSH_PATH_CLI_SSH_COPY_ID="${S64_OPENSSH_PATH_CLI_SSH_COPY_ID:-}"
   declare S64_OPENSSH_PATH_CLI_SSH_KEYGEN="${S64_OPENSSH_PATH_CLI_SSH_KEYGEN:-}"
+  declare S64_OPENSSH_PATH_CLI_HOME="${S64_OPENSSH_PATH_CLI_HOME:-${HOME}/.ssh}"
+
+  declare S64_OPENSSH_FILE_CLIENT_CONFIG="${S64_OPENSSH_FILE_CLIENT_CONFIG:-config}"
+  declare S64_OPENSSH_FILE_KNOWN_HOSTS="${S64_OPENSSH_FILE_KNOWN_HOSTS:-known_hosts}"
+  declare S64_OPENSSH_SET_KEY_TYPE="${S64_OPENSSH_SET_KEY_TYPE:-ed25519}"
 }
 
 #
@@ -56,6 +62,7 @@ function s64_openssh_lib_setup() {
     s64_core_lib_command_assign 'S64_OPENSSH_PATH_CLI_SCP' 'scp' &&
     s64_core_lib_command_assign 'S64_OPENSSH_PATH_CLI_SSH' 'ssh' &&
     s64_core_lib_command_assign 'S64_OPENSSH_PATH_CLI_SSH_ADD' 'ssh-add' &&
+    s64_core_lib_command_assign 'S64_OPENSSH_PATH_CLI_SSH_COPY_ID' 'ssh-copy-id' &&
     s64_core_lib_command_assign 'S64_OPENSSH_PATH_CLI_SSH_KEYGEN' 'ssh-keygen'
 }
 
@@ -91,6 +98,15 @@ function s64_openssh_lib_run_scp() {
   bl64_check_command "$S64_OPENSSH_PATH_CLI_SCP" "$BL64_VAR_DEFAULT" 'S64_OPENSSH_PATH_CLI_SCP' || return $?
   bl64_dbg_app_trace_start
   "$S64_OPENSSH_PATH_CLI_SCP" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_openssh_lib_run_ssh_copy_id() {
+  bl64_dbg_app_show_function "$@"
+  bl64_check_command "$S64_OPENSSH_PATH_CLI_SSH_COPY_ID" "$BL64_VAR_DEFAULT" 'S64_OPENSSH_PATH_CLI_SSH_COPY_ID' || return $?
+  bl64_dbg_app_trace_start
+  "$S64_OPENSSH_PATH_CLI_SSH_COPY_ID" \
     "$@"
   bl64_dbg_app_trace_stop
 }

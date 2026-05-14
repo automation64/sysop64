@@ -34,13 +34,13 @@ function my_initialize() {
       'MY_FILE_PATH'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'Search what package provides a file'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_DEBIAN") my_search_debian ;;
-  *) bl64_check_alert_unsupported || return $? ;;
+  *) bl64_check_alert_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

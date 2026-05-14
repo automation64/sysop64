@@ -39,7 +39,7 @@ function my_create() {
     "${MY_SWAP_VOLUME}/${MY_SWAP_FILE}" ||
     return $?
 
-  bl64_msg_show_doc 'swap file created. Add it to the fstab to make mount it at boot'
+  bl64_msg_show_info 'swap file created. Add it to the fstab to make mount it at boot'
 }
 
 function my_initialize() {
