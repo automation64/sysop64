@@ -30,9 +30,6 @@ bl64_msg_help_about_set 'Show kernel log journal'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_linux_lib_run_journalctl \
-  --quiet \
-  --no-pager \
-  --dmesg \
-  --output=short-iso
+s64_linux_lib_run_journalctl_filter \
+  --dmesg
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

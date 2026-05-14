@@ -23,10 +23,11 @@ declare MY_RESOURCE="${1:-}"
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_opentofu_lib_setup &&
+    s64_opentofu_lib_check_project &&
     bl64_check_parameter 'MY_RESOURCE'
 }
 
-bl64_lib_script_version_set '2.0.1'
+bl64_lib_script_version_set '2.1.0'
 bl64_msg_help_about_set 'Show resource information'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 

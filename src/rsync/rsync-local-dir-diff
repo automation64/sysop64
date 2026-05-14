@@ -35,13 +35,13 @@ function my_initialize() {
       'MY_BASE_TO'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_about_set 'Check files between Linux paths: report differences'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 
-bl64_msg_show_doc 'Change reference:
+bl64_msg_show_info 'Change reference:
 
 < : means that a file is being transferred to the remote host (sent)
 > : means that a file is being transferred to the local host (received)
@@ -59,7 +59,8 @@ s64_rsync_lib_run_rsync \
   --dry-run \
   --itemize-changes \
   --delete \
-  $S64_RSYNC_SET_CIFS \
+  $S64_RSYNC_SET_COMMON \
+  $S64_RSYNC_SET_LOCAL \
   "${MY_BASE_FROM}/${MY_DIR_NAME}/" \
   "${MY_BASE_TO}/${MY_DIR_NAME}"
 

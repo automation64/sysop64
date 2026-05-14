@@ -23,8 +23,8 @@ declare MY_TARGET_PATH="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_UPSTREAM_URL' &&
-    s64_git_lib_setup &&
+  s64_git_lib_setup &&
+    bl64_check_parameter 'MY_UPSTREAM_URL' &&
     s64_core_lib_show_setup \
       'MY_UPSTREAM_URL' \
       'MY_TARGET_PATH'

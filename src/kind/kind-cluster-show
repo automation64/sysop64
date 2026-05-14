@@ -20,14 +20,14 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_
 
 function show_k8s_show() {
   bl64_dbg_app_show_function
-  bl64_msg_show_doc 'cluster configuration'
+  bl64_msg_show_info 'cluster configuration'
   bl64_k8s_run_kubectl \
     cluster-info
 }
 
 function show_kind_ip_show() {
   bl64_dbg_app_show_function
-  bl64_msg_show_doc 'kubernetes nodes IP range'
+  bl64_msg_show_info 'kubernetes nodes IP range'
   printf '\nIPAM.Config: %s\n' \
     "$(
       bl64_cnt_cli \

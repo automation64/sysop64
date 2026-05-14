@@ -20,15 +20,16 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_opentofu_lib_setup
+  s64_opentofu_lib_setup &&
+    s64_opentofu_lib_check_project
 }
 
-bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Reconfigure OpenTofu state'
+bl64_lib_script_version_set '2.1.0'
+bl64_msg_help_about_set 'Update current state to match status of deployed resources, without altering them.'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_tf_run_tofu \
-  init \
-  -reconfigure
+  plan \
+  -refresh-only
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -26,6 +26,11 @@ function my_search_arch() {
     bl64_txt_run_awk '/\[installed/ { getline; next } { print $0 }'
 }
 
+function my_search_debian() {
+  bl64_dbg_app_show_function
+  bl64_pkg_run_apt search "${MY_PACKAGE_NAME}"
+}
+
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
@@ -34,13 +39,14 @@ function my_initialize() {
       'MY_PACKAGE_NAME'
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_about_set 'Search for available OS packages'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_ARCH") my_search_arch ;;
-  *) bl64_check_alert_unsupported || return $? ;;
+  "$BL64_OS_FLAVOR_DEBIAN") my_search_debian ;;
+  *) bl64_check_alert_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

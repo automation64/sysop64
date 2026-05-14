@@ -18,17 +18,18 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 source "${S64_CORE_PATH_ROOT}/core/core.lib" && source "${S64_CORE_PATH_ROOT}/core/k3s.lib" || { s64_core_lib_check_module_load && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64_load && exit 1; }
 
-declare MY_CLUSTER_URL="${1:-}"
+declare MY_NODE_MAIN_IP="${1:-}"
 declare MY_CLUSTER_TOKEN="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_k3s_lib_setup &&
     bl64_check_privilege_root &&
-    bl64_check_parameter 'MY_CLUSTER_URL' &&
+    bl64_check_parameter 'MY_NODE_MAIN_IP' &&
     bl64_check_parameter 'MY_CLUSTER_TOKEN' &&
     s64_core_lib_show_setup \
-      'MY_CLUSTER_URL' \
+      'MY_NODE_MAIN_IP' \
+      'S64_K3S_SET_API_PORT' \
       'MY_CLUSTER_TOKEN'
 }
 
@@ -39,6 +40,6 @@ bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_k3s_lib_run_k3s \
   server \
-  --server "$MY_CLUSTER_URL" \
+  --server "https://${MY_NODE_MAIN_IP}:${S64_K3S_SET_API_PORT}" \
   --token "$MY_CLUSTER_TOKEN"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

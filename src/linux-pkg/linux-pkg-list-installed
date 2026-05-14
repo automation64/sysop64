@@ -36,6 +36,7 @@ function my_list() {
       if [[ -n "$filter" ]]; then
         bl64_pkg_run_apt 'list' --installed |
           bl64_txt_run_grep "$filter"
+        :
       else
         bl64_pkg_run_apt 'list' --installed
       fi
@@ -44,6 +45,7 @@ function my_list() {
       if [[ -n "$filter" ]]; then
         bl64_pkg_run_dnf 'list' --installed |
           bl64_txt_run_grep "$filter"
+        :
       else
         bl64_pkg_run_dnf 'list' --installed
       fi
@@ -52,6 +54,7 @@ function my_list() {
       if [[ -n "$filter" ]]; then
         bl64_pkg_run_apk 'list' --installed |
           bl64_txt_run_grep "$filter"
+        :
       else
         bl64_pkg_run_apk 'list' --installed
       fi
@@ -61,6 +64,7 @@ function my_list() {
         if [[ -n "$filter" ]]; then
           bl64_pkg_run_yum 'list' installed |
             bl64_txt_run_grep "$filter"
+          :
         else
           bl64_pkg_run_yum 'list' installed
         fi
@@ -68,6 +72,7 @@ function my_list() {
         if [[ -n "$filter" ]]; then
           bl64_pkg_run_dnf 'list' --installed |
             bl64_txt_run_grep "$filter"
+          :
         else
           bl64_pkg_run_dnf 'list' --installed
         fi
@@ -85,7 +90,7 @@ function my_initialize() {
       'MY_FILTER'
 }
 
-bl64_lib_script_version_set '1.2.0'
+bl64_lib_script_version_set '1.2.1'
 bl64_msg_help_about_set 'List installed operating system packages'
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 

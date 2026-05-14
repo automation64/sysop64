@@ -39,11 +39,16 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_K3S_VERSION='1.0.0'
+  declare S64_K3S_VERSION='1.2.0'
   declare S64_K3S_ABOUT_MODULE_MAIN='K3s - Rancher Light Kubernetes'
 
-  declare S64_K3S_PATH_CFG_K3S_SERVER='/etc/rancher/k3s/k3s.yaml'
-  declare S64_K3S_PATH_AUTH_K3S_TOKEN='/var/lib/rancher/k3s/server/token'
+  declare S64_K3S_SET_API_PORT='6443'
+
+  declare S64_K3S_PATH_CFG_K3S='/etc/rancher/k3s'
+  declare S64_K3S_PATH_VAR_K3S='/var/lib/rancher/k3s'
+  declare S64_K3S_PATH_RUN_K3S='/run/k3s'
+  declare S64_K3S_PATH_CFG_K3S_SERVER="${S64_K3S_PATH_CFG_K3S}/k3s.yaml"
+  declare S64_K3S_PATH_AUTH_K3S_TOKEN="${S64_K3S_PATH_VAR_K3S}/server/token"
   declare S64_K3S_PATH_CFG_K8S_KUBECTL="${HOME}/.kube/config-k3s"
 }
 

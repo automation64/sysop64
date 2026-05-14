@@ -31,7 +31,13 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
+  declare S64_K8S_PATH_CLI_KUBEADM="${S64_K8S_PATH_CLI_KUBEADM:-}"
+
+  # KubeCTL / Output format
   declare S64_K8S_OUTPUT_FORMAT="${S64_K8S_OUTPUT_FORMAT:-yaml}"
+
+  # Cluster API / Port
+  declare S64_K8S_API_SERVER_PORT="${S64_K8S_API_SERVER_PORT:-6443}"
 }
 
 #
@@ -40,17 +46,28 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='4.1.0'
+  declare S64_K8S_VERSION='4.2.0'
   declare S64_K8S_ABOUT_MODULE_MAIN='Kubernetes Platform'
-  declare S64_K8S_ABOUT_SUBMODULE_CLI='Kubectl CLI'
-  declare S64_K8S_ABOUT_SUBMODULE_CLT='Cluster'
+  declare S64_K8S_ABOUT_SUBMODULE_CLI='KubeCTL'
+  declare S64_K8S_ABOUT_SUBMODULE_CLUSTER='Cluster'
+  declare S64_K8S_ABOUT_SUBMODULE_CP='Control Plane'
+  declare S64_K8S_ABOUT_SUBMODULE_EVENT='Events'
   declare S64_K8S_ABOUT_SUBMODULE_NODE='Nodes'
   declare S64_K8S_ABOUT_SUBMODULE_OBJ='Objects'
+  declare S64_K8S_ABOUT_SUBMODULE_SECRET='Secrets'
   declare S64_K8S_ABOUT_SUBMODULE_SVC='Services'
   declare S64_K8S_ABOUT_SUBMODULE_WKL='Workloads'
 
-  declare S64_K8S_PATH_CFG_KUBE="${HOME}/.kube"
-  declare S64_K8S_PATH_CFG_CONFIG="${S64_K8S_PATH_CFG_KUBE}/config"
+  declare S64_K8S_PATH_CFG_CLUSTER_BASE='/etc/kubernetes'
+  declare S64_K8S_PATH_CFG_CNI_BASE='/etc/cni'
+  declare S64_K8S_PATH_CFG_KUBECTL_BASE="${HOME}/.kube"
+  declare S64_K8S_PATH_VAR_CNI_BASE='/var/lib/cni'
+  declare S64_K8S_PATH_VAR_ETCD_BASE='/var/lib/etcd'
+  declare S64_K8S_PATH_VAR_KUBELET_BASE='/var/lib/kubelet'
+
+  declare S64_K8S_PATH_CFG_ADMINCONF="${S64_K8S_PATH_CFG_CLUSTER_BASE}/admin.conf"
+  declare S64_K8S_PATH_CFG_KUBECONFIG="${S64_K8S_PATH_CFG_KUBECTL_BASE}/config"
+  declare S64_K8S_PATH_CFG_KUBELET="${S64_K8S_PATH_VAR_KUBELET_BASE}/config.yaml"
 }
 
 #
@@ -90,4 +107,14 @@ function s64_k8s_lib_cli_set_format() {
     S64_K8S_OUTPUT_FORMAT="$format"
   fi
   printf -- '--output=%s' "${S64_K8S_OUTPUT_FORMAT}"
+}
+
+function s64_k8s_lib_run_kubeadm() {
+  bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_assign 'S64_K8S_PATH_CLI_KUBEADM' 'kubeadm' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_K8S_PATH_CLI_KUBEADM" \
+    "$@"
+  bl64_dbg_app_trace_stop
 }

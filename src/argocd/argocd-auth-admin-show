@@ -28,9 +28,9 @@ bl64_msg_help_about_set 'Get the initial admin password for the current ArgoCD d
 bl64_dbg_set_level "$S64_CORE_SET_DEBUG" && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_msg_show_doc 'Admin user name'
+bl64_msg_show_info 'Admin user name'
 echo "$S64_ARGOCD_USER_ADMIN"
-bl64_msg_show_doc 'Show initial admin user password'
+bl64_msg_show_info 'Show initial admin user password'
 s64_argocd_lib_run_argocd \
   admin \
   initial-password
