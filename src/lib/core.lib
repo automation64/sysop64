@@ -1,0 +1,259 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  #
+  # Shared settings
+  #
+
+  # Default debut level
+  export S64_CORE_SET_DEBUG="${S64_CORE_SET_DEBUG:-NONE}"
+
+  # Default verbose level
+  export S64_CORE_SET_VERBOSE="${S64_CORE_SET_VERBOSE:-ALL}"
+
+  # Default verbose format
+  export S64_CORE_SET_FORMAT="${S64_CORE_SET_FORMAT:-FULL}"
+
+  # Default output format
+  export S64_CORE_SET_OUTPUT="${S64_CORE_SET_OUTPUT:-EMOJI}"
+
+  # Default output pagination tool
+  export S64_CORE_SET_PAGER="${S64_CORE_SET_PAGER:-}"
+
+  # Default task mode
+  export S64_CORE_SET_TASK="${S64_CORE_SET_TASK:-RUN}"
+
+  # Custom command search paths
+  export S64_CORE_SEARCH_USER="${S64_CORE_SEARCH_USER:-}"
+  export S64_CORE_SEARCH_SYSTEM="${S64_CORE_SEARCH_SYSTEM:-}"
+
+  #
+  # Shared Paths
+  #
+
+  # Default Automation64 install path
+  declare S64_CORE_PATH_AT64='/opt'
+  [[ ! -d "${S64_CORE_PATH_AT64}/bl64" ]] && S64_CORE_PATH_AT64="${HOME}/at64"
+
+  # Default BashLib64 install path
+  export S64_CORE_PATH_BL64="${S64_CORE_PATH_BL64:-${S64_CORE_PATH_AT64}/bl64}"
+
+  # Default install path
+  export S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+
+  # Default log repository
+  export S64_CORE_PATH_LOGS="${S64_CORE_PATH_LOGS:-${HOME}/sysop64-logs}"
+
+  # Common UI tools
+  export S64_CORE_PATH_VI="${S64_CORE_PATH_VI:-}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_CORE_VERSION='3.9.0'
+  # Minimal BashLib64 version required
+  declare S64_BL64_VERSION='23.0.0'
+
+  # Library path
+  declare S64_CORE_PATH_LIB="${S64_CORE_PATH_ROOT}/lib"
+
+  # Modules path
+  declare S64_CORE_PATH_MOD="${S64_CORE_PATH_ROOT}/mod"
+
+  # Tool path
+  declare S64_CORE_PATH_BIN="${S64_CORE_PATH_ROOT}/bin"
+
+  # Common labels
+  declare S64_CORE_LABEL_MODULE_PARAMETERS='Module parameters:'
+
+  # Is the module primary? (YES|NO). Override at the task level if not
+  declare S64_CORE_SET_MODULE_PRIMARY='YES'
+
+  # Task mode options
+  declare S64_CORE_TASK_MODE_RUN='RUN'
+  declare S64_CORE_TASK_MODE_HELP='HELP'
+}
+
+#
+# External
+#
+
+# shellcheck disable=SC2034
+{
+  export BROWSER
+  export EDITOR
+  export HTTPS_PROXY
+  export NO_PROXY
+  export PAGER
+  export VISUAL
+}
+
+#
+# Functions
+#
+
+function s64_core_lib_initialize() {
+  bl64_dbg_set_level "$S64_CORE_SET_DEBUG"
+
+  _s64_core_lib_harden
+  # shellcheck disable=SC2154
+  [[ -z "$S64_CORE_SET_PAGER" ]] && S64_CORE_SET_PAGER="$BL64_OS_CMD_CAT"
+  if [[ -x "$S64_CORE_SET_PAGER" ]]; then
+    PAGER="$S64_CORE_SET_PAGER"
+  else
+    bl64_msg_show_warning "unable to set requested pager (S64_CORE_SET_PAGER=${S64_CORE_SET_PAGER})"
+  fi
+
+  bl64_dbg_app_show_comments 'Core parameters'
+  bl64_dbg_app_show_vars \
+    'S64_CORE_SET_DEBUG' \
+    'S64_CORE_SET_VERBOSE' \
+    'S64_CORE_SET_FORMAT' \
+    'S64_CORE_SET_OUTPUT' \
+    'S64_CORE_SET_PAGER' \
+    'S64_CORE_SET_TASK' \
+    'S64_CORE_SEARCH_USER' \
+    'S64_CORE_SEARCH_SYSTEM' \
+    'S64_CORE_PATH_AT64' \
+    'S64_CORE_PATH_BL64' \
+    'S64_CORE_PATH_ROOT' \
+    'S64_CORE_PATH_LOGS' \
+    'S64_CORE_PATH_VI'
+
+  return 0
+}
+
+function _s64_core_lib_harden() {
+  bl64_dbg_app_show_function
+  bl64_dbg_app_trace_start
+  BROWSER=''
+  EDITOR=''
+  VISUAL=''
+  HTTPS_PROXY=''
+  NO_PROXY=''
+  bl64_dbg_app_trace_stop
+}
+
+function s64_core_lib_file_edit() {
+  bl64_dbg_app_show_function "$@"
+  if [[ -z "$S64_CORE_PATH_VI" ]]; then
+    S64_CORE_PATH_VI="$(bl64_bsh_command_locate 'vi')"
+  fi
+  # shellcheck disable=SC2154
+  bl64_check_command "$S64_CORE_PATH_VI" "$BL64_VAR_DEFAULT" 'vi' || return $?
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_CORE_PATH_VI" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_core_lib_command_require() {
+  bl64_dbg_app_show_function "$@"
+  local command_variable="${1:-}"
+  local command_name="${2:-}"
+  s64_core_lib_command_assign "$@" && return 0
+  bl64_msg_show_error "Unable to find required command. Please install it and try again (command: ${command_name})"
+  # shellcheck disable=SC2154
+  return "$BL64_LIB_ERROR_TASK_FAILED"
+}
+
+function s64_core_lib_command_assign() {
+  bl64_dbg_app_show_function "$@"
+  local command_variable="${1:-}"
+  local command_name="${2:-}"
+  local command_path=''
+
+  bl64_check_parameter 'command_variable' &&
+    bl64_check_parameter 'command_name' ||
+    return $?
+  shift
+  shift
+
+  if [[ -z "${!command_variable}" ]]; then
+    # shellcheck disable=SC2086
+    command_path="$(
+      bl64_bsh_command_locate_user \
+        "$command_name" \
+        $S64_CORE_SEARCH_SYSTEM \
+        $S64_CORE_SEARCH_USER \
+        "$@"
+    )"
+
+    if [[ -n "$command_path" ]]; then
+      printf -v "${command_variable}" '%s' "${command_path}"
+      return 0
+    else
+      return "$BL64_LIB_ERROR_TASK_FAILED"
+    fi
+  fi
+}
+
+function s64_core_lib_module_show_about() {
+  bl64_dbg_app_show_function
+  local module_full_name="${1:-}"
+
+  bl64_dbg_app_show_comments 'no need to show about if the module is not primary'
+  bl64_lib_flag_is_enabled "$S64_CORE_SET_MODULE_PRIMARY" || return 0
+
+  # shellcheck disable=SC2154
+  bl64_msg_help_about_set "${module_full_name} / ${BL64_MSG_HELP_ABOUT}" &&
+    bl64_msg_set_output "$S64_CORE_SET_OUTPUT" &&
+    bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
+    bl64_msg_set_format "$S64_CORE_SET_FORMAT" ||
+    return $?
+
+  if [[ "${S64_CORE_SET_TASK}" == "${S64_CORE_TASK_MODE_RUN}" ]]; then
+    bl64_msg_show_about
+  elif [[ "${S64_CORE_SET_TASK}" == "${S64_CORE_TASK_MODE_HELP}" ]]; then
+    bl64_msg_help_show
+    exit 0
+  else
+    bl64_msg_show_error "Invalid task mode: ${S64_CORE_SET_TASK}"
+    return "$BL64_LIB_ERROR_TASK_FAILED"
+  fi
+}
+
+function s64_core_lib_module_check() {
+  echo "Error: unable to load SysOp64 module library (S64_CORE_PATH_AT64=${S64_CORE_PATH_AT64})" 1>&2
+  return 1
+}
+
+function s64_core_lib_check_bl64() {
+  echo "Error: unable to load BashLib64 library (S64_CORE_PATH_BL64=${S64_CORE_PATH_BL64})" 1>&2
+  return 1
+}
+
+function s64_core_lib_task_show_setup() {
+  bl64_dbg_app_show_function "$@"
+  bl64_msg_show_setup "Task parameters:" \
+    "$@"
+}
+
+function s64_core_lib_module_show_setup() {
+  bl64_dbg_app_show_function "$@"
+  bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
+    "$@"
+}

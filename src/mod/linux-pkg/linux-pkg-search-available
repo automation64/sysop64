@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# template-one: 3.3.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+[[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/linux.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
+
+declare MY_PACKAGE_NAME="${1:-}"
+
+function my_search_arch() {
+  bl64_dbg_app_show_function
+  bl64_pkg_run_pacman --sync --search "${MY_PACKAGE_NAME}" |
+    bl64_txt_run_awk '/\[installed/ { getline; next } { print $0 }'
+}
+
+function my_search_debian() {
+  bl64_dbg_app_show_function
+  bl64_pkg_run_apt search "${MY_PACKAGE_NAME}"
+}
+
+function my_initialize() {
+  bl64_dbg_app_show_function
+  s64_linux_lib_setup &&
+    bl64_check_parameter 'MY_PACKAGE_NAME' &&
+    s64_core_lib_task_show_setup \
+      'MY_PACKAGE_NAME'
+}
+
+bl64_lib_script_version_set '1.1.0'
+bl64_msg_help_about_set 'Search for available OS packages'
+s64_core_lib_initialize && my_initialize || exit $?
+
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+case "$BL64_OS_FLAVOR" in
+  "$BL64_OS_FLAVOR_ARCH") my_search_arch ;;
+  "$BL64_OS_FLAVOR_DEBIAN") my_search_debian ;;
+  *) bl64_check_alert_unsupported ;;
+esac
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

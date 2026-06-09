@@ -5,15 +5,13 @@
 ![GitHub forks](https://img.shields.io/github/forks/automation64/sysop64?style=social)
 ![Release Downloads](https://img.shields.io/github/downloads/automation64/sysop64/total)
 
-🚀 **SysOp64** is a collection of Unix/Linux Systems Operations scripts
-
 ---
 
 ## 📌 Overview
 
-**SysOp64** purpose is to provide the DevOps/SRE/SysAdmin with a collection of curated and opinionated set of single-task scripts for systems administration and operation.
+**SysOp64** is a collection of curated and opinionated single-task scripts for systems administration and operation.
 
-It serves as a knowledge base to save the time and effort invested in determining the right execution sequence and command line parameters for operational tasks, regardless of their complexity or frequency.
+It serves as a ready-to-run knowledge base to save the time and effort invested in determining the right execution sequence and command line parameters for operational tasks, regardless of their complexity or frequency.
 
 ---
 
@@ -32,11 +30,13 @@ sudo /opt/inst64/install-sysop64
 
 ```sh
 # List modules
-so64
+q m
 # List module tasks
-so64 <MODULE>
+q t <MODULE>
 # Run module task
-so64 <MODULE/TASK> [TASK_PARAMETERS]
+q r <MODULE> <TASK> [TASK_PARAMETERS]
+# Show help
+q h
 ```
 
 ---
@@ -57,24 +57,32 @@ so64 <MODULE/TASK> [TASK_PARAMETERS]
 
 ### Actions
 
+- `change`: modify existing component attributes or content
 - `check`: run component health-checking
 - `cleanup`: remove temporary content
+- `debug`: debug component
+- `dump`: show component content as-is
 - `edit`: edit content
 - `guide`: show technical documentation about the module or task
 - `init`: initialize component
 - `list`: list components
 - `login`: login to service
 - `migrate`: migrate component or content
+- `query`: query component or content
+- `monitor`: show component runtime metrics
 - `rename`: rename component
-- `restart`: restart component
 - `reset`: reset component or content
+- `restart`: restart component
 - `run`: run service
 - `scan`: scan component
+- `search`: search component content
 - `setup`: setup component
 - `show`: show component details
 - `status`: show component status
 - `sync`: synchronize component or content
-- `tail`: show last lines of content
+- `test`: test component
+- `trace`: trace component (detailed debug)
+- `watch`: continuously monitor component for changes in realtime
 - `update`: update component status or content
 - `upgrade`: upgrade component
 
@@ -84,14 +92,15 @@ so64 <MODULE/TASK> [TASK_PARAMETERS]
 - `create` / `destroy`: create or destroy (no undo) component
 - `enable` / `disable`: enable or disable component
 - `expand` / `shrink`: expand or shrink component size
-- `grant` / `revoque`: grant or revoque component access permission
+- `get` / `put`: get or put object from/to component
+- `grant` / `revoke`: grant or revoke component access permission
 - `import` / `export`: import or export component or content
 - `login` / `logout`: login to or logout from service
 - `open` / `close`: open or close an object
-- `push` / `pull`: push or pull content
+- `push` / `pull`: push or pull content from stack
 - `read` / `write`: read or write content
 - `send` / `receive`: send or receive content over the network
-- `set` / `unset`: set or unset configuration value
+- `set` / `unset`: set new or unset component attribute value
 - `start` / `stop`: start or stop component
 
 ---

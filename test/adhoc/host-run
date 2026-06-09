@@ -5,7 +5,8 @@ echo "WARING: this will be ran on the local machine, not in the container."
 echo "======================================================================="
 
 export S64_CORE_PATH_ROOT="src"
+export S64_CORE_PATH_ROOT_MOD="src/mod"
 export S64_CORE_PATH_BL64="lib/bl64"
 declare cmd="$1"
 shift
-"./$S64_CORE_PATH_ROOT/$cmd" "$@"
+"./$S64_CORE_PATH_ROOT_MOD/$cmd" "$@"

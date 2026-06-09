@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2154,SC2015
+source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
+  { s64_core_lib_check_bl64 && exit 1; }
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_K8S_PATH_CLI_KUBEADM="${S64_K8S_PATH_CLI_KUBEADM:-}"
+
+  # KubeCTL / Output format
+  declare S64_K8S_OUTPUT_FORMAT="${S64_K8S_OUTPUT_FORMAT:-yaml}"
+
+  # Cluster API / Port
+  declare S64_K8S_SET_CLUSTER_API_PORT="${S64_K8S_SET_CLUSTER_API_PORT:-6443}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_K8S_VERSION='4.3.0'
+  declare S64_K8S_ABOUT_MODULE_MAIN='Kubernetes Platform'
+  declare S64_K8S_ABOUT_SUBMODULE_CLI='KubeCTL'
+  declare S64_K8S_ABOUT_SUBMODULE_CP='Control Plane'
+  declare S64_K8S_ABOUT_SUBMODULE_EVENT='Events'
+  declare S64_K8S_ABOUT_SUBMODULE_NET='Network'
+  declare S64_K8S_ABOUT_SUBMODULE_NODE='Nodes'
+  declare S64_K8S_ABOUT_SUBMODULE_OBJ='Objects'
+  declare S64_K8S_ABOUT_SUBMODULE_SECRET='Secrets'
+  declare S64_K8S_ABOUT_SUBMODULE_WKL='Workloads'
+
+  declare S64_K8S_PATH_CFG_CLUSTER_BASE='/etc/kubernetes'
+  declare S64_K8S_PATH_CFG_CNI_BASE='/etc/cni'
+  declare S64_K8S_PATH_CFG_KUBECTL_BASE="${HOME}/.kube"
+  declare S64_K8S_PATH_VAR_CNI_BASE='/var/lib/cni'
+  declare S64_K8S_PATH_VAR_ETCD_BASE='/var/lib/etcd'
+  declare S64_K8S_PATH_VAR_KUBELET_BASE='/var/lib/kubelet'
+
+  declare S64_K8S_PATH_CFG_ADMINCONF="${S64_K8S_PATH_CFG_CLUSTER_BASE}/admin.conf"
+  declare S64_K8S_PATH_CFG_KUBECONFIG="${S64_K8S_PATH_CFG_KUBECTL_BASE}/config"
+  declare S64_K8S_PATH_CFG_KUBELET="${S64_K8S_PATH_VAR_KUBELET_BASE}/config.yaml"
+
+  declare S64_K8S_PATH_KEY_CA="${S64_K8S_PATH_CFG_CLUSTER_BASE}/pki/ca.crt"
+
+  declare S64_K8S_FLAG_NAMESPACE_ALL='ALL'
+  declare S64_K8S_FLAG_NAMESPACE_DEFAULT='default'
+}
+
+#
+# Functions
+#
+
+function s64_k8s_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_module_show_about "$S64_K8S_ABOUT_MODULE_MAIN"
+  s64_core_lib_command_assign 'S64_K8S_PATH_CLI_KUBEADM' 'kubeadm'
+  bl64_k8s_setup
+}
+
+function s64_k8s_lib_setup_secondary() {
+  bl64_dbg_app_show_function
+  bl64_dbg_app_show_comments 'use this function instead of s64_k8s_lib_setup when not the primary module'
+  S64_CORE_SET_MODULE_PRIMARY='NO' s64_k8s_lib_setup
+}
+
+function s64_k8s_lib_cli_set_ns() {
+  bl64_dbg_app_show_function "$@"
+  local namespace="${1:-$BL64_VAR_DEFAULT}"
+  # shellcheck disable=SC2154,SC2015
+  if [[ "$namespace" == "$BL64_VAR_DEFAULT" || "$namespace" == "$S64_K8S_FLAG_NAMESPACE_ALL" ]]; then
+    printf -- '--all-namespaces'
+  else
+    printf -- '--namespace=%s' "${namespace}"
+  fi
+}
+
+function s64_k8s_meta_strip_runtime() {
+  bl64_dbg_app_show_function
+  bl64_txt_run_awk '
+    /^[ ]+creationTimestamp:/ { next }
+    $0 == "status: {}" { next }
+    { print $0 }
+  '
+}
+
+function s64_k8s_lib_cli_set_format() {
+  bl64_dbg_app_show_function "$@"
+  local format="${1:-}"
+  if [[ "$format" != 'yaml' ]]; then
+    S64_K8S_OUTPUT_FORMAT="$format"
+  fi
+  printf -- '--output=%s' "${S64_K8S_OUTPUT_FORMAT}"
+}
+
+function s64_k8s_lib_run_kubeadm() {
+  bl64_dbg_app_show_function "$@"
+  local debug_flag='--v 2'
+  bl64_dbg_app_command_is_enabled || debug_flag=' '
+  bl64_check_command "$S64_K8S_PATH_CLI_KUBEADM" "$BL64_VAR_DEFAULT" 'S64_K8S_PATH_CLI_KUBEADM' ||
+    return $?
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_K8S_PATH_CLI_KUBEADM" \
+    $debug_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}

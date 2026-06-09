@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2154,SC2015
+source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+  { s64_core_lib_check_bl64 && exit 1; }
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_OPENSSH_PATH_CLI_SCP="${S64_OPENSSH_PATH_CLI_SCP:-}"
+  declare S64_OPENSSH_PATH_CLI_SSH="${S64_OPENSSH_PATH_CLI_SSH:-}"
+  declare S64_OPENSSH_PATH_CLI_SSH_ADD="${S64_OPENSSH_PATH_CLI_SSH_ADD:-}"
+  declare S64_OPENSSH_PATH_CLI_SSH_COPY_ID="${S64_OPENSSH_PATH_CLI_SSH_COPY_ID:-}"
+  declare S64_OPENSSH_PATH_CLI_SSH_KEYGEN="${S64_OPENSSH_PATH_CLI_SSH_KEYGEN:-}"
+  declare S64_OPENSSH_PATH_CLI_HOME="${S64_OPENSSH_PATH_CLI_HOME:-${HOME}/.ssh}"
+
+  declare S64_OPENSSH_FILE_CLIENT_CONFIG="${S64_OPENSSH_FILE_CLIENT_CONFIG:-config}"
+  declare S64_OPENSSH_FILE_KNOWN_HOSTS="${S64_OPENSSH_FILE_KNOWN_HOSTS:-known_hosts}"
+  declare S64_OPENSSH_SET_KEY_TYPE="${S64_OPENSSH_SET_KEY_TYPE:-ed25519}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_OPENSSH_VERSION='3.2.1'
+  declare S64_OPENSSH_ABOUT_MODULE_MAIN='OpenSSH - Secure Remote Shell'
+}
+
+#
+# Functions
+#
+
+function s64_openssh_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_module_show_about "$S64_OPENSSH_ABOUT_MODULE_MAIN" &&
+    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SCP' 'scp' &&
+    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH' 'ssh' &&
+    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH_ADD' 'ssh-add' &&
+    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH_COPY_ID' 'ssh-copy-id' &&
+    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH_KEYGEN' 'ssh-keygen'
+}
+
+function s64_openssh_lib_run_ssh_keygen() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_OPENSSH_PATH_CLI_SSH_KEYGEN" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_openssh_lib_run_ssh() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_OPENSSH_PATH_CLI_SSH" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_openssh_lib_run_ssh_add() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_OPENSSH_PATH_CLI_SSH_ADD" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_openssh_lib_run_scp() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_OPENSSH_PATH_CLI_SCP" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_openssh_lib_run_ssh_copy_id() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_OPENSSH_PATH_CLI_SSH_COPY_ID" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}

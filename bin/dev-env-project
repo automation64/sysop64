@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # template-env: 1.2.0
 #######################################
 # Copyright SerDigital64 - https://github.com/serdigital64
@@ -22,25 +23,13 @@
 {
   # Env / Project / Module environment definition version
   export DEV_ENV_PROJECT_ID='project'
-  export DEV_ENV_PROJECT_VERSION='2.0.0'
+  export DEV_ENV_PROJECT_VERSION='3.0.0'
 
   # Pack / Project / Paths
   export DEV_PACK_PROJECT_PATH_STAGING="${DEV_PATH_BUILD_STAGING}/${DEV_ENV_PROJECT_ID}"
   export DEV_PACK_PROJECT_PATH_TARGET="${DEV_PATH_BUILD_PACK}/${DEV_ENV_PROJECT_ID}"
-}
-
-#
-# Module parameters
-#
-# * Use .dev.env file to override values
-#
-
-# shellcheck disable=SC2154
-{
   # Pack / Project / Package file name
-  export DEV_PACK_PROJECT_BUNDLE="${DEV_PACK_PROJECT_BUNDLE:-}"
-  # Pack / Project / Assets to include in the package
-  export DEV_PACK_PROJECT_ASSETS="${DEV_PACK_PROJECT_ASSETS:-}"
+  export DEV_PACK_PROJECT_BUNDLE='sysop64-scripts.tar.gz'
   # Pack / Project / List of generated distributable files
-  export DEV_PACK_PROJECT_DISTRIBUTABLE="${DEV_PACK_PROJECT_DISTRIBUTABLE:-${DEV_PATH_BUILD_PACK}/${DEV_PACK_PROJECT_BUNDLE}}"
+  export DEV_PACK_PROJECT_DISTRIBUTABLE="${DEV_PATH_BUILD_PACK}/${DEV_ENV_PROJECT_ID}/${DEV_PACK_PROJECT_BUNDLE}"
 }

@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2154,SC2015
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
+  { s64_core_lib_check_bl64 && exit 1; }
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_NGINX_LAB_IMAGE_TAG="${S64_NGINX_LAB_IMAGE_TAG:-latest}"
+  declare S64_NGINX_LAB_HOST_NGINX_CONF="${S64_NGINX_LAB_HOST_NGINX_CONF:-}"
+  declare S64_NGINX_PATH_CLI="${S64_NGINX_PATH_CLI:-/usr/sbin/nginx}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_NGINX_VERSION='1.2.1'
+  declare S64_NGINX_ABOUT_MODULE_MAIN='NGINX Web Server'
+
+  declare S64_NGINX_PATH_ETC_NGINX='/etc/nginx'
+  declare S64_NGINX_PATH_VAR_NGINX='/var/lib/nginx'
+  declare S64_NGINX_PATH_CFG_NGINX="${S64_NGINX_PATH_ETC_NGINX}/nginx.conf"
+  declare S64_NGINX_PATH_LOG_NGINX='/var/log/nginx'
+  declare S64_NGINX_PATH_LOG_ERROR="${S64_NGINX_PATH_LOG_NGINX}/error.log"
+  declare S64_NGINX_PATH_LOG_ACCESS="${S64_NGINX_PATH_LOG_NGINX}/access.log"
+
+  declare S64_NGINX_LAB_IMAGE_NAME='nginx'
+  declare S64_NGINX_LAB_CONTAINER_NAME='lab-nginx'
+}
+
+#
+# Functions
+#
+
+function s64_nginx_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_module_show_about "$S64_NGINX_ABOUT_MODULE_MAIN" &&
+    bl64_check_command "$S64_NGINX_PATH_CLI" "$BL64_VAR_DEFAULT" 'S64_NGINX_PATH_CLI'
+}
+
+function s64_nginx_lib_run_nginx() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_NGINX_PATH_CLI" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}

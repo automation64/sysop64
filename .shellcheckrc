@@ -20,6 +20,5 @@ enable=deprecate-which
 # Project specific
 #
 
-disable=SC2015
-source-path=./src
-source-path=./lib/bl64
+source-path=SCRIPTDIR/../../src/lib
+source-path=SCRIPTDIR/../../lib/bl64
