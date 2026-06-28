@@ -46,10 +46,10 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '2.0.1'
-bl64_msg_help_usage_set '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]'
-bl64_msg_help_about_set 'AWS EKS / AMI / Info'
+bl64_msg_help_set_usage '-l [-r Version] [-a Family] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_set_about 'AWS EKS / AMI / Info'
 # shellcheck disable=SC2016
-bl64_msg_help_parameters_set \
+bl64_msg_help_set_parameters \
   '-l         : Show recommended AMI for EKS version
 -h         : Show help
 -a Family  : AMI Family. Format: AL2|AL2023

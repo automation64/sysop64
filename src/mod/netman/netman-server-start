@@ -20,7 +20,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 
 
 function my_start_systemd() {
   bl64_dbg_app_show_function
-  s64_systemd_lib_run_systemctl start "$S64_NETMAN_SERVER_NAME"
+  s64_systemd_lib_run_systemctl start "$S64_NETMAN_SERVICE_NAME"
 }
 
 function my_initialize() {
@@ -31,12 +31,12 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Start server'
+bl64_msg_help_set_about 'Start server'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_REDHAT" | "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_ARCH") my_start_systemd ;;
-  *) bl64_check_alert_unsupported ;;
+  *) bl64_check_rise_task_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

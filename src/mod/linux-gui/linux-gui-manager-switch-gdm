@@ -29,7 +29,7 @@ function my_disable_current() {
       s64_systemd_lib_run_systemctl stop "$manager"
       s64_systemd_lib_run_systemctl disable "$manager" --force
       ;;
-    *) bl64_check_alert_unsupported || return $? ;;
+    *) bl64_check_rise_task_unsupported || return $? ;;
   esac
 }
 
@@ -41,7 +41,7 @@ function my_enable_new() {
       s64_systemd_lib_run_systemctl enable gdm --force
       s64_systemd_lib_run_systemctl start gdm
       ;;
-    *) bl64_check_alert_unsupported || return $? ;;
+    *) bl64_check_rise_task_unsupported || return $? ;;
   esac
 }
 
@@ -60,7 +60,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '2.0.0'
-bl64_msg_help_about_set 'Switch to GDM display manager'
+bl64_msg_help_set_about 'Switch to GDM display manager'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

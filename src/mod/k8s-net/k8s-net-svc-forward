@@ -38,8 +38,8 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Redirect local port to K8S service'
-bl64_msg_help_usage_set 'MY_NAMESPACE MY_SERVICE_NAME MY_SERVICE_PORT MY_HOST_PORT'
+bl64_msg_help_set_about 'Redirect local port to K8S service'
+bl64_msg_help_set_usage 'MY_NAMESPACE MY_SERVICE_NAME MY_SERVICE_PORT MY_HOST_PORT'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

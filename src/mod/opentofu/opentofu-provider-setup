@@ -24,7 +24,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '2.0.1'
-bl64_msg_help_about_set 'Initialize modules and providers'
+bl64_msg_help_set_about 'Initialize modules and providers'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

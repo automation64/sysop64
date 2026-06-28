@@ -27,8 +27,9 @@ function my_initialize() {
       'MY_STASH_ID'
 }
 
-bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Attach uncommited changes to current branch from saved work (stash)'
+bl64_lib_script_version_set '1.0.1'
+bl64_msg_help_set_about 'Attach uncommited changes to current branch from saved work (stash)'
+bl64_msg_help_set_usage '[MY_STASH_ID]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

@@ -86,7 +86,8 @@ function my_run() {
 function my_mods() {
   bl64_dbg_app_show_function "$@"
   cd "$S64_CORE_PATH_MOD" &&
-    bl64_fs_run_ls -c --sort=name
+    bl64_fs_run_ls -1 |
+    bl64_txt_run_sort
 }
 
 function my_tasks() {
@@ -126,7 +127,7 @@ function my_initialize() {
   esac
 }
 
-bl64_lib_script_version_set '2.0.0'
+bl64_lib_script_version_set '2.0.1'
 bl64_msg_help_usage_set '[-V format] [-D Debug] <COMMAND> [MODULE] [TASK] [PARAMETERS]'
 bl64_msg_help_about_set 'Run sysadmin tasks'
 bl64_msg_help_parameters_set \

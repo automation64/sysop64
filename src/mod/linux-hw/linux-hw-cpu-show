@@ -38,7 +38,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.1.0'
-bl64_msg_help_about_set 'Show CPU hardware information'
+bl64_msg_help_set_about 'Show CPU hardware information'
 s64_core_lib_initialize && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 if [[ -x "$S64_LINUX_PATH_CLI_DMIDECODE" ]]; then

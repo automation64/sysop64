@@ -25,7 +25,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '2.1.0'
-bl64_msg_help_about_set 'Update current state to match status of deployed resources, without altering them.'
+bl64_msg_help_set_about 'Update current state to match status of deployed resources, without altering them.'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

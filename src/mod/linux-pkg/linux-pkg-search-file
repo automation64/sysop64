@@ -26,6 +26,13 @@ function my_search_debian() {
     --search "$MY_FILE_PATH"
 }
 
+function my_search_redhat() {
+  bl64_dbg_app_show_function
+  bl64_pkg_run_rpm \
+    --query \
+    --file "$MY_FILE_PATH"
+}
+
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
@@ -34,13 +41,14 @@ function my_initialize() {
       'MY_FILE_PATH'
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Search what package provides a file'
+bl64_lib_script_version_set '1.1.0'
+bl64_msg_help_set_about 'Search what package provides a file'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_DEBIAN") my_search_debian ;;
-  *) bl64_check_alert_unsupported ;;
+  "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT") my_search_redhat ;;
+  *) bl64_check_rise_task_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

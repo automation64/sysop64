@@ -29,8 +29,8 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'List deployed Cilium Load Balancer IP Pools'
-bl64_msg_help_usage_set '[MY_NAMESPACE]'
+bl64_msg_help_set_about 'List deployed Cilium Load Balancer IP Pools'
+bl64_msg_help_set_usage '[MY_NAMESPACE]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

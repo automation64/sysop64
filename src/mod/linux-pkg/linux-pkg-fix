@@ -28,7 +28,7 @@ function my_fix() {
   bl64_dbg_app_show_function
   case "$BL64_OS_FLAVOR" in
     "$BL64_OS_FLAVOR_DEBIAN") my_fix_debian ;;
-    *) bl64_check_alert_unsupported ;;
+    *) bl64_check_rise_task_unsupported ;;
   esac
 }
 
@@ -40,7 +40,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Fix operating system packages'
+bl64_msg_help_set_about 'Fix operating system packages'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

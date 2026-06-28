@@ -60,7 +60,7 @@ function my_cleanup() {
     "$BL64_OS_FLAVOR_ARCH") my_cleanup_arch ;;
     "$BL64_OS_FLAVOR_DEBIAN") my_cleanup_debian ;;
     "$BL64_OS_FLAVOR_FEDORA") my_cleanup_fedora ;;
-    *) bl64_check_alert_unsupported ;;
+    *) bl64_check_rise_task_unsupported ;;
   esac
 }
 
@@ -70,7 +70,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.1.1'
-bl64_msg_help_about_set 'Cleanup operating system packages'
+bl64_msg_help_set_about 'Cleanup operating system packages'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

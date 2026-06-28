@@ -27,7 +27,7 @@ function my_task() {
     "$BL64_OS_FLAVOR_DEBIAN") bl64_pkg_run_apt show "${MY_PACKAGE_NAME}" ;;
     "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT") bl64_pkg_run_rpm --query --info "${MY_PACKAGE_NAME}" ;;
     "$BL64_OS_FLAVOR_ALPINE") bl64_pkg_run_apk info "${MY_PACKAGE_NAME}" ;;
-    *) bl64_check_alert_unsupported || return $? ;;
+    *) bl64_check_rise_task_unsupported || return $? ;;
   esac
 }
 
@@ -40,7 +40,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.1.0'
-bl64_msg_help_about_set 'Show OS package details'
+bl64_msg_help_set_about 'Show OS package details'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

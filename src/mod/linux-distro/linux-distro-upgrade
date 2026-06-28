@@ -77,7 +77,7 @@ function prepare() {
   case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*) prepare_ubuntu ;;
     ${BL64_OS_FD}-*) prepare_fedora ;;
-    *) bl64_check_alert_unsupported ;;
+    *) bl64_check_rise_task_unsupported ;;
   esac
 }
 
@@ -88,7 +88,7 @@ function upgrade() {
   case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*) upgrade_ubuntu ;;
     ${BL64_OS_FD}-*) upgrade_fedora "$MY_RELEASE" ;;
-    *) bl64_check_alert_unsupported ;;
+    *) bl64_check_rise_task_unsupported ;;
   esac
 }
 
@@ -119,10 +119,10 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.1.0'
-bl64_msg_help_usage_set '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
-bl64_msg_help_about_set 'Upgrade Linux distribution release'
+bl64_msg_help_set_usage '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_set_about 'Upgrade Linux distribution release'
 # shellcheck disable=SC2016
-bl64_msg_help_parameters_set \
+bl64_msg_help_set_parameters \
   '-p         : Prepare for Distro upgrade
 -u         : Perform for Distro upgrade
 -h         : Show help

@@ -19,22 +19,22 @@ source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/k8s.
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
 declare MY_NAMESPACE="${1:-}"
-declare MY_MANIFEST="${2:-}"
+declare MY_MANIFEST_FILE="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_k8s_lib_setup &&
-    bl64_check_parameter 'MY_MANIFEST' &&
+    bl64_check_parameter 'MY_MANIFEST_FILE' &&
     bl64_check_parameter 'MY_NAMESPACE' &&
-    bl64_check_file "$MY_MANIFEST" &&
+    bl64_check_file "$MY_MANIFEST_FILE" &&
     s64_core_lib_task_show_setup \
-      'MY_MANIFEST' \
+      'MY_MANIFEST_FILE' \
       'MY_NAMESPACE'
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Deploy Kubernetes API object from manifest'
-bl64_msg_help_usage_set 'MY_NAMESPACE MY_KUSTOMIZE'
+bl64_msg_help_set_about 'Deploy Kubernetes API object from manifest'
+bl64_msg_help_set_usage 'MY_NAMESPACE MY_MANIFEST_FILE'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
@@ -44,5 +44,5 @@ bl64_k8s_run_kubectl \
   --validate='strict' \
   --wait='true' \
   --namespace="$MY_NAMESPACE" \
-  --filename="$MY_MANIFEST"
+  --filename="$MY_MANIFEST_FILE"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

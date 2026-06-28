@@ -42,6 +42,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 {
   declare S64_LIBVIRT_VERSION='1.4.0'
   declare S64_LIBVIRT_ABOUT_MODULE_MAIN='LibVirt Virtual Machine Manager'
+  declare S64_LIBVIRT_ABOUT_SUBMODULE_SYS='System'
+  declare S64_LIBVIRT_ABOUT_SUBMODULE_QEMU='QEMU'
+  declare S64_LIBVIRT_ABOUT_SUBMODULE_LXC='LXC'
 
   declare S64_LIBVIRT_PATH_CLI_VIRSH='/usr/bin/virsh'
   declare S64_LIBVIRT_PATH_CLI_VIRTINSTALL='/usr/bin/virt-install'

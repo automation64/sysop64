@@ -21,7 +21,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 
 function my_show_systemd() {
   bl64_dbg_app_show_function
   s64_systemd_lib_run_journalctl_filter \
-    --unit kubelet
+    --unit "$S64_K8S_SERVICE_KUBELET"
 }
 
 function my_initialize() {
@@ -32,12 +32,12 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '2.0.0'
-bl64_msg_help_about_set 'Show kubelet server logs'
+bl64_msg_help_set_about 'Show kubelet server logs'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_REDHAT") my_show_systemd ;;
-  *) bl64_check_alert_unsupported ;;
+  *) bl64_check_rise_task_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

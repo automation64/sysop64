@@ -29,10 +29,10 @@ function my_repo_list_dnf() {
 function my_repo_list() {
   bl64_dbg_app_show_function
   case "$BL64_OS_DISTRO" in
-    ${BL64_OS_CNT}-7.* | ${BL64_OS_OL}-7.*) bl64_check_alert_unsupported ;;
+    ${BL64_OS_CNT}-7.* | ${BL64_OS_OL}-7.*) bl64_check_rise_task_unsupported ;;
     ${BL64_OS_FD}-* | ${BL64_OS_AMZ}-* | ${BL64_OS_CNT}-* | ${BL64_OS_OL}-* | ${BL64_OS_RHEL}-* | ${BL64_OS_ALM}-* | ${BL64_OS_RCK}-*) my_repo_list_dnf ;;
     *)
-      bl64_check_alert_unsupported
+      bl64_check_rise_task_unsupported
       return $?
       ;;
   esac
@@ -45,7 +45,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.3'
-bl64_msg_help_about_set 'List enabled Linux native package repositories'
+bl64_msg_help_set_about 'List enabled Linux native package repositories'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

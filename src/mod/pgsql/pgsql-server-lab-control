@@ -56,9 +56,9 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '2.0.3'
-bl64_msg_help_usage_set '-s|-o [-V Verbose] [-D Debug] [-h]'
-bl64_msg_help_about_set 'Control PostgreSQL lab container'
-bl64_msg_help_parameters_set \
+bl64_msg_help_set_usage '-s|-o [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_set_about 'Control PostgreSQL lab container'
+bl64_msg_help_set_parameters \
   '-s         : Start container and detach
 -o         : Stop detached container
 -h         : Show help

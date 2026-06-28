@@ -24,7 +24,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Show technical reference information'
+bl64_msg_help_set_about 'Show technical reference information'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

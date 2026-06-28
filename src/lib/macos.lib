@@ -102,7 +102,7 @@ function s64_macos_lib_setup() {
 
         S64_MACOS_PATH_PLIST_NCENTER="${S64_MACOS_PATH_CFG_PREFERENCES}/com.apple.ncprefs.plist"
         ;;
-      *) bl64_check_alert_unsupported || return $? ;;
+      *) bl64_check_rise_task_unsupported || return $? ;;
     esac
 }
 

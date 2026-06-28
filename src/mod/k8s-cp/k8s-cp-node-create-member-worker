@@ -42,8 +42,8 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Create worker node and join the cluster'
-bl64_msg_help_usage_set 'MY_API_FQDN MY_CONTROL_TOKEN MY_CONTROL_HASH [MY_KUBEADM_CONFIG]'
+bl64_msg_help_set_about 'Create worker node and join the cluster'
+bl64_msg_help_set_usage 'MY_API_FQDN MY_CONTROL_TOKEN MY_CONTROL_HASH [MY_KUBEADM_CONFIG]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

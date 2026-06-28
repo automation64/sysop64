@@ -27,8 +27,9 @@ function my_initialize() {
       'MY_COMMIT'
 }
 
-bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Show what files changed in a specific commit'
+bl64_lib_script_version_set '1.0.1'
+bl64_msg_help_set_about 'Show what files changed in a specific commit'
+bl64_msg_help_set_usage '[MY_COMMIT]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

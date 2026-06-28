@@ -33,8 +33,8 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Delete IP from ARP cache'
-bl64_msg_help_usage_set 'MY_IP'
+bl64_msg_help_set_about 'Delete IP from ARP cache'
+bl64_msg_help_set_usage 'MY_IP'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

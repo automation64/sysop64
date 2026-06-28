@@ -30,8 +30,8 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'X_HELP_ABOUT_X'
-bl64_msg_help_usage_set 'X_HELP_COMMAND_LINE_PARAMETERS_X'
+bl64_msg_help_set_about 'X_HELP_ABOUT_X'
+bl64_msg_help_set_usage 'X_HELP_COMMAND_LINE_PARAMETERS_X'
 s64_core_lib_initialize && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 # X_COMMAND_PLACEHOLDER_X

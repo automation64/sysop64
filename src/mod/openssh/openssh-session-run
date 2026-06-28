@@ -42,8 +42,8 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Run a command in a remote host'
-bl64_msg_help_usage_set 'MY_HOST [MY_USER] MY_COMMAND'
+bl64_msg_help_set_about 'Run a command in a remote host'
+bl64_msg_help_set_usage 'MY_HOST [MY_USER] MY_COMMAND'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

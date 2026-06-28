@@ -33,6 +33,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 {
   declare S64_OKD_PATH_CLI_CRC="${S64_OKD_PATH_CLI_CRC:-}"
   declare S64_OKD_PATH_CLI_OC="${S64_OKD_PATH_CLI_OC:-}"
+
+  declare S64_OKD_SET_CRC_LOG_LEVEL="${S64_OKD_SET_CRC_LOG_LEVEL:-info}"
 }
 
 #
@@ -41,8 +43,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OKD_VERSION='1.0.0'
+  declare S64_OKD_VERSION='1.1.0'
   declare S64_OKD_ABOUT_MODULE_MAIN='OpenShift Community Edition'
+
+  declare S64_OKD_PATH_CRC_HOME="${HOME}/.crc"
+  declare S64_OKD_PATH_CRC_LOG_CLI="${S64_OKD_PATH_CRC_HOME}/crc.log"
+  declare S64_OKD_PATH_CRC_LOG_LIBVIRT='/var/log/libvirt/qemu/crc.log'
 }
 
 #
@@ -60,6 +66,7 @@ function s64_okd_lib_run_crc() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_OKD_PATH_CLI_CRC" \
+    --log-level "${S64_OKD_SET_CRC_LOG_LEVEL}" \
     "$@"
   bl64_dbg_app_trace_stop
 }

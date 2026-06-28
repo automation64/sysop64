@@ -32,8 +32,8 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.2'
-bl64_msg_help_about_set 'Run Ansible ad-hoc module task locally'
-bl64_msg_help_usage_set 'MY_MODULE MY_COMMAND'
+bl64_msg_help_set_about 'Run Ansible ad-hoc module task locally'
+bl64_msg_help_set_usage 'MY_MODULE MY_COMMAND'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

@@ -25,8 +25,9 @@ function my_initialize() {
   s64_helm_lib_setup
 }
 
-bl64_lib_script_version_set '2.0.0'
-bl64_msg_help_about_set 'Search for charts in locally installed Helm repositories. Latest version only'
+bl64_lib_script_version_set '2.0.1'
+bl64_msg_help_set_about 'Search for charts in locally installed Helm repositories. Latest version only'
+bl64_msg_help_set_usage '[MY_PATTERN]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

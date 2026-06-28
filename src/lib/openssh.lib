@@ -50,8 +50,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_VERSION='3.2.1'
+  declare S64_OPENSSH_VERSION='3.3.0'
   declare S64_OPENSSH_ABOUT_MODULE_MAIN='OpenSSH - Secure Remote Shell'
+
+  declare S64_OPENSSH_SERVICE="$BL64_VAR_INCOMPATIBLE"
 }
 
 #
@@ -60,6 +62,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
 
 function s64_openssh_lib_setup() {
   bl64_dbg_app_show_function
+
+  # shellcheck disable=SC2249
+  case "$BL64_OS_FLAVOR" in
+    "$BL64_OS_FLAVOR_ALPINE") S64_OPENSSH_SERVICE='sshd' ;;
+    "$BL64_OS_FLAVOR_DEBIAN") S64_OPENSSH_SERVICE='ssh' ;;
+    "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT") S64_OPENSSH_SERVICE='sshd' ;;
+    "$BL64_OS_FLAVOR_SUSE") S64_OPENSSH_SERVICE='sshd' ;;
+    "$BL64_OS_FLAVOR_ARCH") S64_OPENSSH_SERVICE='sshd' ;;
+  esac
   s64_core_lib_module_show_about "$S64_OPENSSH_ABOUT_MODULE_MAIN" &&
     s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SCP' 'scp' &&
     s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH' 'ssh' &&

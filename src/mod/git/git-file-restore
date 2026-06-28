@@ -31,8 +31,9 @@ function my_initialize() {
       'MY_COMMIT_HASH'
 }
 
-bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Restore file from previous commit to working directory'
+bl64_lib_script_version_set '1.0.1'
+bl64_msg_help_set_about 'Restore file from previous commit to working directory'
+bl64_msg_help_set_usage 'MY_FILE_PATH MY_COMMIT_HASH'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

@@ -64,14 +64,14 @@ q h
 - `dump`: show component content as-is
 - `edit`: edit content
 - `guide`: show technical documentation about the module or task
-- `init`: initialize component
+- `init`: initialize component content
 - `list`: list components
 - `login`: login to service
 - `migrate`: migrate component or content
 - `query`: query component or content
 - `monitor`: show component runtime metrics
 - `rename`: rename component
-- `reset`: reset component or content
+- `reset`: reset component or content to initial or empty value
 - `restart`: restart component
 - `run`: run service
 - `scan`: scan component

@@ -35,7 +35,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '2.0.1'
-bl64_msg_help_about_set 'Run service inside a container, with network access from the host to the container'
+bl64_msg_help_set_about 'Run service inside a container, with network access from the host to the container'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

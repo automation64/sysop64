@@ -25,7 +25,7 @@ function my_initialize() {
 
 S64_TERRAFORM_PATH_PROJECT="${S64_TERRAFORM_PATH_PROJECT:-${1:-}}"
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Show project status'
+bl64_msg_help_set_about 'Show project status'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

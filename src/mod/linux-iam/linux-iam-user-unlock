@@ -34,13 +34,14 @@ function my_initialize() {
       'MY_USERNAME'
 }
 
-bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'unlocks user login!'
+bl64_lib_script_version_set '1.0.1'
+bl64_msg_help_set_about 'unlocks user login!'
+bl64_msg_help_set_usage 'MY_USERNAME'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 case "$BL64_OS_FLAVOR" in
   "$BL64_OS_FLAVOR_ARCH") my_unlock_arch ;;
-  *) bl64_check_alert_unsupported ;;
+  *) bl64_check_rise_task_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -26,8 +26,9 @@ function my_initialize() {
     bl64_check_parameter 'MY_FILE_PATH'
 }
 
-bl64_lib_script_version_set '1.1.0'
-bl64_msg_help_about_set 'Show the history of a file with commits'
+bl64_lib_script_version_set '1.1.1'
+bl64_msg_help_set_about 'Show the history of a file with commits'
+bl64_msg_help_set_usage 'MY_FILE_PATH'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

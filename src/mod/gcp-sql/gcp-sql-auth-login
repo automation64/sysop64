@@ -33,7 +33,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.1.0'
-bl64_msg_help_about_set 'Connect to a DB instance'
+bl64_msg_help_set_about 'Connect to a DB instance'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

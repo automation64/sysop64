@@ -35,9 +35,9 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_usage_set 'X_HELP_CLI_X [-V Verbose] [-D Debug] [-h]'
-bl64_msg_help_about_set 'X_HELP_ABOUT_X'
-bl64_msg_help_parameters_set \
+bl64_msg_help_set_usage 'X_HELP_CLI_X [-V Verbose] [-D Debug] [-h]'
+bl64_msg_help_set_about 'X_HELP_ABOUT_X'
+bl64_msg_help_set_parameters \
   'X_HELP_PARAMETERS_X
 -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
 -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'

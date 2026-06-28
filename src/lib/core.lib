@@ -74,7 +74,7 @@
 {
   declare S64_CORE_VERSION='3.9.0'
   # Minimal BashLib64 version required
-  declare S64_BL64_VERSION='23.0.0'
+  declare S64_BL64_VERSION='23.3.1'
 
   # Library path
   declare S64_CORE_PATH_LIB="${S64_CORE_PATH_ROOT}/lib"
@@ -219,14 +219,14 @@ function s64_core_lib_module_show_about() {
   bl64_lib_flag_is_enabled "$S64_CORE_SET_MODULE_PRIMARY" || return 0
 
   # shellcheck disable=SC2154
-  bl64_msg_help_about_set "${module_full_name} / ${BL64_MSG_HELP_ABOUT}" &&
+  bl64_msg_help_set_about "${module_full_name} / ${BL64_MSG_HELP_ABOUT}" &&
     bl64_msg_set_output "$S64_CORE_SET_OUTPUT" &&
     bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
     bl64_msg_set_format "$S64_CORE_SET_FORMAT" ||
     return $?
 
   if [[ "${S64_CORE_SET_TASK}" == "${S64_CORE_TASK_MODE_RUN}" ]]; then
-    bl64_msg_show_about
+    bl64_msg_help_show_about
   elif [[ "${S64_CORE_SET_TASK}" == "${S64_CORE_TASK_MODE_HELP}" ]]; then
     bl64_msg_help_show
     exit 0

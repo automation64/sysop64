@@ -37,7 +37,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '2.0.0'
-bl64_msg_help_about_set 'Synchronize files between Linux paths: delete destination differences'
+bl64_msg_help_set_about 'Synchronize files between Linux paths: delete destination differences'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

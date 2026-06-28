@@ -23,11 +23,14 @@ declare MY_PATTERN="${1:-}"
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_git_lib_setup &&
-    bl64_check_parameter 'MY_PATTERN'
+    bl64_check_parameter 'MY_PATTERN' &&
+    s64_core_lib_task_show_setup \
+      'MY_PATTERN'
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_about_set 'Search for a pattern in the current git commit'
+bl64_lib_script_version_set '1.0.2'
+bl64_msg_help_set_about 'Search for a pattern in the current git commit'
+bl64_msg_help_set_usage 'MY_PATTERN'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

@@ -18,29 +18,14 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/systemd.lib" && source "${S64_CORE_PATH_LIB}/openssh.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
-function my_service_start_alpine() {
+function my_show_start_openrc() {
   bl64_dbg_app_show_function
-  s64_linux_lib_run_rcservice sshd start
+  s64_linux_lib_run_rcservice "$S64_OPENSSH_SERVICE" start
 }
 
-function my_service_start_debian() {
+function my_show_start_systemd() {
   bl64_dbg_app_show_function
-  s64_systemd_lib_run_systemctl start ssh
-}
-
-function my_service_start_fedora() {
-  bl64_dbg_app_show_function
-  s64_systemd_lib_run_systemctl start sshd
-}
-
-function my_service_start_redhat() {
-  bl64_dbg_app_show_function
-  s64_systemd_lib_run_systemctl start sshd
-}
-
-function my_service_start_suse() {
-  bl64_dbg_app_show_function
-  s64_systemd_lib_run_systemctl start sshd
+  s64_systemd_lib_run_systemctl start "$S64_OPENSSH_SERVICE"
 }
 
 function my_initialize() {
@@ -51,17 +36,15 @@ function my_initialize() {
     bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '2.0.0'
-bl64_msg_help_about_set 'Start the SSH server'
+bl64_lib_script_version_set '2.1.0'
+bl64_msg_help_set_about 'Start the SSH server'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 case "$BL64_OS_FLAVOR" in
-  "$BL64_OS_FLAVOR_ALPINE") my_service_start_alpine ;;
-  "$BL64_OS_FLAVOR_DEBIAN") my_service_start_debian ;;
-  "$BL64_OS_FLAVOR_FEDORA") my_service_start_fedora ;;
-  "$BL64_OS_FLAVOR_REDHAT") my_service_start_redhat ;;
-  "$BL64_OS_FLAVOR_SUSE") my_service_start_suse ;;
-  *) bl64_check_alert_unsupported ;;
+  "$BL64_OS_FLAVOR_REDHAT" | "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_SUSE") my_show_start_systemd ;;
+  "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_ARCH") my_show_start_systemd ;;
+  "$BL64_OS_FLAVOR_ALPINE") my_show_start_openrc ;;
+  *) bl64_check_rise_task_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

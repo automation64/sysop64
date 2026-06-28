@@ -30,8 +30,9 @@ function my_initialize() {
       'MY_REMOTE'
 }
 
-bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Add GIT remote'
+bl64_lib_script_version_set '1.0.1'
+bl64_msg_help_set_about 'Add GIT remote'
+bl64_msg_help_set_usage 'MY_REPOSITORY_URL [MY_REMOTE]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

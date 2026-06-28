@@ -29,8 +29,8 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.1.0'
-bl64_msg_help_about_set 'Dump all manifests from all namespaces to a directory.'
-bl64_msg_help_usage_set 'MY_DUMP_PATH'
+bl64_msg_help_set_about 'Dump all manifests from all namespaces to a directory.'
+bl64_msg_help_set_usage 'MY_DUMP_PATH'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

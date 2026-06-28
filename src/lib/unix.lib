@@ -148,7 +148,7 @@ function s64_unix_lib_setup() {
         S64_UNIX_PATH_CLI_UMOUNT='/sbin/umount'
         ;;
       *)
-        bl64_check_alert_unsupported
+        bl64_check_rise_task_unsupported
         ;;
     esac
 }

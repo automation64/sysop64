@@ -90,7 +90,7 @@ function s64_argocd_lib_run_argocd() {
     "$S64_ARGOCD_SET_CONNECTION_CORE") connection='--core' ;;
     "$S64_ARGOCD_SET_CONNECTION_DIRECT") connection='' ;;
     *)
-      bl64_check_alert_parameter_invalid 'S64_ARGOCD_SET_CONNECTION'
+      bl64_check_rise_parameter_invalid 'S64_ARGOCD_SET_CONNECTION'
       return $?
       ;;
   esac

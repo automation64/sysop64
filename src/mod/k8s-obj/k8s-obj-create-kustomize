@@ -19,22 +19,22 @@ source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/k8s.
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
 declare MY_NAMESPACE="${1:-}"
-declare MY_KUSTOMIZE="${2:-}"
+declare MY_KUSTOMIZE_DIR="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_k8s_lib_setup &&
-    bl64_check_parameter 'MY_KUSTOMIZE' &&
+    bl64_check_parameter 'MY_KUSTOMIZE_DIR' &&
     bl64_check_parameter 'MY_NAMESPACE' &&
-    bl64_check_directory "$MY_KUSTOMIZE" &&
+    bl64_check_directory "$MY_KUSTOMIZE_DIR" &&
     s64_core_lib_task_show_setup \
-      'MY_KUSTOMIZE' \
+      'MY_KUSTOMIZE_DIR' \
       'MY_NAMESPACE'
 }
 
-bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Deploy Kubernetes API object using Kustomize'
-bl64_msg_help_usage_set 'MY_NAMESPACE MY_KUSTOMIZE'
+bl64_lib_script_version_set '1.0.1'
+bl64_msg_help_set_about 'Deploy Kubernetes API object using Kustomize'
+bl64_msg_help_set_usage 'MY_NAMESPACE MY_KUSTOMIZE_DIR'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
@@ -44,5 +44,5 @@ bl64_k8s_run_kubectl \
   --validate='strict' \
   --wait='true' \
   --namespace="$MY_NAMESPACE" \
-  --kustomize="$MY_KUSTOMIZE"
+  --kustomize="$MY_KUSTOMIZE_DIR"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

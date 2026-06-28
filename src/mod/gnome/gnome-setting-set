@@ -32,7 +32,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'Set GNOME configuration value'
+bl64_msg_help_set_about 'Set GNOME configuration value'
 s64_core_lib_initialize && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_gnome_lib_run_dconf \

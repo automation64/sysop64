@@ -29,7 +29,7 @@ function my_list() {
         'linux-headers-*.*.*-*' \
         'linux-modules-*.*.*-*'
       ;;
-    *) bl64_check_alert_unsupported || return $? ;;
+    *) bl64_check_rise_task_unsupported || return $? ;;
   esac
 }
 
@@ -39,7 +39,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_about_set 'List main Linux kernel packages'
+bl64_msg_help_set_about 'List main Linux kernel packages'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

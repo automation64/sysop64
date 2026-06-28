@@ -44,7 +44,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_NETMAN_ABOUT_MODULE_MAIN='Linux Network Manager'
 
   # SystemD service name
-  declare S64_NETMAN_SERVER_NAME='NetworkManager'
+  declare S64_NETMAN_SERVICE_NAME='NetworkManager'
 
   declare S64_NETMAN_PATH_CLI_NMCLI='/usr/bin/nmcli'
   declare S64_NETMAN_PATH_CLI_NETMAN='/usr/sbin/NetworkManager'

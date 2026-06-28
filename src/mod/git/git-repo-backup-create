@@ -34,8 +34,9 @@ function my_initialize() {
       'MY_BACKUP_DESTINATION'
 }
 
-bl64_lib_script_version_set '1.0.4'
-bl64_msg_help_about_set 'Create a backup of a Git repository as a bundle file.'
+bl64_lib_script_version_set '1.0.5'
+bl64_msg_help_set_about 'Create a backup of a Git repository as a bundle file.'
+bl64_msg_help_set_usage 'MY_REPOSITORY_PATH MY_BACKUP_NAME MY_BACKUP_DESTINATION'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

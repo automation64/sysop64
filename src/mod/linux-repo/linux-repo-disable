@@ -33,7 +33,7 @@ function my_repo_disable() {
   case "$BL64_OS_DISTRO" in
     ${BL64_OS_FD}-4?.*) my_repo_disable_dnfv5 "$repo" ;;
     *)
-      bl64_check_alert_unsupported
+      bl64_check_rise_task_unsupported
       return $?
       ;;
   esac
@@ -49,7 +49,7 @@ function my_initialize() {
 }
 
 bl64_lib_script_version_set '1.0.3'
-bl64_msg_help_about_set 'Disable Linux native package repository'
+bl64_msg_help_set_about 'Disable Linux native package repository'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
