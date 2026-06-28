@@ -48,12 +48,12 @@ function my_initialize() {
   bl64_dbg_app_show_function
   dev_base_task_initialize &&
     bl64_arc_setup &&
-    dev_bin64_build_setup "$DEV_PACK_PROJECT_PATH_TARGET" "$DEV_PACK_PROJECT_PATH_STAGING" &&
-    dev_bin64_task_show_setup \
+    dev_base_build_setup "$DEV_PACK_PROJECT_PATH_TARGET" "$DEV_PACK_PROJECT_PATH_STAGING" &&
+    dev_base_task_show_setup \
       'DEV_PACK_PROJECT_PATH_TARGET'
 }
 
-bl64_lib_script_version_set '2.1.0'
+bl64_lib_script_version_set '2.1.1'
 bl64_msg_help_about_set 'Pack application for release'
 dev_base_initialize && my_initialize || exit $?
 
