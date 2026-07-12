@@ -38,6 +38,9 @@
   # Default output pagination tool
   export S64_CORE_SET_PAGER="${S64_CORE_SET_PAGER:-}"
 
+  # Default text editor
+  export S64_CORE_SET_EDITOR="${S64_CORE_SET_EDITOR:-}"
+
   # Default task mode
   export S64_CORE_SET_TASK="${S64_CORE_SET_TASK:-RUN}"
 
@@ -72,7 +75,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='3.9.0'
+  declare S64_CORE_VERSION='3.11.0'
   # Minimal BashLib64 version required
   declare S64_BL64_VERSION='23.3.1'
 
@@ -126,6 +129,14 @@ function s64_core_lib_initialize() {
     bl64_msg_show_warning "unable to set requested pager (S64_CORE_SET_PAGER=${S64_CORE_SET_PAGER})"
   fi
 
+  if [[ -n "$S64_CORE_SET_EDITOR" ]]; then
+    if [[ -x "$S64_CORE_SET_EDITOR" ]]; then
+      EDITOR="$S64_CORE_SET_EDITOR"
+    else
+      bl64_msg_show_warning "unable to set requested text editor (S64_CORE_SET_EDITOR=${S64_CORE_SET_EDITOR})"
+    fi
+  fi
+
   bl64_dbg_app_show_comments 'Core parameters'
   bl64_dbg_app_show_vars \
     'S64_CORE_SET_DEBUG' \
@@ -133,6 +144,7 @@ function s64_core_lib_initialize() {
     'S64_CORE_SET_FORMAT' \
     'S64_CORE_SET_OUTPUT' \
     'S64_CORE_SET_PAGER' \
+    'S64_CORE_SET_EDITOR' \
     'S64_CORE_SET_TASK' \
     'S64_CORE_SEARCH_USER' \
     'S64_CORE_SEARCH_SYSTEM' \
@@ -142,7 +154,9 @@ function s64_core_lib_initialize() {
     'S64_CORE_PATH_LOGS' \
     'S64_CORE_PATH_VI'
 
-  return 0
+  bl64_msg_set_output "$S64_CORE_SET_OUTPUT" &&
+    bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
+    bl64_msg_set_format "$S64_CORE_SET_FORMAT"
 }
 
 function _s64_core_lib_harden() {
@@ -219,10 +233,7 @@ function s64_core_lib_module_show_about() {
   bl64_lib_flag_is_enabled "$S64_CORE_SET_MODULE_PRIMARY" || return 0
 
   # shellcheck disable=SC2154
-  bl64_msg_help_set_about "${module_full_name} / ${BL64_MSG_HELP_ABOUT}" &&
-    bl64_msg_set_output "$S64_CORE_SET_OUTPUT" &&
-    bl64_msg_set_level "$S64_CORE_SET_VERBOSE" &&
-    bl64_msg_set_format "$S64_CORE_SET_FORMAT" ||
+  bl64_msg_help_set_about "${module_full_name} / ${BL64_MSG_HELP_ABOUT}" ||
     return $?
 
   if [[ "${S64_CORE_SET_TASK}" == "${S64_CORE_TASK_MODE_RUN}" ]]; then
@@ -257,3 +268,11 @@ function s64_core_lib_module_show_setup() {
   bl64_msg_show_setup "$S64_CORE_LABEL_MODULE_PARAMETERS" \
     "$@"
 }
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2154,SC2015
+source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" ||
+  { s64_core_lib_check_bl64 && exit 1; }

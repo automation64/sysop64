@@ -45,17 +45,19 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_SYSTEMD_VERSION='1.0.0'
+  declare S64_SYSTEMD_VERSION='1.1.0'
   declare S64_SYSTEMD_ABOUT_MODULE_MAIN='Linux System Manager'
+  declare S64_SYSTEMD_ABOUT_SUBMODULE_SYS='Server'
+  declare S64_SYSTEMD_ABOUT_SUBMODULE_RESOLV='Resolv Subsystem'
 
-  S64_SYSTEMD_PATH_CLI_HOSTNAMECTL='/usr/bin/hostnamectl'
-  S64_SYSTEMD_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
-  S64_SYSTEMD_PATH_CLI_RESOLVECTL='/usr/bin/resolvectl'
-  S64_SYSTEMD_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
-  S64_SYSTEMD_PATH_CLI_SYSTEMD_ANALYZE='/usr/bin/systemd-analyze'
+  declare S64_SYSTEMD_PATH_CLI_HOSTNAMECTL='/usr/bin/hostnamectl'
+  declare S64_SYSTEMD_PATH_CLI_JOURNALCTL='/usr/bin/journalctl'
+  declare S64_SYSTEMD_PATH_CLI_RESOLVECTL='/usr/bin/resolvectl'
+  declare S64_SYSTEMD_PATH_CLI_SYSTEMCTL='/usr/bin/systemctl'
+  declare S64_SYSTEMD_PATH_CLI_SYSTEMD_ANALYZE='/usr/bin/systemd-analyze'
 
-  S64_SYSTEMD_DB_RESOLVED='systemd/resolved.conf'
-  S64_SYSTEMD_SERVICE_RESOLVED='systemd-resolved'
+  declare S64_SYSTEMD_DB_RESOLVED='systemd/resolved.conf'
+  declare S64_SYSTEMD_SERVICE_RESOLVED='systemd-resolved'
 }
 
 #
@@ -129,10 +131,14 @@ function s64_systemd_lib_run_resolvectl() {
 
 function s64_systemd_lib_run_systemctl() {
   bl64_dbg_app_show_function "$@"
+  local verbose_flag='--verbose'
+  bl64_msg_app_detail_is_enabled || verbose_flag='--quiet'
   bl64_check_command "$S64_SYSTEMD_PATH_CLI_SYSTEMCTL" "$BL64_VAR_DEFAULT" 'S64_SYSTEMD_PATH_CLI_SYSTEMCTL' ||
     return $?
   bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
   "$S64_SYSTEMD_PATH_CLI_SYSTEMCTL" \
+    $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
 }

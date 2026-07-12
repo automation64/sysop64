@@ -23,7 +23,7 @@ function my_initialize() {
   s64_linux_lib_setup
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_set_about 'Show technical reference information'
 s64_core_lib_initialize && my_initialize || exit $?
 
@@ -35,5 +35,7 @@ bl64_msg_show_doc 'Installation media:
   - Fedora: https://fedoraproject.org/server/download/
   - AlmaLinux: https://almalinux.org/get-almalinux/
   - RockyLinux: https://rockylinux.org/download
+Distro Upgrade:
+  - Oracle Enterprise linux: https://docs.oracle.com/en/operating-systems/oracle-linux/10/leapp/leapp-AboutLeapp.html
 '
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

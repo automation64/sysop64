@@ -127,7 +127,7 @@ function my_initialize() {
   esac
 }
 
-bl64_lib_script_version_set '2.0.1'
+bl64_lib_script_version_set '2.0.2'
 bl64_msg_help_usage_set '[-V format] [-D Debug] <COMMAND> [MODULE] [TASK] [PARAMETERS]'
 bl64_msg_help_about_set 'Run sysadmin tasks'
 bl64_msg_help_parameters_set \
@@ -148,7 +148,7 @@ PARAMETERS : (Optional). Task parameters
 
 Global Options:
 
--V FORMAT  : verbose message format. Format: BL64_MSG_FORMAT_*
+-V LEVEL  : verbose message format. Format: BL64_MSG_LEVEL_*
 -D DEBUG   : Enable debugging mode. Format: BL64_DBG_TARGET_*"
 
 # shellcheck disable=SC2249,SC2034
