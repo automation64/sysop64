@@ -23,7 +23,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
   { s64_core_lib_check_bl64 && exit 1; }
 
@@ -42,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_RSYNC_VERSION='4.2.1'
+  declare S64_RSYNC_VERSION='4.2.2'
   declare S64_RSYNC_ABOUT_MODULE_MAIN='RSync File Transfer Tools'
 
   # RSync / Common parameters, regardless of the method

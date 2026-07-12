@@ -3,10 +3,16 @@
 
 export TEST_PROJECT_ROOT="/project"
 export TEST_HOME_ROOT="/opt"
+export TEST_BL64_ROOT="$TEST_HOME_ROOT/bl64"
+export TEST_BL64_SRC="$TEST_PROJECT_ROOT/lib/bl64"
 export TEST_SO64_ROOT="$TEST_HOME_ROOT/sysop64"
 export TEST_SO64_SRC="$TEST_PROJECT_ROOT/src"
 
-sudo rm -Rf "$TEST_SO64_ROOT" &&
-sudo mkdir -p $TEST_SO64_ROOT &&
-sudo cp -Rf $TEST_SO64_SRC/* "$TEST_SO64_ROOT"
-sudo chmod 755 -Rf "$TEST_SO64_ROOT"
+sudo rm -Rf "$TEST_BL64_ROOT" &&
+  sudo mkdir -p $TEST_BL64_ROOT &&
+  sudo cp -f $TEST_BL64_SRC/* "$TEST_BL64_ROOT" &&
+  sudo chmod 755 -Rf "$TEST_SO64_ROOT" &&
+  sudo rm -Rf "$TEST_SO64_ROOT" &&
+  sudo mkdir -p $TEST_SO64_ROOT &&
+  sudo cp -Rf $TEST_SO64_SRC/* "$TEST_SO64_ROOT" &&
+  sudo chmod 755 -Rf "$TEST_SO64_ROOT"

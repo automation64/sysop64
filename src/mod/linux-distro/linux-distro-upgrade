@@ -22,45 +22,76 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 
 declare MY_COMMAND=''
 declare MY_OPTION=''
 declare MY_RELEASE=''
-declare MY_CMD_RELEASE_UPGRADE=''
-
-function prepare_fedora() {
-  bl64_dbg_app_show_function
-  bl64_msg_show_task 'install OS upgrade tools'
-  bl64_pkg_install \
-    dnf-utils \
-    dnf-plugin-system-upgrade &&
-    bl64_msg_show_task 'auto-remove unused packages' &&
-    bl64_pkg_cleanup &&
-    bl64_pkg_run_dnf \
-      $BL64_PKG_SET_ASSUME_YES \
-      autoremove &&
-    bl64_msg_show_task 'upgrade all packages' &&
-    bl64_pkg_upgrade
-
-}
-
-function upgrade_fedora() {
-  bl64_dbg_app_show_function "$@"
-  local release="$1"
-  bl64_pkg_run_dnf \
-    system-upgrade download --releasever="$release" &&
-    bl64_pkg_run_dnf \
-      system-upgrade reboot
-}
+declare MY_CMD_LEAPP='/usr/bin/leapp'
+declare MY_CMD_RELEASE_UPGRADE='/bin/do-release-upgrade'
 
 function prepare_ubuntu() {
   bl64_dbg_app_show_function
   bl64_msg_show_task 'auto-remove unused packages'
   bl64_pkg_cleanup &&
-    bl64_pkg_run_apt autoremove "$BL64_PKG_SET_ASSUME_YES" &&
-    bl64_msg_show_task 'prepare for upgrade' &&
-    bl64_pkg_prepare &&
-    bl64_msg_show_task 'upgrade all packages' &&
+    bl64_pkg_run_apt autoremove "$BL64_PKG_SET_ASSUME_YES"
+
+  bl64_msg_show_task 'prepare for upgrade'
+  bl64_pkg_prepare &&
+    bl64_msg_show_task 'upgrade current release packages' &&
     bl64_pkg_run_apt upgrade \
       --with-new-pkgs \
       --show-progress \
       "$BL64_PKG_SET_ASSUME_YES"
+}
+
+function prepare_oracle() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_task 'remove debugging kernel images'
+  bl64_pkg_run_dnf \
+    erase \
+    $BL64_PKG_SET_ASSUME_YES \
+    "kernel-debug*" \
+    "kernel-uek-debug*"
+
+  bl64_msg_show_task 'auto-remove unused packages'
+  bl64_pkg_cleanup &&
+    bl64_pkg_run_dnf \
+      $BL64_PKG_SET_ASSUME_YES \
+      autoremove
+
+  bl64_msg_show_task 'install OS upgrade tools'
+  bl64_pkg_install \
+    leapp-upgrade &&
+    bl64_msg_show_task 'upgrade current release packages' &&
+    bl64_pkg_upgrade
+}
+
+function prepare_fedora() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_task 'auto-remove unused packages'
+  bl64_pkg_cleanup &&
+    bl64_pkg_run_dnf \
+      $BL64_PKG_SET_ASSUME_YES \
+      autoremove
+
+  bl64_msg_show_task 'install OS upgrade tools'
+  bl64_pkg_install \
+    dnf-utils \
+    dnf-plugin-system-upgrade &&
+    bl64_msg_show_task 'upgrade current release packages' &&
+    bl64_pkg_upgrade
+}
+
+function upgrade_oracle() {
+  bl64_dbg_app_show_function
+  "$MY_CMD_LEAPP" \
+    preupgrade --oraclelinux &&
+    "$MY_CMD_LEAPP" \
+      upgrade --oraclelinux
+}
+
+function upgrade_fedora() {
+  bl64_dbg_app_show_function
+  bl64_pkg_run_dnf \
+    system-upgrade download --releasever="$MY_RELEASE" &&
+    bl64_pkg_run_dnf \
+      system-upgrade reboot
 }
 
 function upgrade_ubuntu() {
@@ -72,13 +103,15 @@ function upgrade_ubuntu() {
 
 function prepare() {
   bl64_dbg_app_show_function
-  bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade all packages to the latest version for the current distro release' ||
+  bl64_ui_ask_confirmation 'Warning: the task will auto-remove and upgrade current release packages to the latest version for the current distro release' ||
     return $?
   case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*) prepare_ubuntu ;;
     ${BL64_OS_FD}-*) prepare_fedora ;;
+    ${BL64_OS_OL}-*) prepare_oracle ;;
     *) bl64_check_rise_task_unsupported ;;
-  esac
+  esac &&
+    bl64_msg_show_attention 'You must reboot the system to complete the upgrade'
 }
 
 function upgrade() {
@@ -87,7 +120,8 @@ function upgrade() {
     return $?
   case "$BL64_OS_DISTRO" in
     ${BL64_OS_UB}-*) upgrade_ubuntu ;;
-    ${BL64_OS_FD}-*) upgrade_fedora "$MY_RELEASE" ;;
+    ${BL64_OS_FD}-*) upgrade_fedora ;;
+    ${BL64_OS_OL}-*) upgrade_oracle ;;
     *) bl64_check_rise_task_unsupported ;;
   esac
 }
@@ -96,39 +130,52 @@ function my_initialize() {
   bl64_dbg_app_show_function
   [[ -n "$MY_OPTION" && -n "$MY_COMMAND" ]] || { bl64_msg_help_show && return 1; }
   bl64_check_privilege_root &&
-    s64_linux_lib_setup &&
-    bl64_os_check_compatibility \
-      "${BL64_OS_UB}-22" "${BL64_OS_UB}-23" "${BL64_OS_UB}-24" "${BL64_OS_UB}-25" \
-      "${BL64_OS_FD}-39" "${BL64_OS_FD}-40" "${BL64_OS_FD}-41" "${BL64_OS_FD}-42" ||
+    s64_linux_lib_setup ||
     return $?
 
-  if [[ "$MY_COMMAND" == 'upgrade' ]]; then
-    # shellcheck disable=SC2249
-    case "$BL64_OS_DISTRO" in
-      ${BL64_OS_UB}-*)
-        MY_CMD_RELEASE_UPGRADE='/bin/do-release-upgrade'
+  # shellcheck disable=SC2249
+  case "$BL64_OS_DISTRO" in
+    ${BL64_OS_UB}-*)
+      bl64_os_check_compatibility \
+        "${BL64_OS_UB}-22" "${BL64_OS_UB}-23" "${BL64_OS_UB}-24" "${BL64_OS_UB}-25" ||
+        return $?
+      if [[ "$MY_COMMAND" == 'upgrade' ]]; then
         bl64_check_command "$MY_CMD_RELEASE_UPGRADE"
-        ;;
-      ${BL64_OS_FD}-*)
-        bl64_check_parameter 'MY_RELEASE'
-        ;;
-    esac
-  fi || return $?
-  s64_core_lib_task_show_setup \
-    'MY_RELEASE'
+      fi
+      ;;
+    ${BL64_OS_FD}-*)
+      bl64_check_parameter 'MY_RELEASE'
+      ;;
+    ${BL64_OS_OL}-*)
+      bl64_os_check_compatibility \
+        "${BL64_OS_OL}-9" ||
+        return $?
+      if [[ "$MY_COMMAND" == 'upgrade' ]]; then
+        bl64_check_command "$MY_CMD_LEAPP"
+      fi
+      ;;
+    *)
+      bl64_os_raise_platform_unsupported
+      ;;
+  esac &&
+    s64_core_lib_task_show_setup \
+      'MY_RELEASE'
 }
 
-bl64_lib_script_version_set '1.1.0'
+bl64_lib_script_version_set '1.2.0'
 bl64_msg_help_set_usage '<-p|-u> [-r Release] [-V Verbose] [-D Debug] [-h]'
 bl64_msg_help_set_about 'Upgrade Linux distribution release'
 # shellcheck disable=SC2016
 bl64_msg_help_set_parameters \
-  '-p         : Prepare for Distro upgrade
--u         : Perform for Distro upgrade
--h         : Show help
--r Release : Target release
--V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
--D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
+  'Commands:
+  -p : Prepare for Distro upgrade
+  -u : Perform for Distro upgrade
+  -h : Show help
+
+Parameters:
+  -r Release : Target release. Required for Oracle, Fedora
+  -V Verbose : Set verbosity level. Format: one of BL64_MSG_VERBOSE_*
+  -D Debug   : Enable debugging mode. Format: one of BL64_DBG_TARGET_*'
 
 while getopts ':pur:V:D:h' MY_OPTION; do
   case "$MY_OPTION" in

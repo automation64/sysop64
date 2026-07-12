@@ -62,31 +62,31 @@ q h
 - `cleanup`: remove temporary content
 - `debug`: debug component
 - `dump`: show component content as-is
-- `edit`: edit content
+- `edit`: edit content, using interactive text editor
 - `guide`: show technical documentation about the module or task
 - `init`: initialize component content
 - `list`: list components
 - `login`: login to service
 - `migrate`: migrate component or content
-- `query`: query component or content
+- `query`: query component or content using query lang
 - `monitor`: show component runtime metrics
 - `rename`: rename component
 - `reset`: reset component or content to initial or empty value
 - `restart`: restart component
 - `run`: run service
 - `scan`: scan component
-- `search`: search component content
+- `search`: search component content without query lang
 - `setup`: setup component
 - `show`: show component details
 - `status`: show component status
-- `sync`: synchronize component or content
+- `sync`: synchronize component or content against another component or content
 - `test`: test component
 - `trace`: trace component (detailed debug)
 - `watch`: continuously monitor component for changes in realtime
 - `update`: update component status or content
 - `upgrade`: upgrade component
 
-- `add` / `delete`: add or delete component
+- `add` / `delete`: add or delete element to/from component
 - `attach` / `detach`: attach or detach component
 - `backup` / `restore`: backup or restore content
 - `create` / `destroy`: create or destroy (no undo) component

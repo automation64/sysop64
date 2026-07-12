@@ -34,8 +34,9 @@ function my_initialize() {
       'MY_PATH_DESTINATION'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_set_about 'Copy files to running container'
+bl64_msg_help_set_usage 'MY_CONTAINER_ID MY_PATH_SOURCE MY_PATH_DESTINATION'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

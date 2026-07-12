@@ -19,24 +19,17 @@ source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/linu
 source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
-function my_repo_list_dnf() {
+function my_list_dnf4() {
   bl64_dbg_app_show_function
   bl64_pkg_run_dnf \
     repolist \
-    --json \
     --all
 }
 
-function my_repo_list() {
+function my_dump_pacman_conf() {
   bl64_dbg_app_show_function
-  case "$BL64_OS_DISTRO" in
-    ${BL64_OS_CNT}-7.* | ${BL64_OS_OL}-7.*) bl64_check_rise_task_unsupported ;;
-    ${BL64_OS_FD}-* | ${BL64_OS_AMZ}-* | ${BL64_OS_CNT}-* | ${BL64_OS_OL}-* | ${BL64_OS_RHEL}-* | ${BL64_OS_ALM}-* | ${BL64_OS_RCK}-*) my_repo_list_dnf ;;
-    *)
-      bl64_check_rise_task_unsupported
-      return $?
-      ;;
-  esac
+  s64_linux_lib_run_pacman_conf \
+    --repo-list
 }
 
 function my_initialize() {
@@ -45,10 +38,17 @@ function my_initialize() {
     bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '1.0.3'
-bl64_msg_help_set_about 'List Linux native package repositories'
+bl64_lib_script_version_set '1.1.0'
+bl64_msg_help_set_about 'List package repositories'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-my_repo_list
+case "$BL64_OS_DISTRO" in
+  "$BL64_OS_OL"-8.* | "$BL64_OS_OL"-9.* | "$BL64_OS_OL"-10.*) my_list_dnf4 ;;
+  "$BL64_OS_CNT"-8.* | "$BL64_OS_CNT"-9.* | "$BL64_OS_CNT"-10.*) my_list_dnf4 ;;
+  "$BL64_OS_ALM"-* | "$BL64_OS_RCK"-*) my_list_dnf4 ;;
+  "$BL64_OS_FD"-3?) my_list_dnf4 ;;
+  "$BL64_OS_ARC"-*) my_dump_pacman_conf ;;
+  *) bl64_check_rise_task_unsupported ;;
+esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
