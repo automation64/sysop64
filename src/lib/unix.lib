@@ -40,7 +40,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_UNIX_VERSION='2.5.0'
+  declare S64_UNIX_VERSION='2.6.0'
   declare S64_UNIX_ABOUT_MODULE='Unix OS'
   declare S64_UNIX_ABOUT_SUBMODULE_BKP='Backup and Archive'
   declare S64_UNIX_ABOUT_SUBMODULE_FS='File System'
@@ -61,6 +61,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_UNIX_CMD_SHUTDOWN=''
   declare S64_UNIX_CMD_SU=''
   declare S64_UNIX_CMD_UMOUNT=''
+
+  declare S64_UNIX_PATH_RESOLV_CONF=''
 }
 
 #
@@ -70,92 +72,103 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 function s64_unix_lib_setup() {
   bl64_dbg_app_show_function
   # shellcheck disable=SC2154,SC2015,SC2034
-  s64_core_lib_module_show_about "$S64_UNIX_ABOUT_MODULE" &&
-    case "$BL64_OS_FLAVOR" in
-      "$BL64_OS_FLAVOR_ALPINE")
-        S64_UNIX_CMD_DF='/bin/df'
-        S64_UNIX_CMD_DD='/usr/bin/dd'
-        S64_UNIX_CMD_DU='/usr/bin/du'
-        S64_UNIX_CMD_KILL='/bin/kill'
-        S64_UNIX_CMD_LS='/bin/ls'
-        S64_UNIX_CMD_MOUNT='/bin/mount'
-        S64_UNIX_CMD_NETSTAT='/bin/netstat'
-        S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
-        S64_UNIX_CMD_PING='/bin/ping'
-        S64_UNIX_CMD_PS='/bin/ps'
-        S64_UNIX_CMD_SHUTDOWN='/sbin/shutdown'
-        S64_UNIX_CMD_SU='/bin/su'
-        S64_UNIX_CMD_UMOUNT='/bin/umount'
-        ;;
-      "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_SUSE")
-        S64_UNIX_CMD_DF='/bin/df'
-        S64_UNIX_CMD_DD='/usr/bin/dd'
-        S64_UNIX_CMD_DU='/usr/bin/du'
-        S64_UNIX_CMD_KILL='/bin/kill'
-        S64_UNIX_CMD_LS='/bin/ls'
-        S64_UNIX_CMD_MOUNT='/bin/mount'
-        S64_UNIX_CMD_NETSTAT='/bin/netstat'
-        S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
-        S64_UNIX_CMD_PING='/bin/ping'
-        S64_UNIX_CMD_PS='/bin/ps'
-        S64_UNIX_CMD_SHUTDOWN='/sbin/shutdown'
-        S64_UNIX_CMD_SU='/bin/su'
-        S64_UNIX_CMD_UMOUNT='/bin/umount'
-        ;;
-      "$BL64_OS_FLAVOR_ARCH")
-        S64_UNIX_CMD_DF='/usr/bin/df'
-        S64_UNIX_CMD_DD='/usr/bin/dd'
-        S64_UNIX_CMD_DU='/usr/bin/du'
-        S64_UNIX_CMD_KILL='/usr/bin/kill'
-        S64_UNIX_CMD_LS='/usr/bin/ls'
-        S64_UNIX_CMD_MOUNT='/usr/bin/mount'
-        S64_UNIX_CMD_NETSTAT='/bin/netstat'
-        S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
-        S64_UNIX_CMD_PING='/usr/bin/ping'
-        S64_UNIX_CMD_PS='/usr/bin/ps'
-        S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
-        S64_UNIX_CMD_SU='/usr/bin/su'
-        S64_UNIX_CMD_UMOUNT='/usr/bin/umount'
-        ;;
-      "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT")
-        S64_UNIX_CMD_DF='/usr/bin/df'
-        S64_UNIX_CMD_DD='/usr/bin/dd'
-        S64_UNIX_CMD_DU='/usr/bin/du'
-        S64_UNIX_CMD_KILL='/usr/bin/kill'
-        S64_UNIX_CMD_LS='/usr/bin/ls'
-        S64_UNIX_CMD_MOUNT='/usr/bin/mount'
-        S64_UNIX_CMD_NETSTAT='/bin/netstat'
-        S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
-        S64_UNIX_CMD_PING='/usr/bin/ping'
-        S64_UNIX_CMD_PS='/bin/ps'
-        S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
-        S64_UNIX_CMD_SU='/usr/bin/su'
-        S64_UNIX_CMD_UMOUNT='/usr/bin/umount'
-        ;;
-      "$BL64_OS_FLAVOR_MACOS")
-        S64_UNIX_CMD_DF='/bin/df'
-        S64_UNIX_CMD_DD='/usr/bin/dd'
-        S64_UNIX_CMD_DU='/usr/bin/du'
-        S64_UNIX_CMD_KILL='/bin/kill'
-        S64_UNIX_CMD_LS='/bin/ls'
-        S64_UNIX_CMD_MOUNT='/sbin/mount'
-        S64_UNIX_CMD_NETSTAT='/usr/sbin/netstat'
-        S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
-        S64_UNIX_CMD_PING='/sbin/ping'
-        S64_UNIX_CMD_PS='/bin/ps'
-        S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
-        S64_UNIX_CMD_SU='/usr/bin/su'
-        S64_UNIX_CMD_UMOUNT='/sbin/umount'
-        ;;
-      *)
-        bl64_check_rise_task_unsupported
-        ;;
-    esac
+  s64_core_lib_module_show_about "$S64_UNIX_ABOUT_MODULE"
+
+  case "$BL64_OS_FLAVOR" in
+    "$BL64_OS_FLAVOR_ALPINE")
+      S64_UNIX_CMD_DF='/bin/df'
+      S64_UNIX_CMD_DD='/usr/bin/dd'
+      S64_UNIX_CMD_DU='/usr/bin/du'
+      S64_UNIX_CMD_KILL='/bin/kill'
+      S64_UNIX_CMD_LS='/bin/ls'
+      S64_UNIX_CMD_MOUNT='/bin/mount'
+      S64_UNIX_CMD_NETSTAT='/bin/netstat'
+      S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
+      S64_UNIX_CMD_PING='/bin/ping'
+      S64_UNIX_CMD_PS='/bin/ps'
+      S64_UNIX_CMD_SHUTDOWN='/sbin/shutdown'
+      S64_UNIX_CMD_SU='/bin/su'
+      S64_UNIX_CMD_UMOUNT='/bin/umount'
+
+      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
+      ;;
+    "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_SUSE")
+      S64_UNIX_CMD_DF='/bin/df'
+      S64_UNIX_CMD_DD='/usr/bin/dd'
+      S64_UNIX_CMD_DU='/usr/bin/du'
+      S64_UNIX_CMD_KILL='/bin/kill'
+      S64_UNIX_CMD_LS='/bin/ls'
+      S64_UNIX_CMD_MOUNT='/bin/mount'
+      S64_UNIX_CMD_NETSTAT='/bin/netstat'
+      S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
+      S64_UNIX_CMD_PING='/bin/ping'
+      S64_UNIX_CMD_PS='/bin/ps'
+      S64_UNIX_CMD_SHUTDOWN='/sbin/shutdown'
+      S64_UNIX_CMD_SU='/bin/su'
+      S64_UNIX_CMD_UMOUNT='/bin/umount'
+
+      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
+      ;;
+    "$BL64_OS_FLAVOR_ARCH")
+      S64_UNIX_CMD_DF='/usr/bin/df'
+      S64_UNIX_CMD_DD='/usr/bin/dd'
+      S64_UNIX_CMD_DU='/usr/bin/du'
+      S64_UNIX_CMD_KILL='/usr/bin/kill'
+      S64_UNIX_CMD_LS='/usr/bin/ls'
+      S64_UNIX_CMD_MOUNT='/usr/bin/mount'
+      S64_UNIX_CMD_NETSTAT='/bin/netstat'
+      S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
+      S64_UNIX_CMD_PING='/usr/bin/ping'
+      S64_UNIX_CMD_PS='/usr/bin/ps'
+      S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
+      S64_UNIX_CMD_SU='/usr/bin/su'
+      S64_UNIX_CMD_UMOUNT='/usr/bin/umount'
+
+      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
+      ;;
+    "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT")
+      S64_UNIX_CMD_DF='/usr/bin/df'
+      S64_UNIX_CMD_DD='/usr/bin/dd'
+      S64_UNIX_CMD_DU='/usr/bin/du'
+      S64_UNIX_CMD_KILL='/usr/bin/kill'
+      S64_UNIX_CMD_LS='/usr/bin/ls'
+      S64_UNIX_CMD_MOUNT='/usr/bin/mount'
+      S64_UNIX_CMD_NETSTAT='/bin/netstat'
+      S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
+      S64_UNIX_CMD_PING='/usr/bin/ping'
+      S64_UNIX_CMD_PS='/bin/ps'
+      S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
+      S64_UNIX_CMD_SU='/usr/bin/su'
+      S64_UNIX_CMD_UMOUNT='/usr/bin/umount'
+
+      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
+      ;;
+    "$BL64_OS_FLAVOR_MACOS")
+      S64_UNIX_CMD_DF='/bin/df'
+      S64_UNIX_CMD_DD='/usr/bin/dd'
+      S64_UNIX_CMD_DU='/usr/bin/du'
+      S64_UNIX_CMD_KILL='/bin/kill'
+      S64_UNIX_CMD_LS='/bin/ls'
+      S64_UNIX_CMD_MOUNT='/sbin/mount'
+      S64_UNIX_CMD_NETSTAT='/usr/sbin/netstat'
+      S64_UNIX_CMD_NSLOOKUP='/usr/bin/nslookup'
+      S64_UNIX_CMD_PING='/sbin/ping'
+      S64_UNIX_CMD_PS='/bin/ps'
+      S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
+      S64_UNIX_CMD_SU='/usr/bin/su'
+      S64_UNIX_CMD_UMOUNT='/sbin/umount'
+
+      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
+      ;;
+    *)
+      bl64_check_rise_task_unsupported
+      ;;
+  esac
 }
 
 function s64_unix_lib_run_ps() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_PS" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_PS' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_PS' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_PS" \
     "$@"
@@ -164,7 +177,7 @@ function s64_unix_lib_run_ps() {
 
 function s64_unix_lib_run_ls() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_LS" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_LS' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_LS' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_LS" \
     "$@"
@@ -173,7 +186,7 @@ function s64_unix_lib_run_ls() {
 
 function s64_unix_lib_run_mount() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_MOUNT" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_MOUNT' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_MOUNT' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_MOUNT" \
     "$@"
@@ -182,7 +195,7 @@ function s64_unix_lib_run_mount() {
 
 function s64_unix_lib_run_umount() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_UMOUNT" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_UMOUNT' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_UMOUNT' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_UMOUNT" \
     "$@"
@@ -191,7 +204,7 @@ function s64_unix_lib_run_umount() {
 
 function s64_unix_lib_run_kill() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_KILL" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_KILL' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_KILL' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_KILL" \
     "$@"
@@ -200,7 +213,7 @@ function s64_unix_lib_run_kill() {
 
 function s64_unix_lib_run_ping() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_PING" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_PING' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_PING' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_PING" \
     "$@"
@@ -209,7 +222,7 @@ function s64_unix_lib_run_ping() {
 
 function s64_unix_lib_run_df() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_DF" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_DF' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_DF' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_DF" \
     "$@"
@@ -218,7 +231,7 @@ function s64_unix_lib_run_df() {
 
 function s64_unix_lib_run_du() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_DU" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_DU' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_DU' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_DU" \
     "$@"
@@ -227,7 +240,7 @@ function s64_unix_lib_run_du() {
 
 function s64_unix_lib_run_netstat() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_NETSTAT" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_NETSTAT' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_NETSTAT' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_NETSTAT" \
     "$@"
@@ -236,7 +249,7 @@ function s64_unix_lib_run_netstat() {
 
 function s64_unix_lib_run_su() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_SU" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_SU' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_SU' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_SU" \
     "$@"
@@ -245,7 +258,7 @@ function s64_unix_lib_run_su() {
 
 function s64_unix_lib_run_nslookup() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_NSLOOKUP" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_NSLOOKUP' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_NSLOOKUP' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_NSLOOKUP" \
     "$@"
@@ -254,7 +267,7 @@ function s64_unix_lib_run_nslookup() {
 
 function s64_unix_lib_run_dd() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_DD" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_DD' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_DD' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_DD" \
     "$@"
@@ -263,7 +276,7 @@ function s64_unix_lib_run_dd() {
 
 function s64_unix_lib_run_shutdown() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_UNIX_CMD_SHUTDOWN" "$BL64_VAR_DEFAULT" 'S64_UNIX_CMD_SHUTDOWN' || return $?
+  s64_core_lib_command_require 'S64_UNIX_CMD_SHUTDOWN' || return $?
   bl64_dbg_app_trace_start
   "$S64_UNIX_CMD_SHUTDOWN" \
     "$@"

@@ -32,12 +32,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_CMD_SCP="${S64_OPENSSH_CMD_SCP:-}"
-  declare S64_OPENSSH_CMD_SSH="${S64_OPENSSH_CMD_SSH:-}"
-  declare S64_OPENSSH_CMD_SSH_ADD="${S64_OPENSSH_CMD_SSH_ADD:-}"
-  declare S64_OPENSSH_CMD_SSH_COPY_ID="${S64_OPENSSH_CMD_SSH_COPY_ID:-}"
-  declare S64_OPENSSH_CMD_SSH_KEYGEN="${S64_OPENSSH_CMD_SSH_KEYGEN:-}"
-
   declare S64_OPENSSH_PATH_HOME_SSH="${S64_OPENSSH_PATH_HOME_SSH:-${HOME}/.ssh}"
 
   declare S64_OPENSSH_FILE_CLIENT_CONFIG="${S64_OPENSSH_FILE_CLIENT_CONFIG:-config}"
@@ -52,8 +46,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_VERSION='3.3.0'
+  declare S64_OPENSSH_VERSION='3.4.0'
   declare S64_OPENSSH_ABOUT_MODULE='OpenSSH - Secure Remote Shell'
+
+  declare S64_OPENSSH_CMD_SCP='/usr/bin/scp'
+  declare S64_OPENSSH_CMD_SSH='/usr/bin/ssh'
+  declare S64_OPENSSH_CMD_SSH_ADD='/usr/bin/ssh-add'
+  declare S64_OPENSSH_CMD_SSH_COPY_ID='/usr/bin/ssh-copy-id'
+  declare S64_OPENSSH_CMD_SSH_KEYGEN='/usr/bin/ssh-keygen'
+  declare S64_OPENSSH_CMD_SSH_KEYSCAN='/usr/bin/ssh-keyscan'
 
   declare S64_OPENSSH_SERVICE="$BL64_VAR_INCOMPATIBLE"
 }
@@ -78,7 +79,8 @@ function s64_openssh_lib_setup() {
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH' 'ssh' &&
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_ADD' 'ssh-add' &&
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_COPY_ID' 'ssh-copy-id' &&
-    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYGEN' 'ssh-keygen'
+    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYGEN' 'ssh-keygen' &&
+    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYSCAN' 'ssh-keyscan'
 }
 
 function s64_openssh_lib_run_ssh_keygen() {
@@ -117,6 +119,14 @@ function s64_openssh_lib_run_ssh_copy_id() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_OPENSSH_CMD_SSH_COPY_ID" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_openssh_lib_run_ssh_keyscan() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_OPENSSH_CMD_SSH_KEYSCAN" \
     "$@"
   bl64_dbg_app_trace_stop
 }
