@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_NETMAN_SET_OUTPUT_MODE="${S64_NETMAN_SET_OUTPUT_MODE:-tabular}"
+  declare S64_NETMAN_CFG_OUTPUT_MODE="${S64_NETMAN_CFG_OUTPUT_MODE:-multiline}"
 }
 
 #
@@ -40,7 +40,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_NETMAN_VERSION='1.0.0'
+  declare S64_NETMAN_VERSION='1.0.1'
   declare S64_NETMAN_ABOUT_MODULE='Linux Network Manager'
 
   # SystemD service name
@@ -65,7 +65,7 @@ function s64_netman_lib_run_nmcli() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_NETMAN_CMD_NMCLI" \
-    --mode "$S64_NETMAN_SET_OUTPUT_MODE" \
+    --mode "$S64_NETMAN_CFG_OUTPUT_MODE" \
     --pretty \
     "$@"
   bl64_dbg_app_trace_stop

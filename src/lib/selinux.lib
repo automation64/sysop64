@@ -42,10 +42,13 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_SELINUX_CMD_AUSYSCALL='/usr/bin/ausyscall'
   declare S64_SELINUX_CMD_SEMODULE='/usr/sbin/semodule'
   declare S64_SELINUX_CMD_SESTATUS='/usr/sbin/sestatus'
+  declare S64_SELINUX_CMD_SETENFORCE='/usr/sbin/setenforce'
   declare S64_SELINUX_CMD_SETSEBOOL='/usr/sbin/setsebool'
 
   # Optional commands
   declare S64_SELINUX_CMD_SEMANAGE='/usr/sbin/semanage'
+
+  declare S64_SELINUX_PATH_CONFIG='/etc/selinux/config'
 }
 
 #
@@ -132,6 +135,14 @@ function s64_selinux_lib_run_semodule() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_SELINUX_CMD_SEMODULE" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_setenforce() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_SETENFORCE" \
     "$@"
   bl64_dbg_app_trace_stop
 }

@@ -37,7 +37,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='4.3.0'
+  declare S64_LINUX_VERSION='4.3.1'
   declare S64_LINUX_ABOUT_MODULE='Linux OS'
   declare S64_LINUX_ABOUT_SUBMODULE_APP='Applications'
   declare S64_LINUX_ABOUT_SUBMODULE_BOOT='Boot Manager'
@@ -412,7 +412,7 @@ function s64_linux_lib_setup_secondary() {
 
 function s64_linux_lib_run_udisksctl() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_UDISKSCTL" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_UDISKSCTL' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_UDISKSCTL' ||
     return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
@@ -423,7 +423,7 @@ function s64_linux_lib_run_udisksctl() {
 
 function s64_linux_lib_run_blkid() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_BLKID" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_BLKID' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_BLKID' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_BLKID" \
@@ -434,7 +434,7 @@ function s64_linux_lib_run_blkid() {
 function s64_linux_lib_run_cryptsetup() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
-  bl64_check_command "$S64_LINUX_CMD_CRYPTSETUP" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_CRYPTSETUP' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_CRYPTSETUP' ||
     return $?
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
@@ -447,7 +447,7 @@ function s64_linux_lib_run_cryptsetup() {
 
 function s64_linux_lib_run_lsblk() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_LSBLK" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_LSBLK' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_LSBLK' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_LSBLK" \
@@ -458,7 +458,7 @@ function s64_linux_lib_run_lsblk() {
 function s64_linux_lib_run_mount() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
-  bl64_check_command "$S64_LINUX_CMD_MOUNT" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_MOUNT' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_MOUNT' ||
     return $?
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
@@ -472,7 +472,7 @@ function s64_linux_lib_run_mount() {
 function s64_linux_lib_run_fsck() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='-V'
-  bl64_check_command "$S64_LINUX_CMD_FSCK" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_FSCK' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_FSCK' ||
     return $?
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
@@ -486,7 +486,7 @@ function s64_linux_lib_run_fsck() {
 function s64_linux_lib_run_badblocks() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='-v'
-  bl64_check_command "$S64_LINUX_CMD_BADBLOCKS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_BADBLOCKS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_BADBLOCKS' ||
     return $?
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
@@ -500,7 +500,7 @@ function s64_linux_lib_run_badblocks() {
 function s64_linux_lib_run_mdadm() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--verbose'
-  bl64_check_command "$S64_LINUX_CMD_MDADM" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_MDADM' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_MDADM' ||
     return $?
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
@@ -513,7 +513,7 @@ function s64_linux_lib_run_mdadm() {
 
 function s64_linux_lib_run_vgs() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_VGS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_VGS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_VGS' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_VGS" \
@@ -523,7 +523,7 @@ function s64_linux_lib_run_vgs() {
 
 function s64_linux_lib_run_lvs() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_LVS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_LVS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_LVS' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_LVS" \
@@ -533,7 +533,7 @@ function s64_linux_lib_run_lvs() {
 
 function s64_linux_lib_run_pvs() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_PVS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_PVS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_PVS' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_PVS" \
@@ -544,7 +544,7 @@ function s64_linux_lib_run_pvs() {
 function s64_linux_lib_run_mkfs() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='-v'
-  bl64_check_command "$S64_LINUX_CMD_MKFS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_MKFS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_MKFS' ||
     return $?
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
@@ -557,7 +557,7 @@ function s64_linux_lib_run_mkfs() {
 
 function s64_linux_lib_run_mkfs_ext4() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_MKFS_EXT4" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_MKFS_EXT4' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_MKFS_EXT4' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_MKFS_EXT4" \
@@ -567,7 +567,7 @@ function s64_linux_lib_run_mkfs_ext4() {
 
 function s64_linux_lib_run_mkfs_xfs() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_MKFS_XFS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_MKFS_XFS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_MKFS_XFS' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_MKFS_XFS" \
@@ -580,7 +580,7 @@ function s64_linux_lib_run_dmsetup() {
   local verbose_flag='--verbose'
   local command="$1"
 
-  bl64_check_command "$S64_LINUX_CMD_DMSETUP" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_DMSETUP' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_DMSETUP' ||
     return $?
   shift
 
@@ -596,7 +596,7 @@ function s64_linux_lib_run_dmsetup() {
 
 function s64_linux_lib_run_lspci() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_LSPCI" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_LSPCI' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_LSPCI' ||
     return $?
 
   bl64_dbg_app_trace_start
@@ -608,7 +608,7 @@ function s64_linux_lib_run_lspci() {
 
 function s64_linux_lib_run_lsusb() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_LSUSB" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_LSUSB' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_LSUSB' ||
     return $?
 
   bl64_dbg_app_trace_start
@@ -620,7 +620,7 @@ function s64_linux_lib_run_lsusb() {
 
 function s64_linux_lib_run_grub2_mkconfig() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_GRUB2MKCONFIG" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_GRUB2MKCONFIG' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_GRUB2MKCONFIG' ||
     return $?
 
   bl64_dbg_app_trace_start
@@ -632,7 +632,7 @@ function s64_linux_lib_run_grub2_mkconfig() {
 
 function s64_linux_lib_run_ldd() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_LDD" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_LDD' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_LDD' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_LDD" \
@@ -642,7 +642,7 @@ function s64_linux_lib_run_ldd() {
 
 function s64_linux_lib_run_ip() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_IP" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_IP' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_IP' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_IP" \
@@ -652,7 +652,7 @@ function s64_linux_lib_run_ip() {
 
 function s64_linux_lib_run_rcservice() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_RCSERVICE" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_RCSERVICE' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_RCSERVICE' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_RCSERVICE" \
@@ -662,7 +662,7 @@ function s64_linux_lib_run_rcservice() {
 
 function s64_linux_lib_run_rcstatus() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_RCSTATUS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_RCSTATUS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_RCSTATUS' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_RCSTATUS" \
@@ -672,7 +672,7 @@ function s64_linux_lib_run_rcstatus() {
 
 function s64_linux_lib_run_dpkg_query() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_DPKG_QUERY" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_DPKG_QUERY' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_DPKG_QUERY' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_DPKG_QUERY" \
@@ -683,7 +683,7 @@ function s64_linux_lib_run_dpkg_query() {
 function s64_linux_lib_run_btrfs() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--quiet'
-  bl64_check_command "$S64_LINUX_CMD_BTRFS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_BTRFS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_BTRFS' ||
     return $?
   bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
   bl64_dbg_app_trace_start
@@ -697,7 +697,7 @@ function s64_linux_lib_run_btrfs() {
 function s64_linux_lib_run_swapon() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag=' '
-  bl64_check_command "$S64_LINUX_CMD_SWAPON" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_SWAPON' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_SWAPON' ||
     return $?
   bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
   bl64_dbg_app_trace_start
@@ -711,7 +711,7 @@ function s64_linux_lib_run_swapon() {
 function s64_linux_lib_run_swapoff() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag=' '
-  bl64_check_command "$S64_LINUX_CMD_SWAPOFF" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_SWAPOFF' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_SWAPOFF' ||
     return $?
   bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
   bl64_dbg_app_trace_start
@@ -724,7 +724,7 @@ function s64_linux_lib_run_swapoff() {
 
 function s64_linux_lib_run_parted() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_PARTED" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_PARTED' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_PARTED' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_PARTED" \
@@ -734,7 +734,7 @@ function s64_linux_lib_run_parted() {
 
 function s64_linux_lib_run_sysctl() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_SYSCTL" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_SYSCTL' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_SYSCTL' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_SYSCTL" \
@@ -745,7 +745,7 @@ function s64_linux_lib_run_sysctl() {
 function s64_linux_lib_run_dmidecode() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag='--quiet'
-  bl64_check_command "$S64_LINUX_CMD_DMIDECODE" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_DMIDECODE' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_DMIDECODE' ||
     return $?
   bl64_msg_app_detail_is_enabled && verbose_flag=' '
   bl64_dbg_app_trace_start
@@ -757,7 +757,7 @@ function s64_linux_lib_run_dmidecode() {
 
 function s64_linux_lib_run_smartctl() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_SMARTCTL" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_SMARTCTL' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_SMARTCTL' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_SMARTCTL" \
@@ -768,7 +768,7 @@ function s64_linux_lib_run_smartctl() {
 function s64_linux_lib_run_pacman_key() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag=' '
-  bl64_check_command "$S64_LINUX_CMD_PACMAN_KEY" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_PACMAN_KEY' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_PACMAN_KEY' ||
     return $?
   bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
   bl64_dbg_app_trace_start
@@ -781,7 +781,7 @@ function s64_linux_lib_run_pacman_key() {
 function s64_linux_lib_run_pacman_conf() {
   bl64_dbg_app_show_function "$@"
   local verbose_flag=' '
-  bl64_check_command "$S64_LINUX_CMD_PACMAN_CONF" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_PACMAN_CONF' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_PACMAN_CONF' ||
     return $?
   bl64_msg_app_detail_is_enabled && verbose_flag='--verbose'
   bl64_dbg_app_trace_start
@@ -793,7 +793,7 @@ function s64_linux_lib_run_pacman_conf() {
 
 function s64_linux_lib_run_getent() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_GETENT" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_GETENT' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_GETENT' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_GETENT" \
@@ -803,7 +803,7 @@ function s64_linux_lib_run_getent() {
 
 function s64_linux_lib_run_stat() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_STAT" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_STAT' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_STAT' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_STAT" \
@@ -813,7 +813,7 @@ function s64_linux_lib_run_stat() {
 
 function s64_linux_lib_run_iptables() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_IPTABLES" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_IPTABLES' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_IPTABLES' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_IPTABLES" \
@@ -823,7 +823,7 @@ function s64_linux_lib_run_iptables() {
 
 function s64_linux_lib_run_nft() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_NFT" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_NFT' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_NFT' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_NFT" \
@@ -833,7 +833,7 @@ function s64_linux_lib_run_nft() {
 
 function s64_linux_lib_run_faillock() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_FAILLOCK" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_FAILLOCK' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_FAILLOCK' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_FAILLOCK" \
@@ -843,7 +843,7 @@ function s64_linux_lib_run_faillock() {
 
 function s64_linux_lib_run_update_alternatives() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_UPDATE_ALTERNATIVES" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_UPDATE_ALTERNATIVES' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_UPDATE_ALTERNATIVES' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_UPDATE_ALTERNATIVES" \
@@ -853,7 +853,7 @@ function s64_linux_lib_run_update_alternatives() {
 
 function s64_linux_lib_run_udevadm() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_UDEVADM" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_UDEVADM' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_UDEVADM' ||
     return $?
   _s64_linux_lib_run_udevadm_harden
   bl64_dbg_app_trace_start
@@ -877,7 +877,7 @@ function _s64_linux_lib_run_udevadm_harden() {
 
 function s64_linux_lib_run_findmnt() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_FINDMNT" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_FINDMNT' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_FINDMNT' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_FINDMNT" \
@@ -887,7 +887,7 @@ function s64_linux_lib_run_findmnt() {
 
 function s64_linux_lib_run_ss() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_SS" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_SS' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_SS' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_SS" \
@@ -897,7 +897,7 @@ function s64_linux_lib_run_ss() {
 
 function s64_linux_lib_run_host() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_HOST" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_HOST' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_HOST' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_HOST" \
@@ -907,7 +907,7 @@ function s64_linux_lib_run_host() {
 
 function s64_linux_lib_run_tcpdump() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_TCPDUMP" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_TCPDUMP' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_TCPDUMP' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_TCPDUMP" \
@@ -929,7 +929,7 @@ function s64_linux_lib_run_lshw() {
 
 function s64_linux_lib_run_lsmod() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_LSMOD" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_LSMOD' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_LSMOD' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_LSMOD" \
@@ -939,7 +939,7 @@ function s64_linux_lib_run_lsmod() {
 
 function s64_linux_lib_run_modprobe() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_MODPROBE" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_MODPROBE' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_MODPROBE' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_MODPROBE" \
@@ -949,7 +949,7 @@ function s64_linux_lib_run_modprobe() {
 
 function s64_linux_lib_run_conntrack() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_CONNTRACK" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_CONNTRACK' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_CONNTRACK' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_CONNTRACK" \
@@ -959,7 +959,7 @@ function s64_linux_lib_run_conntrack() {
 
 function s64_linux_lib_run_tracepath() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_TRACEPATH" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_TRACEPATH' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_TRACEPATH' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_TRACEPATH" \
@@ -969,7 +969,7 @@ function s64_linux_lib_run_tracepath() {
 
 function s64_linux_lib_run_modinfo() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LINUX_CMD_MODINFO" "$BL64_VAR_DEFAULT" 'S64_LINUX_CMD_MODINFO' ||
+  s64_core_lib_command_require 'S64_LINUX_CMD_MODINFO' ||
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_MODINFO" \
