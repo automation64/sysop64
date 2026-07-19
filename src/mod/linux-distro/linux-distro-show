@@ -28,5 +28,5 @@ bl64_msg_help_set_about 'Show Linux distro details'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_os_run_cat "$S64_LINUX_PATH_FILE_OS_RELEASE"
+bl64_os_run_cat "$S64_LINUX_PATH_OS_RELEASE"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

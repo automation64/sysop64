@@ -22,9 +22,9 @@ function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
     bl64_check_privilege_root &&
-    bl64_check_file "$S64_LINUX_PATH_CFG_GRUB_OPTIONS" &&
+    bl64_check_file "$S64_LINUX_PATH_GRUB_OPTIONS" &&
     s64_core_lib_task_show_setup \
-      'S64_LINUX_PATH_CFG_GRUB_OPTIONS'
+      'S64_LINUX_PATH_GRUB_OPTIONS'
 }
 
 bl64_lib_script_version_set '1.0.2'
@@ -32,6 +32,6 @@ bl64_msg_help_set_about 'Edit Grub configuration'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_core_lib_file_edit "$S64_LINUX_PATH_CFG_GRUB_OPTIONS"
+s64_core_lib_file_edit "$S64_LINUX_PATH_GRUB_OPTIONS"
 bl64_msg_show_warning 'Options are not automatically applied. You need to run the command grub-mkconfig to apply the changes.'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

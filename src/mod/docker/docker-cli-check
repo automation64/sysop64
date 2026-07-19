@@ -20,12 +20,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 
 
 function my_check() {
   bl64_dbg_app_show_function
-  if [[ ! -e "$S64_DOCKER_PATH_CLI_CONFIG" ]]; then
+  if [[ ! -e "$S64_DOCKER_PATH_CONFIG" ]]; then
     bl64_msg_show_warning 'There is no docker configuration file. The CLI will use default settings.'
     return 0
   fi
 
-  if [[ -s "$S64_DOCKER_PATH_CLI_CONFIG" ]]; then
+  if [[ -s "$S64_DOCKER_PATH_CONFIG" ]]; then
     bl64_msg_show_warning 'The configuration file is empty. While the docker CLI will still run, some tools may fail to parse it. Either delete or update it.'
     return 0
   fi

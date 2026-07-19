@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_BASH_PATH_CLI="${S64_BASH_PATH_CLI:-}"
+  declare S64_BASH_CMD="${S64_BASH_CMD:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_BASH_VERSION='1.0.0'
-  declare S64_BASH_ABOUT_MODULE_MAIN='Bash - Shell'
+  declare S64_BASH_ABOUT_MODULE='Bash - Shell'
 }
 
 #
@@ -50,6 +50,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_bash_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_BASH_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_BASH_PATH_CLI' 'bash'
+  s64_core_lib_module_show_about "$S64_BASH_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_BASH_CMD' 'bash'
 }

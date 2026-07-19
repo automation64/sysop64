@@ -36,7 +36,7 @@ function my_task() {
     bl64_msg_show_task "stopping container: $container"
     bl64_cnt_run_docker \
       stop \
-      --timeout "$S64_DOCKER_SET_TIMEOUT" \
+      --timeout "$S64_DOCKER_CFG_TIMEOUT" \
       "$container"
   done
 }

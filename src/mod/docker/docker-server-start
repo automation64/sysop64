@@ -15,30 +15,28 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
-source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/systemd.lib" && source "${S64_CORE_PATH_LIB}/docker.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/docker.lib" && source "${S64_CORE_PATH_LIB}/systemd.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
-function my_service_start() {
+function my_start_systemd() {
   bl64_dbg_app_show_function
-  case "$BL64_OS_FLAVOR" in
-    "$BL64_OS_FLAVOR_ARCH") s64_systemd_lib_run_systemctl start docker ;;
-    *) bl64_check_rise_task_unsupported || return $? ;;
-  esac
+  s64_systemd_lib_run_systemctl start "$S64_DOCKER_SERVICE"
 }
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_docker_lib_setup &&
     s64_systemd_lib_setup_secondary &&
-    bl64_check_privilege_root &&
-    bl64_os_check_flavor \
-      "$BL64_OS_FLAVOR_ARCH"
+    bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '2.0.0'
-bl64_msg_help_set_about 'Start the Docker server'
+bl64_lib_script_version_set '3.0.0'
+bl64_msg_help_set_about 'Start server'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-my_service_start
+case "$BL64_OS_FLAVOR" in
+  "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_REDHAT" | "$BL64_OS_FLAVOR_ARCH") my_start_systemd ;;
+  *) bl64_check_rise_task_unsupported ;;
+esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

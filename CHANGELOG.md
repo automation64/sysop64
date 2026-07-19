@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.0.0]
+
+### Added
+
+- Modules
+  - Squid
+  - Bind
+
+### Changed
+
+- Core: **breaking-change** upgraded to BashLib64 v23.4.0
+- Updated modules
+  - Docker
+  - FirewallD
+  - Linux
+  - NetMan
+  - RSync
+  - Ansible
+
 ## [7.1.0]
 
 ### Added
@@ -31,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Core: **breaking-change** upgrade to BashLib64 v23.3.1
+- Core: **breaking-change** upgraded to BashLib64 v23.3.1
 
 ## [6.0.0]
 

@@ -19,7 +19,7 @@ source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/k8s.
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
 declare MY_TYPE="${1:-$BL64_VAR_DEFAULT}"
-declare MY_NAMESPACE="${2:-$S64_K8S_FLAG_NAMESPACE_ALL}"
+declare MY_NAMESPACE="${2:-$S64_K8S_TAG_NAMESPACE_ALL}"
 
 function my_get_type() {
   bl64_dbg_app_show_function

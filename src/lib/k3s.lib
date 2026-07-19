@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_K3S_PATH_CLI="${S64_K3S_PATH_CLI:-}"
+  declare S64_K3S_CMD="${S64_K3S_CMD:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_K3S_VERSION='1.2.0'
-  declare S64_K3S_ABOUT_MODULE_MAIN='K3s - Rancher Light Kubernetes'
+  declare S64_K3S_ABOUT_MODULE='K3s - Rancher Light Kubernetes'
 
   declare S64_K3S_SET_API_PORT='6443'
 
@@ -59,14 +59,14 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_k3s_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_K3S_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_K3S_PATH_CLI' 'k3s'
+  s64_core_lib_module_show_about "$S64_K3S_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_K3S_CMD' 'k3s'
 }
 
 function s64_k3s_lib_run_k3s() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_K3S_PATH_CLI" \
+  "$S64_K3S_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

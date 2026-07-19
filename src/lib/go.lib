@@ -31,8 +31,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_GO_PATH_CLI_GO="${S64_GO_PATH_CLI_GO:-}"
-  declare S64_GO_PATH_CLI_GOFMT="${S64_GO_PATH_CLI_GOFMT:-}"
+  declare S64_GO_CMD_GO="${S64_GO_CMD_GO:-}"
+  declare S64_GO_CMD_GOFMT="${S64_GO_CMD_GOFMT:-}"
 }
 
 #
@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_GO_VERSION='1.1.0'
-  declare S64_GO_ABOUT_MODULE_MAIN='Go Programming Language'
+  declare S64_GO_ABOUT_MODULE='Go Programming Language'
 }
 
 #
@@ -51,15 +51,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_go_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_GO_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_GO_PATH_CLI_GO' 'go' &&
-    s64_core_lib_command_require 'S64_GO_PATH_CLI_GOFMT' 'gofmt'
+  s64_core_lib_module_show_about "$S64_GO_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_GO_CMD_GO' 'go' &&
+    s64_core_lib_command_require 'S64_GO_CMD_GOFMT' 'gofmt'
 }
 
 function s64_go_lib_run_go() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_GO_PATH_CLI_GO" \
+  "$S64_GO_CMD_GO" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -67,7 +67,7 @@ function s64_go_lib_run_go() {
 function s64_go_lib_run_gofmt() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_GO_PATH_CLI_GOFMT" \
+  "$S64_GO_CMD_GOFMT" \
     "$@"
   bl64_dbg_app_trace_stop
 }

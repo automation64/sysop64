@@ -28,7 +28,7 @@ declare MY_OBJECT="${3:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  S64_K8S_OUTPUT_FORMAT='yaml'
+  S64_K8S_CFG_OUTPUT_FORMAT='yaml'
   s64_k8s_lib_setup &&
     bl64_xsv_setup &&
     bl64_check_parameter 'MY_NAMESPACE' &&

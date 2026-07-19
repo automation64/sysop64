@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_KUBESCAPE_SET_FORMAT="${S64_KUBESCAPE_SET_FORMAT:-pretty-printer}"
-  declare S64_KUBESCAPE_PATH_CLI="${S64_KUBESCAPE_PATH_CLI:-}"
+  declare S64_KUBESCAPE_CMD="${S64_KUBESCAPE_CMD:-}"
 }
 
 #
@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_KUBESCAPE_VERSION='1.1.0'
-  declare S64_KUBESCAPE_ABOUT_MODULE_MAIN='Kubescape Security Platform'
+  declare S64_KUBESCAPE_ABOUT_MODULE='Kubescape Security Platform'
 }
 
 #
@@ -51,8 +51,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_kubescape_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_KUBESCAPE_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_KUBESCAPE_PATH_CLI' 'kubescape' &&
+  s64_core_lib_module_show_about "$S64_KUBESCAPE_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_KUBESCAPE_CMD' 'kubescape' &&
     s64_core_lib_module_show_setup \
       'S64_KUBESCAPE_SET_FORMAT'
 }
@@ -61,7 +61,7 @@ function s64_kubescape_lib_run_kubescape() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_KUBESCAPE_PATH_CLI" \
+  "$S64_KUBESCAPE_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

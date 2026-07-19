@@ -31,10 +31,21 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_SELINUX_VERSION='1.0.0'
-  declare S64_SELINUX_ABOUT_MODULE_MAIN='SELinux - Mandatory Access Control System'
+  declare S64_SELINUX_VERSION='1.1.0'
+  declare S64_SELINUX_ABOUT_MODULE='SELinux - Mandatory Access Control System'
 
-  declare S64_SELINUX_PATH_CLI_SESTATUS='/usr/sbin/sestatus'
+  # Core commands
+  declare S64_SELINUX_CMD_AULAST='/usr/bin/aulast'
+  declare S64_SELINUX_CMD_AULASTLOG='/usr/bin/aulastlog'
+  declare S64_SELINUX_CMD_AUREPORT='/usr/sbin/aureport'
+  declare S64_SELINUX_CMD_AUSEARCH='/usr/sbin/ausearch'
+  declare S64_SELINUX_CMD_AUSYSCALL='/usr/bin/ausyscall'
+  declare S64_SELINUX_CMD_SEMODULE='/usr/sbin/semodule'
+  declare S64_SELINUX_CMD_SESTATUS='/usr/sbin/sestatus'
+  declare S64_SELINUX_CMD_SETSEBOOL='/usr/sbin/setsebool'
+
+  # Optional commands
+  declare S64_SELINUX_CMD_SEMANAGE='/usr/sbin/semanage'
 }
 
 #
@@ -43,18 +54,84 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_selinux_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_SELINUX_ABOUT_MODULE_MAIN" &&
+  s64_core_lib_module_show_about "$S64_SELINUX_ABOUT_MODULE" &&
     bl64_os_check_flavor \
       "$BL64_OS_FLAVOR_SUSE" \
       "$BL64_OS_FLAVOR_FEDORA" \
       "$BL64_OS_FLAVOR_REDHAT" &&
-    bl64_check_command "$S64_SELINUX_PATH_CLI_SESTATUS"
+    s64_core_lib_command_require 'S64_SELINUX_CMD_SESTATUS' 'sestatus'
 }
 
 function s64_selinux_lib_run_sestatus() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_SELINUX_PATH_CLI_SESTATUS" \
+  "$S64_SELINUX_CMD_SESTATUS" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_ausearch() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_AUSEARCH" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_aulast() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_AULAST" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_aulastlog() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_AULASTLOG" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_ausyscall() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_AUSYSCALL" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_aureport() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_AUREPORT" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_setsebool() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_SETSEBOOL" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_semanage() {
+  bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_SELINUX_CMD_SEMANAGE' 'semanage' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_SEMANAGE" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_semodule() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_SEMODULE" \
     "$@"
   bl64_dbg_app_trace_stop
 }

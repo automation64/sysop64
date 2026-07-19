@@ -38,7 +38,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_OCI_CLI_CONFIG="${S64_OCI_CLI_CONFIG:-${HOME}/.oci/config}"
   declare S64_OCI_CLI_OUTPUT="${S64_OCI_CLI_OUTPUT:-json}"
 
-  declare S64_OCI_PATH_CLI="${S64_OCI_PATH_CLI:-}"
+  declare S64_OCI_CMD="${S64_OCI_CMD:-}"
 }
 
 #
@@ -48,7 +48,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_OCI_VERSION='1.2.1'
-  declare S64_OCI_ABOUT_MODULE_MAIN='Oracle Cloud Infrastructure'
+  declare S64_OCI_ABOUT_MODULE='Oracle Cloud Infrastructure'
   declare S64_OCI_ABOUT_SUBMODULE_DC='Data Centers and Regions'
   declare S64_OCI_ABOUT_SUBMODULE_SSO='Single Sign-On'
 }
@@ -59,8 +59,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_oci_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_OCI_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_OCI_PATH_CLI' 'oci' &&
+  s64_core_lib_module_show_about "$S64_OCI_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_OCI_CMD' 'oci' &&
     s64_core_lib_module_show_setup \
       'S64_OCI_AUTH_TYPE' \
       'S64_OCI_AUTH_PROFILE' \
@@ -75,7 +75,7 @@ function s64_oci_lib_run_oci() {
 
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  OCI_CLI_TENANCY="$S64_OCI_AUTH_TENANT" "$S64_OCI_PATH_CLI" \
+  OCI_CLI_TENANCY="$S64_OCI_AUTH_TENANT" "$S64_OCI_CMD" \
     --auth="$S64_OCI_AUTH_TYPE" \
     --profile="$S64_OCI_AUTH_PROFILE" \
     --config-file="$S64_OCI_CLI_CONFIG" \

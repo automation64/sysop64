@@ -36,7 +36,7 @@ s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 case "$BL64_OS_FLAVOR" in
-  "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_REDHAT") my_start_systemd ;;
+  "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_REDHAT" | "$BL64_OS_FLAVOR_FEDORA") my_start_systemd ;;
   *) bl64_check_rise_task_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

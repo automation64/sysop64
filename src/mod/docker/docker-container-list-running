@@ -31,6 +31,6 @@ bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_cnt_run_docker \
   ps \
   --no-trunc \
-  --format "$S64_DOCKER_SET_FORMAT" \
+  --format "$S64_DOCKER_CFG_FORMAT" \
   --size
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

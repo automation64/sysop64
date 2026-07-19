@@ -31,8 +31,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSHIFT_PATH_CLI_CRC="${S64_OPENSHIFT_PATH_CLI_CRC:-}"
-  declare S64_OPENSHIFT_PATH_CLI_OC="${S64_OPENSHIFT_PATH_CLI_OC:-}"
+  declare S64_OPENSHIFT_CMD_CRC="${S64_OPENSHIFT_CMD_CRC:-}"
+  declare S64_OPENSHIFT_CMD_OC="${S64_OPENSHIFT_CMD_OC:-}"
 }
 
 #
@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_OPENSHIFT_VERSION='1.1.0'
-  declare S64_OPENSHIFT_ABOUT_MODULE_MAIN='OpenShift Container Platform'
+  declare S64_OPENSHIFT_ABOUT_MODULE='OpenShift Container Platform'
 
   # WARNING: hardcoded path
   declare S64_OPENSHIFT_PATH_CFG_CRC="${HOME}/.crc"
@@ -54,9 +54,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_openshift_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_OPENSHIFT_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_OPENSHIFT_PATH_CLI_CRC' 'crc' &&
-    s64_core_lib_command_require 'S64_OPENSHIFT_PATH_CLI_OC' 'oc'
+  s64_core_lib_module_show_about "$S64_OPENSHIFT_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_OPENSHIFT_CMD_CRC' 'crc' &&
+    s64_core_lib_command_require 'S64_OPENSHIFT_CMD_OC' 'oc'
 }
 
 function s64_openshift_lib_run_crc() {
@@ -67,7 +67,7 @@ function s64_openshift_lib_run_crc() {
   bl64_dbg_app_command_is_enabled && verbose_flag='--log-level=debug'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_OPENSHIFT_PATH_CLI_CRC" \
+  "$S64_OPENSHIFT_CMD_CRC" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
@@ -79,7 +79,7 @@ function s64_openshift_lib_run_oc() {
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_OPENSHIFT_PATH_CLI_OC" \
+  "$S64_OPENSHIFT_CMD_OC" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop

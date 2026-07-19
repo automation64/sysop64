@@ -25,7 +25,7 @@ function my_list_glibc() {
 
 function my_list_musl() {
   bl64_dbg_app_show_function
-  bl64_os_run_cat "$S64_LINUX_PATH_CFG_HOSTS"
+  bl64_os_run_cat "$S64_LINUX_PATH_HOSTS"
 }
 
 function my_initialize() {

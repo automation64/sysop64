@@ -31,12 +31,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_APPARMOR_VERSION='1.0.0'
-  declare S64_APPARMOR_ABOUT_MODULE_MAIN='AppArmor - Mandatory Access Control System'
+  declare S64_APPARMOR_VERSION='1.0.1'
+  declare S64_APPARMOR_ABOUT_MODULE='AppArmor - Mandatory Access Control System'
 
-  declare S64_APPARMOR_PATH_CLI_AA_ENABLED='/usr/bin/aa-enabled'
-  declare S64_APPARMOR_PATH_CLI_AA_LOGPROF='/usr/bin/aa-logprof'
-  declare S64_APPARMOR_PATH_CLI_AA_STATUS='/usr/bin/aa-status'
+  declare S64_APPARMOR_CMD_AA_ENABLED='/usr/bin/aa-enabled'
+  declare S64_APPARMOR_CMD_AA_LOGPROF='/usr/bin/aa-logprof'
+  declare S64_APPARMOR_CMD_AA_STATUS='/usr/bin/aa-status'
 }
 
 #
@@ -45,17 +45,17 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_apparmor_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_APPARMOR_ABOUT_MODULE_MAIN" &&
+  s64_core_lib_module_show_about "$S64_APPARMOR_ABOUT_MODULE" &&
     bl64_os_check_flavor \
       "$BL64_OS_FLAVOR_ARCH" \
       "$BL64_OS_FLAVOR_DEBIAN" &&
-    bl64_check_command "$S64_APPARMOR_PATH_CLI_AA_ENABLED"
+    s64_core_lib_command_require 'S64_APPARMOR_CMD_AA_STATUS' 'aa-status'
 }
 
 function s64_apparmor_lib_run_aa_enabled() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_APPARMOR_PATH_CLI_AA_ENABLED" \
+  "$S64_APPARMOR_CMD_AA_ENABLED" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -63,7 +63,7 @@ function s64_apparmor_lib_run_aa_enabled() {
 function s64_apparmor_lib_run_aa_logprof() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_APPARMOR_PATH_CLI_AA_LOGPROF" \
+  "$S64_APPARMOR_CMD_AA_LOGPROF" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -71,7 +71,7 @@ function s64_apparmor_lib_run_aa_logprof() {
 function s64_apparmor_lib_run_aa_status() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_APPARMOR_PATH_CLI_AA_STATUS" \
+  "$S64_APPARMOR_CMD_AA_STATUS" \
     "$@"
   bl64_dbg_app_trace_stop
 }

@@ -28,12 +28,12 @@ function my_initialize() {
       'MY_PLAYBOOK_PATH'
 }
 
-bl64_lib_script_version_set '1.0.3'
+bl64_lib_script_version_set '1.0.4'
 bl64_msg_help_set_about 'Run Ansible playbook locally'
 bl64_msg_help_set_usage 'MY_PLAYBOOK_PATH'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_ansible_lib_run_playbook \
+bl64_ans_run_ansible_playbook \
   "$MY_PLAYBOOK_PATH"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

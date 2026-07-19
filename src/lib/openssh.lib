@@ -32,16 +32,18 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_PATH_CLI_SCP="${S64_OPENSSH_PATH_CLI_SCP:-}"
-  declare S64_OPENSSH_PATH_CLI_SSH="${S64_OPENSSH_PATH_CLI_SSH:-}"
-  declare S64_OPENSSH_PATH_CLI_SSH_ADD="${S64_OPENSSH_PATH_CLI_SSH_ADD:-}"
-  declare S64_OPENSSH_PATH_CLI_SSH_COPY_ID="${S64_OPENSSH_PATH_CLI_SSH_COPY_ID:-}"
-  declare S64_OPENSSH_PATH_CLI_SSH_KEYGEN="${S64_OPENSSH_PATH_CLI_SSH_KEYGEN:-}"
-  declare S64_OPENSSH_PATH_CLI_HOME="${S64_OPENSSH_PATH_CLI_HOME:-${HOME}/.ssh}"
+  declare S64_OPENSSH_CMD_SCP="${S64_OPENSSH_CMD_SCP:-}"
+  declare S64_OPENSSH_CMD_SSH="${S64_OPENSSH_CMD_SSH:-}"
+  declare S64_OPENSSH_CMD_SSH_ADD="${S64_OPENSSH_CMD_SSH_ADD:-}"
+  declare S64_OPENSSH_CMD_SSH_COPY_ID="${S64_OPENSSH_CMD_SSH_COPY_ID:-}"
+  declare S64_OPENSSH_CMD_SSH_KEYGEN="${S64_OPENSSH_CMD_SSH_KEYGEN:-}"
+
+  declare S64_OPENSSH_PATH_HOME_SSH="${S64_OPENSSH_PATH_HOME_SSH:-${HOME}/.ssh}"
 
   declare S64_OPENSSH_FILE_CLIENT_CONFIG="${S64_OPENSSH_FILE_CLIENT_CONFIG:-config}"
   declare S64_OPENSSH_FILE_KNOWN_HOSTS="${S64_OPENSSH_FILE_KNOWN_HOSTS:-known_hosts}"
-  declare S64_OPENSSH_SET_KEY_TYPE="${S64_OPENSSH_SET_KEY_TYPE:-ed25519}"
+
+  declare S64_OPENSSH_CFG_KEY_TYPE="${S64_OPENSSH_CFG_KEY_TYPE:-ed25519}"
 }
 
 #
@@ -51,7 +53,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_OPENSSH_VERSION='3.3.0'
-  declare S64_OPENSSH_ABOUT_MODULE_MAIN='OpenSSH - Secure Remote Shell'
+  declare S64_OPENSSH_ABOUT_MODULE='OpenSSH - Secure Remote Shell'
 
   declare S64_OPENSSH_SERVICE="$BL64_VAR_INCOMPATIBLE"
 }
@@ -71,18 +73,18 @@ function s64_openssh_lib_setup() {
     "$BL64_OS_FLAVOR_SUSE") S64_OPENSSH_SERVICE='sshd' ;;
     "$BL64_OS_FLAVOR_ARCH") S64_OPENSSH_SERVICE='sshd' ;;
   esac
-  s64_core_lib_module_show_about "$S64_OPENSSH_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SCP' 'scp' &&
-    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH' 'ssh' &&
-    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH_ADD' 'ssh-add' &&
-    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH_COPY_ID' 'ssh-copy-id' &&
-    s64_core_lib_command_require 'S64_OPENSSH_PATH_CLI_SSH_KEYGEN' 'ssh-keygen'
+  s64_core_lib_module_show_about "$S64_OPENSSH_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_OPENSSH_CMD_SCP' 'scp' &&
+    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH' 'ssh' &&
+    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_ADD' 'ssh-add' &&
+    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_COPY_ID' 'ssh-copy-id' &&
+    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYGEN' 'ssh-keygen'
 }
 
 function s64_openssh_lib_run_ssh_keygen() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_OPENSSH_PATH_CLI_SSH_KEYGEN" \
+  "$S64_OPENSSH_CMD_SSH_KEYGEN" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -90,7 +92,7 @@ function s64_openssh_lib_run_ssh_keygen() {
 function s64_openssh_lib_run_ssh() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_OPENSSH_PATH_CLI_SSH" \
+  "$S64_OPENSSH_CMD_SSH" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -98,7 +100,7 @@ function s64_openssh_lib_run_ssh() {
 function s64_openssh_lib_run_ssh_add() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_OPENSSH_PATH_CLI_SSH_ADD" \
+  "$S64_OPENSSH_CMD_SSH_ADD" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -106,7 +108,7 @@ function s64_openssh_lib_run_ssh_add() {
 function s64_openssh_lib_run_scp() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_OPENSSH_PATH_CLI_SCP" \
+  "$S64_OPENSSH_CMD_SCP" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -114,7 +116,7 @@ function s64_openssh_lib_run_scp() {
 function s64_openssh_lib_run_ssh_copy_id() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_OPENSSH_PATH_CLI_SSH_COPY_ID" \
+  "$S64_OPENSSH_CMD_SSH_COPY_ID" \
     "$@"
   bl64_dbg_app_trace_stop
 }

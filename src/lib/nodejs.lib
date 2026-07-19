@@ -31,8 +31,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_NODEJS_PATH_CLI_NODE="${S64_NODEJS_PATH_CLI_NODE:-}"
-  declare S64_NODEJS_PATH_CLI_NPM="${S64_NODEJS_PATH_CLI_NPM:-}"
+  declare S64_NODEJS_CMD_NODE="${S64_NODEJS_CMD_NODE:-}"
+  declare S64_NODEJS_CMD_NPM="${S64_NODEJS_CMD_NPM:-}"
 }
 
 #
@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_NODEJS_VERSION='1.1.0'
-  declare S64_NODEJS_ABOUT_MODULE_MAIN='Node.JS JavaScript Runtime'
+  declare S64_NODEJS_ABOUT_MODULE='Node.JS JavaScript Runtime'
 }
 
 #
@@ -51,15 +51,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_nodejs_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_NODEJS_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_NODEJS_PATH_CLI_NODE' 'node' &&
-    s64_core_lib_command_require 'S64_NODEJS_PATH_CLI_NPM' 'npm'
+  s64_core_lib_module_show_about "$S64_NODEJS_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_NODEJS_CMD_NODE' 'node' &&
+    s64_core_lib_command_require 'S64_NODEJS_CMD_NPM' 'npm'
 }
 
 function s64_nodejs_lib_run_node() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_NODEJS_PATH_CLI_NODE" \
+  "$S64_NODEJS_CMD_NODE" \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -67,7 +67,7 @@ function s64_nodejs_lib_run_node() {
 function s64_nodejs_lib_run_npm() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_NODEJS_PATH_CLI_NPM" \
+  "$S64_NODEJS_CMD_NPM" \
     "$@"
   bl64_dbg_app_trace_stop
 }

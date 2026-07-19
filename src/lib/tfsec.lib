@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_TFSEC_PATH_CLI="${S64_TFSEC_PATH_CLI:-}"
+  declare S64_TFSEC_CMD="${S64_TFSEC_CMD:-}"
   declare S64_TFSEC_SET_FORMAT="${S64_TFSEC_SET_FORMAT:-lovely}"
 }
 
@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_TFSEC_VERSION='1.1.0'
-  declare S64_TFSEC_ABOUT_MODULE_MAIN='TFSec SAST'
+  declare S64_TFSEC_ABOUT_MODULE='TFSec SAST'
 }
 
 #
@@ -51,8 +51,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_tfsec_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_TFSEC_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_TFSEC_PATH_CLI' 'tfsec' &&
+  s64_core_lib_module_show_about "$S64_TFSEC_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_TFSEC_CMD' 'tfsec' &&
     s64_core_lib_module_show_setup \
       'S64_TFSEC_SET_FORMAT'
 }
@@ -61,7 +61,7 @@ function s64_tfsec_lib_run_tfsec() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_TFSEC_PATH_CLI" \
+  "$S64_TFSEC_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

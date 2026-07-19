@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_UFW_PATH_CLI="${S64_UFW_PATH_CLI:-}"
+  declare S64_UFW_CMD="${S64_UFW_CMD:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_UFW_VERSION='1.1.0'
-  declare S64_UFW_ABOUT_MODULE_MAIN='UFW Linux Firewall Manager'
+  declare S64_UFW_ABOUT_MODULE='UFW Linux Firewall Manager'
 }
 
 #
@@ -50,15 +50,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_ufw_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_UFW_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_UFW_PATH_CLI' 'ufw'
+  s64_core_lib_module_show_about "$S64_UFW_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_UFW_CMD' 'ufw'
 }
 
 function s64_ufw_lib_run_ufw() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_UFW_PATH_CLI" \
+  "$S64_UFW_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

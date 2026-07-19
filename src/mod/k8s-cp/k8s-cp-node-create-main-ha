@@ -32,7 +32,7 @@ function my_initialize() {
   - custom control plane endpoint' &&
     s64_core_lib_task_show_setup \
       'MY_API_FQDN' \
-      'S64_K8S_SET_CLUSTER_API_PORT' \
+      'S64_K8S_CFG_CLUSTER_API_PORT' \
       'MY_KUBEADM_CONFIG' &&
     bl64_ui_ask_proceed 'Create cluster node on the current host?'
 }
@@ -48,5 +48,5 @@ s64_k8s_lib_run_kubeadm \
   init \
   --upload-certs \
   --skip-phases=addon/kube-proxy \
-  --control-plane-endpoint "${MY_API_FQDN}:${S64_K8S_SET_CLUSTER_API_PORT}"
+  --control-plane-endpoint "${MY_API_FQDN}:${S64_K8S_CFG_CLUSTER_API_PORT}"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

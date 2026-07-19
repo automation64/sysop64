@@ -53,7 +53,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-gcp.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_GCP_VERSION='1.2.1'
-  declare S64_GCP_ABOUT_MODULE_MAIN='Google Cloud Platform'
+  declare S64_GCP_ABOUT_MODULE='Google Cloud Platform'
   declare S64_GCP_ABOUT_SUBMODULE_AUTH='Authentication and Authorization'
   declare S64_GCP_ABOUT_SUBMODULE_BILL='Billing'
   declare S64_GCP_ABOUT_SUBMODULE_CE='Compute Engine'
@@ -89,7 +89,7 @@ function s64_gcp_lib_setup() {
   bl64_dbg_app_show_function
   CLOUDSDK_CORE_PROJECT="$S64_GCP_SET_PROJECT_ID"
   CLOUDSDK_CORE_FORMAT="$S64_GCP_SET_OUTPUT_FORMAT"
-  s64_core_lib_module_show_about "$S64_GCP_ABOUT_MODULE_MAIN" &&
+  s64_core_lib_module_show_about "$S64_GCP_ABOUT_MODULE" &&
     bl64_gcp_setup &&
     s64_core_lib_module_show_setup \
       'S64_GCP_SET_BILLING_PROJECT_ID' \

@@ -34,7 +34,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_KIND_PATH_CLI="${S64_KIND_PATH_CLI:-}"
+  declare S64_KIND_CMD="${S64_KIND_CMD:-}"
 
   # Cluster definition
   S64_KIND_PATH_CLUSTER_CONFIG="${S64_KIND_PATH_CLUSTER_CONFIG:-}"
@@ -48,7 +48,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_KIND_VERSION='3.1.2'
-  declare S64_KIND_ABOUT_MODULE_MAIN='Kind - Kubernetes in Docker tool'
+  declare S64_KIND_ABOUT_MODULE='Kind - Kubernetes in Docker tool'
 }
 
 #
@@ -57,10 +57,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_kind_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_KIND_ABOUT_MODULE_MAIN" &&
+  s64_core_lib_module_show_about "$S64_KIND_ABOUT_MODULE" &&
     bl64_cnt_setup &&
     bl64_k8s_setup &&
-    s64_core_lib_command_require 'S64_KIND_PATH_CLI' 'kind' &&
+    s64_core_lib_command_require 'S64_KIND_CMD' 'kind' &&
     s64_core_lib_module_show_setup \
       'S64_KIND_SET_CLUSTER_NAME' \
       'S64_KIND_PATH_CLUSTER_CONFIG'
@@ -72,7 +72,7 @@ function s64_kind_lib_run_kind() {
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_KIND_PATH_CLI" \
+  "$S64_KIND_CMD" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop
