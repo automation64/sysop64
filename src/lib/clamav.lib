@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_CLAMAV_PATH_CLI="${S64_CLAMAV_PATH_CLI:-}"
+  declare S64_CLAMAV_CMD="${S64_CLAMAV_CMD:-}"
   declare S64_CLAMAV_SET_DB_MAX_OLD="${S64_CLAMAV_SET_DB_MAX_OLD:-14}"
 }
 
@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_CLAMAV_VERSION='1.1.0'
-  declare S64_CLAMAV_ABOUT_MODULE_MAIN='ClamAV Antivirus'
+  declare S64_CLAMAV_ABOUT_MODULE='ClamAV Antivirus'
 }
 
 #
@@ -51,8 +51,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_clamav_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_CLAMAV_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_CLAMAV_PATH_CLI' 'clamscan'
+  s64_core_lib_module_show_about "$S64_CLAMAV_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_CLAMAV_CMD' 'clamscan'
   s64_core_lib_module_show_setup \
     'S64_CLAMAV_SET_DB_MAX_OLD'
 }
@@ -63,7 +63,7 @@ function s64_clamav_lib_run_clamscan() {
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_CLAMAV_PATH_CLI" \
+  "$S64_CLAMAV_CMD" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop

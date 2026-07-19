@@ -20,8 +20,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 
 
 function my_dump_glibc() {
   bl64_dbg_app_show_function
-  bl64_msg_show_info "source: ${S64_LINUX_PATH_CFG_NSSWITCH_CONF}"
-  bl64_os_run_cat "$S64_LINUX_PATH_CFG_NSSWITCH_CONF"
+  bl64_msg_show_info "source: ${S64_LINUX_PATH_NSSWITCH_CONF}"
+  bl64_os_run_cat "$S64_LINUX_PATH_NSSWITCH_CONF"
 }
 
 function my_dump_musl() {

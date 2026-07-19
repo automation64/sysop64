@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_UV_PATH_CLI="${S64_UV_PATH_CLI:-}"
+  declare S64_UV_CMD="${S64_UV_CMD:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_UV_VERSION='1.1.0'
-  declare S64_UV_ABOUT_MODULE_MAIN='UV Python Package Manager'
+  declare S64_UV_ABOUT_MODULE='UV Python Package Manager'
 }
 
 #
@@ -50,15 +50,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_uv_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_UV_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_UV_PATH_CLI' 'uv'
+  s64_core_lib_module_show_about "$S64_UV_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_UV_CMD' 'uv'
 }
 
 function s64_uv_lib_run_uv() {
   bl64_dbg_app_show_function "$@"
   # shellcheck disable=SC2086
   bl64_dbg_app_trace_start
-  "$S64_UV_PATH_CLI" \
+  "$S64_UV_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

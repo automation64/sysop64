@@ -65,7 +65,7 @@ q h
 - `edit`: edit content, using interactive text editor
 - `guide`: show technical documentation about the module or task
 - `init`: initialize component content
-- `list`: list components
+- `list`: generate a simple list of components or attributes
 - `login`: login to service
 - `migrate`: migrate component or content
 - `query`: query component or content using query lang
@@ -102,6 +102,18 @@ q h
 - `send` / `receive`: send or receive content over the network
 - `set` / `unset`: set new or unset component attribute value
 - `start` / `stop`: start or stop component
+
+### Global Variables
+
+- `S64_<MODULE>_ABOUT_MODULE`: module brief description
+- `S64_<MODULE>_ABOUT_SUBMODULE_<NAME>`: generic tag-value pair
+- `S64_<MODULE>_CFG_<NAME>`: command configuration setting
+- `S64_<MODULE>_CMD_<NAME>`: full path to command
+- `S64_<MODULE>_FILE_<NAME>`: file or directory name, without any path
+- `S64_<MODULE>_PATH_<NAME>`: full path to file or directory
+- `S64_<MODULE>_SET_<NAME>`: command line option
+- `S64_<MODULE>_TAG_<NAME>`: generic tag-value pair
+- `S64_<MODULE>_VERSION`: module version
 
 ---
 

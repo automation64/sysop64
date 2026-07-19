@@ -22,7 +22,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_openssh_lib_setup &&
-    bl64_check_directory "$S64_OPENSSH_PATH_CLI_HOME"
+    bl64_check_directory "$S64_OPENSSH_PATH_HOME_SSH"
 }
 
 bl64_lib_script_version_set '1.0.0'
@@ -30,6 +30,6 @@ bl64_msg_help_set_about 'List keys in the local key repository'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-cd "$S64_OPENSSH_PATH_CLI_HOME"
+cd "$S64_OPENSSH_PATH_HOME_SSH"
 bl64_bsh_pattern_match_file "*.pub"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

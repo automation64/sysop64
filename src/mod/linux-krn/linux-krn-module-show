@@ -35,7 +35,6 @@ bl64_msg_help_set_usage 'MY_MODULE_ID'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_linux_lib_run_modprobe \
-  --show-depends \
+s64_linux_lib_run_modinfo \
   "$MY_MODULE_ID"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

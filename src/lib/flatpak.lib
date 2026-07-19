@@ -32,8 +32,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_FLATPAK_VERSION='1.1.1'
-  declare S64_FLATPAK_ABOUT_MODULE_MAIN='Flatpak Package Manager'
-  declare S64_FLATPAK_PATH_CLI='/usr/bin/flatpak'
+  declare S64_FLATPAK_ABOUT_MODULE='Flatpak Package Manager'
+  declare S64_FLATPAK_CMD='/usr/bin/flatpak'
 }
 
 #
@@ -42,15 +42,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_flatpak_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_FLATPAK_ABOUT_MODULE_MAIN" &&
-    bl64_check_command "$S64_FLATPAK_PATH_CLI"
+  s64_core_lib_module_show_about "$S64_FLATPAK_ABOUT_MODULE" &&
+    bl64_check_command "$S64_FLATPAK_CMD"
 }
 
 function s64_flatpak_lib_run_flatpak() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_FLATPAK_PATH_CLI" \
+  "$S64_FLATPAK_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

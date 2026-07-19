@@ -31,8 +31,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_OKD_PATH_CLI_CRC="${S64_OKD_PATH_CLI_CRC:-}"
-  declare S64_OKD_PATH_CLI_OC="${S64_OKD_PATH_CLI_OC:-}"
+  declare S64_OKD_CMD_CRC="${S64_OKD_CMD_CRC:-}"
+  declare S64_OKD_CMD_OC="${S64_OKD_CMD_OC:-}"
 
   declare S64_OKD_SET_CRC_LOG_LEVEL="${S64_OKD_SET_CRC_LOG_LEVEL:-info}"
 }
@@ -44,7 +44,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_OKD_VERSION='1.1.0'
-  declare S64_OKD_ABOUT_MODULE_MAIN='OpenShift Community Edition'
+  declare S64_OKD_ABOUT_MODULE='OpenShift Community Edition'
 
   declare S64_OKD_PATH_CRC_HOME="${HOME}/.crc"
   declare S64_OKD_PATH_CRC_LOG_CLI="${S64_OKD_PATH_CRC_HOME}/crc.log"
@@ -57,15 +57,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_okd_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_OKD_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_OKD_PATH_CLI_CRC' 'crc' &&
-    s64_core_lib_command_require 'S64_OKD_PATH_CLI_OC' 'oc'
+  s64_core_lib_module_show_about "$S64_OKD_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_OKD_CMD_CRC' 'crc' &&
+    s64_core_lib_command_require 'S64_OKD_CMD_OC' 'oc'
 }
 
 function s64_okd_lib_run_crc() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_OKD_PATH_CLI_CRC" \
+  "$S64_OKD_CMD_CRC" \
     --log-level "${S64_OKD_SET_CRC_LOG_LEVEL}" \
     "$@"
   bl64_dbg_app_trace_stop
@@ -74,7 +74,7 @@ function s64_okd_lib_run_crc() {
 function s64_okd_lib_run_oc() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_OKD_PATH_CLI_OC" \
+  "$S64_OKD_CMD_OC" \
     "$@"
   bl64_dbg_app_trace_stop
 }

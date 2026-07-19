@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_SCREEN_PATH_CLI="${S64_SCREEN_PATH_CLI:-}"
+  declare S64_SCREEN_CMD="${S64_SCREEN_CMD:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_SCREEN_VERSION='1.1.0'
-  declare S64_SCREEN_ABOUT_MODULE_MAIN='Screen Terminal Multiplexer'
+  declare S64_SCREEN_ABOUT_MODULE='Screen Terminal Multiplexer'
 }
 
 #
@@ -50,15 +50,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_screen_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_SCREEN_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_SCREEN_PATH_CLI' 'screen'
+  s64_core_lib_module_show_about "$S64_SCREEN_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_SCREEN_CMD' 'screen'
 }
 
 function s64_screen_lib_run_screen() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_SCREEN_PATH_CLI" \
+  "$S64_SCREEN_CMD" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop

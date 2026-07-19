@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_RSYNC_PATH_CLI="${S64_RSYNC_PATH_CLI:-}"
+  declare S64_RSYNC_CMD="${S64_RSYNC_CMD:-}"
 }
 
 #
@@ -41,8 +41,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_RSYNC_VERSION='4.2.2'
-  declare S64_RSYNC_ABOUT_MODULE_MAIN='RSync File Transfer Tools'
+  declare S64_RSYNC_VERSION='4.2.3'
+  declare S64_RSYNC_ABOUT_MODULE='RSync File Transfer Tools'
 
   # RSync / Common parameters, regardless of the method
   declare S64_RSYNC_SET_COMMON=''
@@ -103,17 +103,17 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-log.bash" &&
 
 function s64_rsync_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_RSYNC_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_RSYNC_PATH_CLI' 'rsync'
+  s64_core_lib_module_show_about "$S64_RSYNC_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_RSYNC_CMD' 'rsync'
 }
 
 function s64_rsync_lib_run_rsync() {
   bl64_dbg_app_show_function "$@"
-  local verbose_flag='--human-readable --verbose --stats --progress'
+  local verbose_flag='--human-readable --stats --progress'
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_RSYNC_PATH_CLI" \
+  "$S64_RSYNC_CMD" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop

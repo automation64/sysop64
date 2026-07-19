@@ -28,8 +28,8 @@ bl64_msg_help_set_about 'Show current configuration'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-if [[ -f "$S64_DOCKER_PATH_CLI_CONFIG" ]]; then
-  bl64_os_run_cat "$S64_DOCKER_PATH_CLI_CONFIG"
+if [[ -f "$S64_DOCKER_PATH_CONFIG" ]]; then
+  bl64_os_run_cat "$S64_DOCKER_PATH_CONFIG"
 else
   bl64_msg_show_warning 'There is no docker configuration file. The CLI will use default settings.'
 fi

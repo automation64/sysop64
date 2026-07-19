@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_CURL_PATH_CLI="${S64_CURL_PATH_CLI:-}"
+  declare S64_CURL_CMD="${S64_CURL_CMD:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_CURL_VERSION='1.0.0'
-  declare S64_CURL_ABOUT_MODULE_MAIN='Curl - Network transfer tool'
+  declare S64_CURL_ABOUT_MODULE='Curl - Network transfer tool'
 }
 
 #
@@ -50,8 +50,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_curl_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_CURL_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_CURL_PATH_CLI' 'curl'
+  s64_core_lib_module_show_about "$S64_CURL_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_CURL_CMD' 'curl'
 }
 
 function s64_curl_lib_run_curl() {
@@ -60,7 +60,7 @@ function s64_curl_lib_run_curl() {
   bl64_dbg_app_command_is_enabled || debug_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_CURL_PATH_CLI" \
+  "$S64_CURL_CMD" \
     $debug_flag \
     "$@"
   bl64_dbg_app_trace_stop

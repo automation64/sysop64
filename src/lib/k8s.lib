@@ -32,13 +32,13 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_PATH_CLI_KUBEADM="${S64_K8S_PATH_CLI_KUBEADM:-}"
+  declare S64_K8S_CMD_KUBEADM="${S64_K8S_CMD_KUBEADM:-}"
 
   # KubeCTL / Output format
-  declare S64_K8S_OUTPUT_FORMAT="${S64_K8S_OUTPUT_FORMAT:-yaml}"
+  declare S64_K8S_CFG_OUTPUT_FORMAT="${S64_K8S_CFG_OUTPUT_FORMAT:-yaml}"
 
   # Cluster API / Port
-  declare S64_K8S_SET_CLUSTER_API_PORT="${S64_K8S_SET_CLUSTER_API_PORT:-6443}"
+  declare S64_K8S_CFG_CLUSTER_API_PORT="${S64_K8S_CFG_CLUSTER_API_PORT:-6443}"
 }
 
 #
@@ -48,7 +48,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_K8S_VERSION='4.4.0'
-  declare S64_K8S_ABOUT_MODULE_MAIN='Kubernetes Platform'
+  declare S64_K8S_ABOUT_MODULE='Kubernetes Platform'
   declare S64_K8S_ABOUT_SUBMODULE_CLI='KubeCTL'
   declare S64_K8S_ABOUT_SUBMODULE_CP='Control Plane'
   declare S64_K8S_ABOUT_SUBMODULE_EVENT='Events'
@@ -74,8 +74,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
   declare S64_K8S_PATH_KEY_CA="${S64_K8S_PATH_CFG_CLUSTER_BASE}/pki/ca.crt"
 
-  declare S64_K8S_FLAG_NAMESPACE_ALL='ALL'
-  declare S64_K8S_FLAG_NAMESPACE_DEFAULT='default'
+  declare S64_K8S_TAG_NAMESPACE_ALL='ALL'
+  declare S64_K8S_TAG_NAMESPACE_DEFAULT='default'
 }
 
 #
@@ -84,8 +84,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_k8s_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_K8S_ABOUT_MODULE_MAIN"
-  s64_core_lib_command_assign 'S64_K8S_PATH_CLI_KUBEADM' 'kubeadm'
+  s64_core_lib_module_show_about "$S64_K8S_ABOUT_MODULE"
+  s64_core_lib_command_assign 'S64_K8S_CMD_KUBEADM' 'kubeadm'
   bl64_k8s_setup
 }
 
@@ -99,7 +99,7 @@ function s64_k8s_lib_cli_set_ns() {
   bl64_dbg_app_show_function "$@"
   local namespace="${1:-$BL64_VAR_DEFAULT}"
   # shellcheck disable=SC2154,SC2015
-  if [[ "$namespace" == "$BL64_VAR_DEFAULT" || "$namespace" == "$S64_K8S_FLAG_NAMESPACE_ALL" ]]; then
+  if [[ "$namespace" == "$BL64_VAR_DEFAULT" || "$namespace" == "$S64_K8S_TAG_NAMESPACE_ALL" ]]; then
     printf -- '--all-namespaces'
   else
     printf -- '--namespace=%s' "${namespace}"
@@ -119,20 +119,20 @@ function s64_k8s_lib_cli_set_format() {
   bl64_dbg_app_show_function "$@"
   local format="${1:-}"
   if [[ "$format" != 'yaml' ]]; then
-    S64_K8S_OUTPUT_FORMAT="$format"
+    S64_K8S_CFG_OUTPUT_FORMAT="$format"
   fi
-  printf -- '--output=%s' "${S64_K8S_OUTPUT_FORMAT}"
+  printf -- '--output=%s' "${S64_K8S_CFG_OUTPUT_FORMAT}"
 }
 
 function s64_k8s_lib_run_kubeadm() {
   bl64_dbg_app_show_function "$@"
   local debug_flag='--v 2'
   bl64_dbg_app_command_is_enabled || debug_flag=' '
-  bl64_check_command "$S64_K8S_PATH_CLI_KUBEADM" "$BL64_VAR_DEFAULT" 'S64_K8S_PATH_CLI_KUBEADM' ||
+  bl64_check_command "$S64_K8S_CMD_KUBEADM" "$BL64_VAR_DEFAULT" 'S64_K8S_CMD_KUBEADM' ||
     return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_K8S_PATH_CLI_KUBEADM" \
+  "$S64_K8S_CMD_KUBEADM" \
     $debug_flag \
     "$@"
   bl64_dbg_app_trace_stop

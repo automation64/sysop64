@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LIBVIRT_PATH_CLI="${S64_LIBVIRT_PATH_CLI:-}"
+  declare S64_LIBVIRT_CMD="${S64_LIBVIRT_CMD:-}"
 }
 
 #
@@ -41,15 +41,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_LIBVIRT_VERSION='1.4.0'
-  declare S64_LIBVIRT_ABOUT_MODULE_MAIN='LibVirt Virtual Machine Manager'
+  declare S64_LIBVIRT_ABOUT_MODULE='LibVirt Virtual Machine Manager'
   declare S64_LIBVIRT_ABOUT_SUBMODULE_SYS='System'
   declare S64_LIBVIRT_ABOUT_SUBMODULE_QEMU='QEMU'
   declare S64_LIBVIRT_ABOUT_SUBMODULE_LXC='LXC'
 
-  declare S64_LIBVIRT_PATH_CLI_VIRSH='/usr/bin/virsh'
-  declare S64_LIBVIRT_PATH_CLI_VIRTINSTALL='/usr/bin/virt-install'
-  declare S64_LIBVIRT_PATH_CLI_VIRTMANAGER='/usr/bin/virt-manager'
-  declare S64_LIBVIRT_PATH_CLI_VIRTVIEWER='/usr/bin/virt-viewer'
+  declare S64_LIBVIRT_CMD_VIRSH='/usr/bin/virsh'
+  declare S64_LIBVIRT_CMD_VIRTINSTALL='/usr/bin/virt-install'
+  declare S64_LIBVIRT_CMD_VIRTMANAGER='/usr/bin/virt-manager'
+  declare S64_LIBVIRT_CMD_VIRTVIEWER='/usr/bin/virt-viewer'
 
   declare S64_LIBVIRT_GROUP_LIBVIRT='libvirt'
 
@@ -68,45 +68,45 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_libvirt_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_LIBVIRT_ABOUT_MODULE_MAIN"
+  s64_core_lib_module_show_about "$S64_LIBVIRT_ABOUT_MODULE"
 }
 
 function s64_libvirt_lib_run_virsh() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LIBVIRT_PATH_CLI_VIRSH" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_PATH_CLI_VIRSH' ||
+  bl64_check_command "$S64_LIBVIRT_CMD_VIRSH" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_CMD_VIRSH' ||
     return $?
   bl64_dbg_app_trace_start
-  "$S64_LIBVIRT_PATH_CLI_VIRSH" \
+  "$S64_LIBVIRT_CMD_VIRSH" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
 function s64_libvirt_lib_run_virtinstall() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LIBVIRT_PATH_CLI_VIRTINSTALL" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_PATH_CLI_VIRTINSTALL' ||
+  bl64_check_command "$S64_LIBVIRT_CMD_VIRTINSTALL" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_CMD_VIRTINSTALL' ||
     return $?
   bl64_dbg_app_trace_start
-  "$S64_LIBVIRT_PATH_CLI_VIRTINSTALL" \
+  "$S64_LIBVIRT_CMD_VIRTINSTALL" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
 function s64_libvirt_lib_run_virtviewer() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LIBVIRT_PATH_CLI_VIRTVIEWER" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_PATH_CLI_VIRTVIEWER' ||
+  bl64_check_command "$S64_LIBVIRT_CMD_VIRTVIEWER" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_CMD_VIRTVIEWER' ||
     return $?
   bl64_dbg_app_trace_start
-  "$S64_LIBVIRT_PATH_CLI_VIRTVIEWER" \
+  "$S64_LIBVIRT_CMD_VIRTVIEWER" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
 function s64_libvirt_lib_run_virtmanager() {
   bl64_dbg_app_show_function "$@"
-  bl64_check_command "$S64_LIBVIRT_PATH_CLI_VIRTMANAGER" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_PATH_CLI_VIRTMANAGER' ||
+  bl64_check_command "$S64_LIBVIRT_CMD_VIRTMANAGER" "$BL64_VAR_DEFAULT" 'S64_LIBVIRT_CMD_VIRTMANAGER' ||
     return $?
   bl64_dbg_app_trace_start
-  "$S64_LIBVIRT_PATH_CLI_VIRTMANAGER" \
+  "$S64_LIBVIRT_CMD_VIRTMANAGER" \
     "$@"
   bl64_dbg_app_trace_stop
 }

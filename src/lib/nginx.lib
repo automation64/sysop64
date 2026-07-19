@@ -33,7 +33,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 {
   declare S64_NGINX_LAB_IMAGE_TAG="${S64_NGINX_LAB_IMAGE_TAG:-latest}"
   declare S64_NGINX_LAB_HOST_NGINX_CONF="${S64_NGINX_LAB_HOST_NGINX_CONF:-}"
-  declare S64_NGINX_PATH_CLI="${S64_NGINX_PATH_CLI:-/usr/sbin/nginx}"
+  declare S64_NGINX_CMD="${S64_NGINX_CMD:-/usr/sbin/nginx}"
 }
 
 #
@@ -43,7 +43,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_NGINX_VERSION='1.2.1'
-  declare S64_NGINX_ABOUT_MODULE_MAIN='NGINX Web Server'
+  declare S64_NGINX_ABOUT_MODULE='NGINX Web Server'
 
   declare S64_NGINX_PATH_ETC_NGINX='/etc/nginx'
   declare S64_NGINX_PATH_VAR_NGINX='/var/lib/nginx'
@@ -62,14 +62,14 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_nginx_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_NGINX_ABOUT_MODULE_MAIN" &&
-    bl64_check_command "$S64_NGINX_PATH_CLI" "$BL64_VAR_DEFAULT" 'S64_NGINX_PATH_CLI'
+  s64_core_lib_module_show_about "$S64_NGINX_ABOUT_MODULE" &&
+    bl64_check_command "$S64_NGINX_CMD" "$BL64_VAR_DEFAULT" 'S64_NGINX_CMD'
 }
 
 function s64_nginx_lib_run_nginx() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_NGINX_PATH_CLI" \
+  "$S64_NGINX_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

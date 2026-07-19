@@ -29,6 +29,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 # optional #   : # X_PARAMETERS_PLACEHOLDER_X
 # optional # }
 
+# optional ##
+# optional ## External
+# optional ##
+# optional #
+# optional ## shellcheck disable=SC2034
+# optional #{
+# optional #  :
+# optional #}
+
 #
 # Globals
 #
@@ -36,7 +45,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
 # shellcheck disable=SC2034
 {
   declare S64_X_MODULE_CAPS_X_VERSION='1.0.0'
-  declare S64_X_MODULE_CAPS_X_ABOUT_MODULE_MAIN='X_MODULE_FULL_NAME_X'
+  declare S64_X_MODULE_CAPS_X_ABOUT_MODULE='X_MODULE_FULL_NAME_X'
   # optional # declare S64_X_MODULE_CAPS_X_ABOUT_SUBMODULE_X_SUBMODULE_CAPS_X='X_SUBMODULE_FULL_NAME_X'
   # X_GLOBALS_PLACEHOLDER_X
 }

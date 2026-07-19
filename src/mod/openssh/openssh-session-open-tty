@@ -24,7 +24,7 @@ declare MY_KEY=''
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  [[ -f "${S64_OPENSSH_PATH_CLI_HOME}/${MY_HOST}.pub" ]] && MY_KEY="${S64_OPENSSH_PATH_CLI_HOME}/${MY_HOST}"
+  [[ -f "${S64_OPENSSH_PATH_HOME_SSH}/${MY_HOST}.pub" ]] && MY_KEY="${S64_OPENSSH_PATH_HOME_SSH}/${MY_HOST}"
   s64_openssh_lib_setup &&
     bl64_check_parameter 'MY_HOST' &&
     s64_core_lib_task_show_setup \

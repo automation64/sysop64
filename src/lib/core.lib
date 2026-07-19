@@ -75,9 +75,9 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='3.11.0'
+  declare S64_CORE_VERSION='3.11.1'
   # Minimal BashLib64 version required
-  declare S64_BL64_VERSION='23.3.1'
+  declare S64_BL64_VERSION='23.4.0'
 
   # Library path
   declare S64_CORE_PATH_LIB="${S64_CORE_PATH_ROOT}/lib"
@@ -188,10 +188,14 @@ function s64_core_lib_command_require() {
   bl64_dbg_app_show_function "$@"
   local command_variable="${1:-}"
   local command_name="${2:-}"
-  s64_core_lib_command_assign "$@" && return 0
-  bl64_msg_show_error "Unable to find required command. Please install it and try again (command: ${command_name})"
-  # shellcheck disable=SC2154
-  return "$BL64_LIB_ERROR_TASK_FAILED"
+  local error_msg="the module requires a command that is not available. Please install it and try again (command: ${command_name})"
+  if s64_core_lib_command_assign "$@"; then
+    bl64_check_command "${!command_variable}" "$error_msg" "$command_name"
+  else
+    bl64_msg_show_error "$error_msg"
+    # shellcheck disable=SC2154
+    return "$BL64_LIB_ERROR_TASK_FAILED"
+  fi
 }
 
 function s64_core_lib_command_assign() {
@@ -201,10 +205,9 @@ function s64_core_lib_command_assign() {
   local command_path=''
 
   bl64_check_parameter 'command_variable' &&
-    bl64_check_parameter 'command_name' ||
+    bl64_check_parameter 'command_name' &&
+    shift 2 ||
     return $?
-  shift
-  shift
 
   if [[ -z "${!command_variable}" ]]; then
     # shellcheck disable=SC2086

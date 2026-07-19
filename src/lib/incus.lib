@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_INCUS_PATH_CLI="${S64_INCUS_PATH_CLI:-}"
+  declare S64_INCUS_CMD="${S64_INCUS_CMD:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_INCUS_VERSION='1.1.0'
-  declare S64_INCUS_ABOUT_MODULE_MAIN='Incus Container Manager'
+  declare S64_INCUS_ABOUT_MODULE='Incus Container Manager'
 
   declare S64_INCUS_SOCKET='incus.socket'
   declare S64_INCUS_SERVICE='incus.service'
@@ -53,8 +53,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_incus_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_INCUS_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_INCUS_PATH_CLI' 'incus'
+  s64_core_lib_module_show_about "$S64_INCUS_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_INCUS_CMD' 'incus'
 }
 
 function s64_incus_lib_run_incus() {
@@ -63,7 +63,7 @@ function s64_incus_lib_run_incus() {
   bl64_msg_app_detail_is_enabled || verbose_flag=' '
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_INCUS_PATH_CLI" \
+  "$S64_INCUS_CMD" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop

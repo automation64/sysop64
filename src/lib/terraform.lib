@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_TERRAFORM_VERSION='1.1.0'
-  declare S64_TERRAFORM_ABOUT_MODULE_MAIN='Terraform Infrastructure as Code'
+  declare S64_TERRAFORM_ABOUT_MODULE='Terraform Infrastructure as Code'
 }
 
 #
@@ -51,7 +51,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-tf.bash" &&
 
 function s64_terraform_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_TERRAFORM_ABOUT_MODULE_MAIN" &&
+  s64_core_lib_module_show_about "$S64_TERRAFORM_ABOUT_MODULE" &&
     bl64_tf_setup &&
     bl64_check_parameter 'S64_TERRAFORM_PATH_PROJECT' &&
     s64_core_lib_module_show_setup \

@@ -22,7 +22,7 @@ function my_initialize() {
   bl64_dbg_app_show_function
   s64_linux_lib_setup &&
     s64_core_lib_task_show_setup \
-      'S64_LINUX_PATH_CFG_RESOLV_CONF'
+      'S64_LINUX_PATH_RESOLV_CONF'
 }
 
 bl64_lib_script_version_set '1.0.0'
@@ -30,5 +30,5 @@ bl64_msg_help_set_about 'Show local name resolution configuration'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_os_run_cat "$S64_LINUX_PATH_CFG_RESOLV_CONF"
+bl64_os_run_cat "$S64_LINUX_PATH_RESOLV_CONF"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

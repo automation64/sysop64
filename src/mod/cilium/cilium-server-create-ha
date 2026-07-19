@@ -36,7 +36,7 @@ function my_initialize() {
     s64_core_lib_task_show_setup \
       'S64_CILIUM_SET_VERSION' \
       'MY_API_FQDN' \
-      'S64_K8S_SET_CLUSTER_API_PORT'
+      'S64_K8S_CFG_CLUSTER_API_PORT'
 }
 
 bl64_lib_script_version_set '1.0.0'
@@ -52,6 +52,6 @@ s64_cilium_lib_run_cilium \
   --set kubeProxyReplacement=true \
   --set gatewayAPI.enabled=true \
   --set "k8sServiceHost=${MY_API_FQDN}" \
-  --set "k8sServicePort=${S64_K8S_SET_CLUSTER_API_PORT}" \
+  --set "k8sServicePort=${S64_K8S_CFG_CLUSTER_API_PORT}" \
   --version "$S64_CILIUM_SET_VERSION"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

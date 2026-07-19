@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.3.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Imports
+#
+
+# shellcheck disable=SC2154,SC2015
+source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
+  { s64_core_lib_check_bl64 && exit 1; }
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_BIND_VERSION='1.0.0'
+  declare S64_BIND_ABOUT_MODULE='BIND - DNS Server'
+
+  declare S64_BIND_SERVICE=''
+
+  declare S64_BIND_PATH_ETC=''
+  declare S64_BIND_PATH_VAR=''
+  declare S64_BIND_PATH_LOG=''
+  declare S64_BIND_PATH_NAMED_CONF=''
+  declare S64_BIND_PATH_NAMED_LOG=''
+
+  declare S64_BIND_CMD_MDIG=''
+  declare S64_BIND_CMD_NAMED_CHECKCONF=''
+  declare S64_BIND_CMD_NAMED_CHECKZONE=''
+}
+
+#
+# Functions
+#
+
+function s64_bind_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_module_show_about "$S64_BIND_ABOUT_MODULE" ||
+    return $?
+
+  case "$BL64_OS_FLAVOR" in
+    "$BL64_OS_FLAVOR_REDHAT" | "$BL64_OS_FLAVOR_FEDORA")
+      S64_BIND_PATH_ETC='/etc/named'
+      S64_BIND_PATH_VAR='/var/named'
+      S64_BIND_PATH_NAMED_CONF='/etc/named.conf'
+      S64_BIND_SERVICE='named'
+
+      S64_BIND_CMD_MDIG='/usr/bin/mdig'
+      S64_BIND_CMD_NAMED_CHECKCONF='/usr/bin/named-checkconf'
+      S64_BIND_CMD_NAMED_CHECKZONE='/usr/bin/named-checkzone'
+      ;;
+    *)
+      bl64_check_rise_task_unsupported
+      return $?
+      ;;
+  esac
+
+  s64_core_lib_command_require 'S64_BIND_CMD_MDIG' 'mdig' &&
+    s64_core_lib_command_require 'S64_BIND_CMD_NAMED_CHECKCONF' 'named-checkconf' &&
+    s64_core_lib_command_require 'S64_BIND_CMD_NAMED_CHECKZONE' 'named-checkzone'
+}
+
+function s64_bind_lib_run_mdig() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_BIND_CMD_MDIG" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_bind_lib_run_named_checkconf() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_BIND_CMD_NAMED_CHECKCONF" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_bind_lib_run_named_checkzone() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_BIND_CMD_NAMED_CHECKZONE" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}

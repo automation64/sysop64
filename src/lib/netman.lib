@@ -41,13 +41,13 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_NETMAN_VERSION='1.0.0'
-  declare S64_NETMAN_ABOUT_MODULE_MAIN='Linux Network Manager'
+  declare S64_NETMAN_ABOUT_MODULE='Linux Network Manager'
 
   # SystemD service name
   declare S64_NETMAN_SERVICE_NAME='NetworkManager'
 
-  declare S64_NETMAN_PATH_CLI_NMCLI='/usr/bin/nmcli'
-  declare S64_NETMAN_PATH_CLI_NETMAN='/usr/sbin/NetworkManager'
+  declare S64_NETMAN_CMD_NMCLI='/usr/bin/nmcli'
+  declare S64_NETMAN_CMD_NETMAN='/usr/sbin/NetworkManager'
 }
 
 #
@@ -56,15 +56,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_netman_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_NETMAN_ABOUT_MODULE_MAIN" &&
-    bl64_check_command "$S64_NETMAN_PATH_CLI_NMCLI" "$BL64_VAR_DEFAULT" 'S64_NETMAN_PATH_CLI_NMCLI' &&
-    bl64_check_command "$S64_NETMAN_PATH_CLI_NETMAN" "$BL64_VAR_DEFAULT" 'S64_NETMAN_PATH_CLI_NETMAN'
+  s64_core_lib_module_show_about "$S64_NETMAN_ABOUT_MODULE" &&
+    bl64_check_command "$S64_NETMAN_CMD_NMCLI" "$BL64_VAR_DEFAULT" 'S64_NETMAN_CMD_NMCLI' &&
+    bl64_check_command "$S64_NETMAN_CMD_NETMAN" "$BL64_VAR_DEFAULT" 'S64_NETMAN_CMD_NETMAN'
 }
 
 function s64_netman_lib_run_nmcli() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_NETMAN_PATH_CLI_NMCLI" \
+  "$S64_NETMAN_CMD_NMCLI" \
     --mode "$S64_NETMAN_SET_OUTPUT_MODE" \
     --pretty \
     "$@"
@@ -74,7 +74,7 @@ function s64_netman_lib_run_nmcli() {
 function s64_netman_lib_run_netman() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_NETMAN_PATH_CLI_NETMAN" \
+  "$S64_NETMAN_CMD_NETMAN" \
     "$@"
   bl64_dbg_app_trace_stop
 }

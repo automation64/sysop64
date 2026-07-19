@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_ASUS_PATH_CLI_ASUSCTL="${S64_ASUS_PATH_CLI_ASUSCTL:-}"
+  declare S64_ASUS_CMD_ASUSCTL="${S64_ASUS_CMD_ASUSCTL:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_ASUS_VERSION='1.1.0'
-  declare S64_ASUS_ABOUT_MODULE_MAIN='Asus Tools'
+  declare S64_ASUS_ABOUT_MODULE='Asus Tools'
 }
 
 #
@@ -50,15 +50,15 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_asus_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_ASUS_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_ASUS_PATH_CLI_ASUSCTL' 'asusctl'
+  s64_core_lib_module_show_about "$S64_ASUS_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_ASUS_CMD_ASUSCTL' 'asusctl'
 }
 
 function s64_asus_lib_run_asusctl() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_ASUS_PATH_CLI_ASUSCTL" \
+  "$S64_ASUS_CMD_ASUSCTL" \
     "$@"
   bl64_dbg_app_trace_stop
 }

@@ -26,7 +26,7 @@ function my_list_dnf4() {
     --all
 }
 
-function my_dump_pacman_conf() {
+function my_list_pacman_conf() {
   bl64_dbg_app_show_function
   s64_linux_lib_run_pacman_conf \
     --repo-list
@@ -38,7 +38,7 @@ function my_initialize() {
     bl64_check_privilege_root
 }
 
-bl64_lib_script_version_set '1.1.0'
+bl64_lib_script_version_set '1.1.1'
 bl64_msg_help_set_about 'List package repositories'
 s64_core_lib_initialize && my_initialize || exit $?
 
@@ -48,7 +48,7 @@ case "$BL64_OS_DISTRO" in
   "$BL64_OS_CNT"-8.* | "$BL64_OS_CNT"-9.* | "$BL64_OS_CNT"-10.*) my_list_dnf4 ;;
   "$BL64_OS_ALM"-* | "$BL64_OS_RCK"-*) my_list_dnf4 ;;
   "$BL64_OS_FD"-3?) my_list_dnf4 ;;
-  "$BL64_OS_ARC"-*) my_dump_pacman_conf ;;
+  "$BL64_OS_ARC"-*) my_list_pacman_conf ;;
   *) bl64_check_rise_task_unsupported ;;
 esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

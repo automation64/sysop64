@@ -6,7 +6,7 @@ function s64_X_MODULE_X_lib_run_X_CLI_COMMAND_X() {
   # optional # s64_X_MODULE_X_lib_harden
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_X_MODULE_CAPS_X_PATH_CLI" \
+  "$S64_X_MODULE_CAPS_X_CMD" \
     $verbose_flag \
     "$@"
   bl64_dbg_app_trace_stop

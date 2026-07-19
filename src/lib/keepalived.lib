@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_KEEPALIVED_PATH_CLI="${S64_KEEPALIVED_PATH_CLI:-}"
+  declare S64_KEEPALIVED_CMD="${S64_KEEPALIVED_CMD:-}"
 }
 
 #
@@ -41,7 +41,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_KEEPALIVED_VERSION='1.0.0'
-  declare S64_KEEPALIVED_ABOUT_MODULE_MAIN='KeepAliveD - High-availability and load-balancing service'
+  declare S64_KEEPALIVED_ABOUT_MODULE='KeepAliveD - High-availability and load-balancing service'
 
   declare S64_KEEPALIVED_PATH_ETC_KEEPALIVED='/etc/keepalived'
   declare S64_KEEPALIVED_PATH_CONFIG="${S64_KEEPALIVED_PATH_ETC_KEEPALIVED}/keepalived.conf"
@@ -55,14 +55,14 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 function s64_keepalived_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_KEEPALIVED_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_KEEPALIVED_PATH_CLI' 'keepalived'
+  s64_core_lib_module_show_about "$S64_KEEPALIVED_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_KEEPALIVED_CMD' 'keepalived'
 }
 
 function s64_keepalived_lib_run_keepalived() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_KEEPALIVED_PATH_CLI" \
+  "$S64_KEEPALIVED_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
 }

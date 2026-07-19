@@ -31,13 +31,13 @@ function my_initialize() {
       'MY_TARGET'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_set_about 'Run Ansible ad-hoc task on remote host'
 bl64_msg_help_set_usage 'MY_COMMAND MY_TARGET'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_ansible_lib_run_ansible \
+bl64_ans_run_ansible \
   "$MY_TARGET" \
   --args "$MY_COMMAND"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

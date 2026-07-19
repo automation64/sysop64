@@ -36,7 +36,7 @@ function my_initialize() {
       'MY_CONTROL_TOKEN' \
       'MY_CONTROL_HASH' \
       'MY_KUBEADM_CONFIG' \
-      'S64_K8S_SET_CLUSTER_API_PORT' &&
+      'S64_K8S_CFG_CLUSTER_API_PORT' &&
     bl64_ui_ask_proceed 'Create cluster node on the current host?'
 }
 
@@ -49,7 +49,7 @@ bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_k8s_lib_run_kubeadm \
   ${MY_KUBEADM_CONFIG:+--config="$MY_KUBEADM_CONFIG"} \
   join \
-  "${MY_API_FQDN}:${S64_K8S_SET_CLUSTER_API_PORT}" \
+  "${MY_API_FQDN}:${S64_K8S_CFG_CLUSTER_API_PORT}" \
   --token "$MY_CONTROL_TOKEN" \
   --discovery-token-ca-cert-hash "sha256:${MY_CONTROL_HASH}"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

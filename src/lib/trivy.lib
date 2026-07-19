@@ -32,7 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 # shellcheck disable=SC2034
 {
   # Global Paths
-  declare S64_TRIVY_PATH_CLI="${S64_TRIVY_PATH_CLI:-}"
+  declare S64_TRIVY_CMD="${S64_TRIVY_CMD:-}"
   # Global Settings
   declare S64_TRIVY_SET_FORMAT="${S64_TRIVY_SET_FORMAT:-table}"
 }
@@ -44,7 +44,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 # shellcheck disable=SC2034
 {
   declare S64_TRIVY_VERSION='3.1.1'
-  declare S64_TRIVY_ABOUT_MODULE_MAIN='Trivy SAST'
+  declare S64_TRIVY_ABOUT_MODULE='Trivy SAST'
 }
 
 #
@@ -53,8 +53,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 function s64_trivy_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_TRIVY_ABOUT_MODULE_MAIN" &&
-    s64_core_lib_command_require 'S64_TRIVY_PATH_CLI' 'trivy' &&
+  s64_core_lib_module_show_about "$S64_TRIVY_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_TRIVY_CMD' 'trivy' &&
     s64_core_lib_module_show_setup \
       'S64_TRIVY_SET_FORMAT'
 }
@@ -65,7 +65,7 @@ function s64_trivy_lib_run_trivy() {
   bl64_msg_app_detail_is_enabled || verbose_flag='--quiet'
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
-  "$S64_TRIVY_PATH_CLI" \
+  "$S64_TRIVY_CMD" \
     $verbose_flag \
     --config=/dev/null \
     --timeout=5m \

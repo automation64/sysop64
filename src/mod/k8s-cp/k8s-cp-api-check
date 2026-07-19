@@ -29,7 +29,7 @@ function my_initialize() {
     bl64_check_parameter 'MY_CONTROL_IP' &&
     s64_core_lib_task_show_setup \
       'MY_CONTROL_IP' \
-      'S64_K8S_SET_CLUSTER_API_PORT'
+      'S64_K8S_CFG_CLUSTER_API_PORT'
 }
 
 bl64_lib_script_version_set '1.0.0'
@@ -40,5 +40,5 @@ s64_core_lib_initialize && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_rxtx_run_curl \
   --insecure \
-  "https://${MY_CONTROL_IP}:${S64_K8S_SET_CLUSTER_API_PORT}/livez?verbose"
+  "https://${MY_CONTROL_IP}:${S64_K8S_CFG_CLUSTER_API_PORT}/livez?verbose"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
