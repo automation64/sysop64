@@ -21,10 +21,11 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_unix_lib_setup &&
+    bl64_check_privilege_root &&
     bl64_ui_ask_confirmation 'Type "confirm" to restart the operating system'
 }
 
-bl64_lib_script_version_set '1.1.0'
+bl64_lib_script_version_set '1.1.1'
 bl64_msg_help_set_about 'Restart the operating system'
 s64_core_lib_initialize && my_initialize || exit $?
 

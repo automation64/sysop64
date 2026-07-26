@@ -23,14 +23,25 @@ function my_initialize() {
   s64_k8s_lib_setup
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_set_about 'Show technical reference information'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_msg_show_doc 'KubeADM:
-- KubeADM Manual: https://kubernetes.io/docs/reference/setup-tools/kubeadm/
-- KubeADM Configuration (v1beta4): https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta4/
-- Customizing components with the KubeADM API: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/
-'
+bl64_msg_show_doc 'KubeADM Reference:
+  - KubeADM Manual: https://kubernetes.io/docs/reference/setup-tools/kubeadm/
+  - KubeADM Configuration (v1beta4): https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta4/
+  - KubeADM Requirements: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+  - Customizing components with the KubeADM API: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/'
+bl64_msg_show_doc 'Control Plane Deployment:
+  - Bootstrapping clusters with kubeadm: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/
+  - KubeADM Init: https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
+  - Custom Control-Plane without kubeproxy: https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/
+  - Standard Control-Plane: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+  - High-Availability Control-Plane: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
+  - Configuring a cgroup driver: https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/configure-cgroup-driver'
+bl64_msg_show_doc 'Worker Node Deployment:
+  - Worker Node: https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/adding-linux-nodes/'
+bl64_msg_show_doc 'Container Runtime Reference:
+  - Supported Runtimes: https://kubernetes.io/docs/setup/production-environment/container-runtimes/'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

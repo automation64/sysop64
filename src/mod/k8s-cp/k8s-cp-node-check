@@ -18,18 +18,17 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/k8s.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
-declare MY_KUBEADM_CONFIG="${1:-}"
+declare MY_KUBEADM_CONFIG="${1:-$S64_K8S_PATH_CFG_KUBEADM}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_k8s_lib_setup &&
     bl64_check_privilege_root &&
-    bl64_msg_show_doc "Reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#before-you-begin" &&
     s64_core_lib_task_show_setup \
       'MY_KUBEADM_CONFIG'
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
 bl64_msg_help_set_about 'Check control plane environment prerequisites'
 bl64_msg_help_set_usage '[MY_KUBEADM_CONFIG]'
 s64_core_lib_initialize && my_initialize || exit $?

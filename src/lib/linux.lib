@@ -18,17 +18,11 @@
 #
 
 # shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
+source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" ||
   { s64_core_lib_check_bl64 && exit 1; }
 
 #
@@ -37,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='4.3.1'
+  declare S64_LINUX_VERSION='4.4.0'
   declare S64_LINUX_ABOUT_MODULE='Linux OS'
   declare S64_LINUX_ABOUT_SUBMODULE_APP='Applications'
   declare S64_LINUX_ABOUT_SUBMODULE_BOOT='Boot Manager'
@@ -65,6 +59,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
   declare S64_LINUX_CMD_DMIDECODE="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_DMSETUP="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_DPKG_QUERY="$$BL64_VAR_INCOMPATIBLE"
+  declare S64_LINUX_CMD_ETHTOOL="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_FAILLOCK="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_FINDMNT="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_FSCK="$$BL64_VAR_INCOMPATIBLE"
@@ -136,6 +131,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_DMIDECODE='/usr/bin/dmidecode'
       S64_LINUX_CMD_DMSETUP='/usr/bin/dmsetup'
       S64_LINUX_CMD_DPKG_QUERY="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_CMD_ETHTOOL='/usr/sbin/ethtool'
       S64_LINUX_CMD_FAILLOCK='/usr/bin/faillock'
       S64_LINUX_CMD_FINDMNT='/usr/bin/findmnt'
       S64_LINUX_CMD_FSCK='/usr/bin/fsck'
@@ -190,6 +186,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_DMIDECODE='/usr/sbin/dmidecode'
       S64_LINUX_CMD_DMSETUP='/usr/sbin/dmsetup'
       S64_LINUX_CMD_DPKG_QUERY='/usr/bin/dpkg-query'
+      S64_LINUX_CMD_ETHTOOL='/usr/sbin/ethtool'
       S64_LINUX_CMD_FAILLOCK='/usr/sbin/faillock'
       S64_LINUX_CMD_FINDMNT='/usr/sbin/findmnt'
       S64_LINUX_CMD_FSCK='/usr/sbin/fsck'
@@ -244,6 +241,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_DMIDECODE='/usr/sbin/dmidecode'
       S64_LINUX_CMD_DMSETUP='/usr/sbin/dmsetup'
       S64_LINUX_CMD_DPKG_QUERY="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_CMD_ETHTOOL='/usr/sbin/ethtool'
       S64_LINUX_CMD_FAILLOCK='/usr/sbin/faillock'
       S64_LINUX_CMD_FINDMNT='/usr/sbin/findmnt'
       S64_LINUX_CMD_FSCK='/usr/sbin/fsck'
@@ -298,6 +296,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_DMIDECODE='/usr/sbin/dmidecode'
       S64_LINUX_CMD_DMSETUP='/sbin/dmsetup'
       S64_LINUX_CMD_DPKG_QUERY="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_CMD_ETHTOOL='/usr/sbin/ethtool'
       S64_LINUX_CMD_FAILLOCK='/usr/bin/faillock'
       S64_LINUX_CMD_FINDMNT='/sbin/findmnt'
       S64_LINUX_CMD_FSCK='/sbin/fsck'
@@ -352,6 +351,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_DMIDECODE='/usr/sbin/dmidecode'
       S64_LINUX_CMD_DMSETUP='/usr/sbin/dmsetup'
       S64_LINUX_CMD_DPKG_QUERY="$BL64_VAR_INCOMPATIBLE"
+      S64_LINUX_CMD_ETHTOOL='/usr/sbin/ethtool'
       S64_LINUX_CMD_FAILLOCK='/usr/sbin/faillock'
       S64_LINUX_CMD_FINDMNT='/usr/sbin/findmnt'
       S64_LINUX_CMD_FSCK='/usr/sbin/fsck'
@@ -973,6 +973,16 @@ function s64_linux_lib_run_modinfo() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_MODINFO" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_ethtool() {
+  bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_LINUX_CMD_ETHTOOL' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_CMD_ETHTOOL" \
     "$@"
   bl64_dbg_app_trace_stop
 }

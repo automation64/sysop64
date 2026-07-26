@@ -14,18 +14,6 @@
 #######################################
 
 #
-# Imports
-#
-
-# shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
-  { s64_core_lib_check_bl64 && exit 1; }
-
-#
 # Module parameters
 #
 
@@ -33,7 +21,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 {
   declare S64_CONTAINERD_CMD_CTR="${S64_CONTAINERD_CMD_CTR:-}"
   declare S64_CONTAINERD_CMD_CONTAINERD="${S64_CONTAINERD_CMD_CONTAINERD:-}"
-  declare S64_CONTAINERD_CMD_NETDCTL="${S64_CONTAINERD_CMD_NETDCTL:-}"
+  declare S64_CONTAINERD_CMD_NERDCTL="${S64_CONTAINERD_CMD_NERDCTL:-}"
 }
 
 #
@@ -58,7 +46,7 @@ function s64_containerd_lib_setup() {
   s64_core_lib_module_show_about "$S64_CONTAINERD_ABOUT_MODULE" &&
     s64_core_lib_command_require 'S64_CONTAINERD_CMD_CTR' 'ctr' &&
     s64_core_lib_command_require 'S64_CONTAINERD_CMD_CONTAINERD' 'containerd' &&
-    s64_core_lib_command_require 'S64_CONTAINERD_CMD_NETDCTL' 'nerdctl'
+    s64_core_lib_command_require 'S64_CONTAINERD_CMD_NERDCTL' 'nerdctl'
 }
 
 function s64_containerd_lib_run_ctr() {
@@ -80,7 +68,7 @@ function s64_containerd_lib_run_containerd() {
 function s64_containerd_lib_run_nerdctl() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_CONTAINERD_CMD_NETDCTL" \
+  "$S64_CONTAINERD_CMD_NERDCTL" \
     "$@"
   bl64_dbg_app_trace_stop
 }

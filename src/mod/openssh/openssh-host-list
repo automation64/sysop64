@@ -16,8 +16,7 @@
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
 source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/openssh.lib" || { s64_core_lib_module_check && exit 1; }
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
 function my_initialize() {
   bl64_dbg_app_show_function
@@ -31,7 +30,7 @@ s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 if [[ -f "${S64_OPENSSH_PATH_HOME_SSH}/${S64_OPENSSH_FILE_KNOWN_HOSTS}" ]]; then
-  bl64_os_run_cat "${S64_OPENSSH_PATH_HOME_SSH}/${S64_OPENSSH_FILE_KNOWN_HOSTS}"
+  bl64_txt_dump "${S64_OPENSSH_PATH_HOME_SSH}/${S64_OPENSSH_FILE_KNOWN_HOSTS}"
 else
   bl64_msg_show_warning 'there are no known hosts'
 fi

@@ -30,7 +30,6 @@ function my_initialize() {
     bl64_check_parameter 'MY_API_FQDN' &&
     bl64_check_parameter 'MY_CONTROL_TOKEN' &&
     bl64_check_parameter 'MY_CONTROL_HASH' &&
-    bl64_msg_show_doc "Reference: https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/adding-linux-nodes/" &&
     s64_core_lib_task_show_setup \
       'MY_API_FQDN' \
       'MY_CONTROL_TOKEN' \

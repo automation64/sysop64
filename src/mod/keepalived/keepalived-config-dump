@@ -31,6 +31,6 @@ bl64_msg_help_set_about 'Show current configuration'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_os_run_cat \
+bl64_txt_dump \
   "$S64_KEEPALIVED_PATH_CONFIG"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

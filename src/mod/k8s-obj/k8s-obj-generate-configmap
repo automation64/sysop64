@@ -36,5 +36,5 @@ bl64_k8s_run_kubectl \
   "$(s64_k8s_lib_cli_set_format)" \
   --from-literal=x_key_x=x_value_x \
   'x-name-placeholder-x' |
-  s64_k8s_meta_strip_runtime
+  s64_k8s_lib_meta_strip_runtime
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

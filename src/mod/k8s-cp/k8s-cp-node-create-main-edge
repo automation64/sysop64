@@ -24,7 +24,6 @@ function my_initialize() {
   bl64_dbg_app_show_function
   s64_k8s_lib_setup &&
     bl64_check_privilege_root &&
-    bl64_msg_show_doc "Reference: https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/" &&
     bl64_msg_show_info 'Deployment options:
   - upload Certificates
   - disable kube-proxy' &&

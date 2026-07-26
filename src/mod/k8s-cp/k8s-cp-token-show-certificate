@@ -19,7 +19,6 @@ source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/k8s.
 source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
   source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
@@ -37,7 +36,7 @@ bl64_msg_help_set_about 'Show cluster CA certificate token'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_os_run_cat "$S64_K8S_PATH_KEY_CA" |
+bl64_txt_dump "$S64_K8S_PATH_KEY_CA" |
   bl64_cryp_run_openssl x509 -pubkey |
   bl64_cryp_run_openssl rsa -pubin -outform der 2>/dev/null |
   bl64_cryp_run_openssl dgst -sha256 -hex |

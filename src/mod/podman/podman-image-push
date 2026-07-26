@@ -15,22 +15,27 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
-source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/bind.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/podman.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
+
+declare MY_CONTAINER_IMAGE="${1:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_bind_lib_setup &&
-    bl64_check_privilege_root &&
+  s64_podman_lib_setup &&
+    bl64_check_parameter 'MY_CONTAINER_IMAGE' &&
     s64_core_lib_task_show_setup \
-      'S64_BIND_PATH_NAMED_CONF'
+      'MY_CONTAINER_IMAGE'
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_set_about 'Show current configuration'
+bl64_msg_help_set_about 'Push container image to registry'
+bl64_msg_help_set_usage 'MY_CONTAINER_IMAGE'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_os_run_cat \
-  "$S64_BIND_PATH_NAMED_CONF"
+bl64_cnt_run_podman \
+  push \
+  "$(s64_podman_lib_cli_set_insecure)" \
+  "$MY_CONTAINER_IMAGE"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -14,24 +14,12 @@
 #######################################
 
 #
-# Imports
-#
-
-# shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
-  { s64_core_lib_check_bl64 && exit 1; }
-
-#
 # Globals
 #
 
 # shellcheck disable=SC2034
 {
-  declare S64_BIND_VERSION='1.0.0'
+  declare S64_BIND_VERSION='1.1.0'
   declare S64_BIND_ABOUT_MODULE='BIND - DNS Server'
 
   declare S64_BIND_SERVICE=''
@@ -41,6 +29,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_BIND_PATH_LOG=''
   declare S64_BIND_PATH_NAMED_CONF=''
   declare S64_BIND_PATH_NAMED_LOG=''
+
+  declare S64_BIND_PREFIX_NAMED_CONF='named.'
+  declare S64_BIND_SUFFIX_NAMED_CONF='.zones'
+  declare S64_BIND_SUFFIX_NAMED_DB='.db'
 
   declare S64_BIND_CMD_MDIG=''
   declare S64_BIND_CMD_NAMED_CHECKCONF=''
@@ -58,8 +50,9 @@ function s64_bind_lib_setup() {
 
   case "$BL64_OS_FLAVOR" in
     "$BL64_OS_FLAVOR_REDHAT" | "$BL64_OS_FLAVOR_FEDORA")
-      S64_BIND_PATH_ETC='/etc/named'
+      S64_BIND_PATH_ETC='/etc'
       S64_BIND_PATH_VAR='/var/named'
+      S64_BIND_PATH_ETC_NAMED='/etc/named'
       S64_BIND_PATH_NAMED_CONF='/etc/named.conf'
       S64_BIND_SERVICE='named'
 

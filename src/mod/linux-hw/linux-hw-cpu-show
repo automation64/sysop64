@@ -19,7 +19,7 @@ source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/linu
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
 function my_show_proc() {
-  bl64_os_run_cat /proc/cpuinfo
+  bl64_txt_dump /proc/cpuinfo
 }
 
 function my_show_dmidecode() {
