@@ -14,18 +14,6 @@
 #######################################
 
 #
-# Imports
-#
-
-# shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
-  { s64_core_lib_check_bl64 && exit 1; }
-
-#
 # Module parameters
 #
 
@@ -33,8 +21,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 {
   declare S64_DIG_CMD="${S64_DIG_CMD:-}"
 
-  declare S64_DIG_SET_SERVER_PORT="${S64_DIG_SET_SERVER_PORT:-53}"
-  declare S64_DIG_SET_SERVER_IP="${S64_DIG_SET_SERVER_IP:-1.1.1.1}"
+  declare S64_DIG_CFG_SERVER_PORT="${S64_DIG_CFG_SERVER_PORT:-53}"
+  declare S64_DIG_CFG_SERVER_IP="${S64_DIG_CFG_SERVER_IP:-1.1.1.1}"
 }
 
 #
@@ -56,8 +44,8 @@ function s64_dig_lib_setup() {
   s64_core_lib_module_show_about "$S64_DIG_ABOUT_MODULE" &&
     s64_core_lib_command_require 'S64_DIG_CMD' 'dig' &&
     s64_core_lib_module_show_setup \
-      'S64_DIG_SET_SERVER_IP' \
-      'S64_DIG_SET_SERVER_PORT'
+      'S64_DIG_CFG_SERVER_IP' \
+      'S64_DIG_CFG_SERVER_PORT'
 }
 
 function s64_dig_lib_run_dig() {
@@ -65,8 +53,8 @@ function s64_dig_lib_run_dig() {
   bl64_dbg_app_trace_start
   "$S64_DIG_CMD" \
     -r \
-    -p "$S64_DIG_SET_SERVER_PORT" \
-    "@${S64_DIG_SET_SERVER_IP}" \
+    -p "$S64_DIG_CFG_SERVER_PORT" \
+    "@${S64_DIG_CFG_SERVER_IP}" \
     "$@"
   bl64_dbg_app_trace_stop
 }

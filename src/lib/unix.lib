@@ -14,18 +14,6 @@
 #######################################
 
 #
-# Imports
-#
-
-# shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
-  { s64_core_lib_check_bl64 && exit 1; }
-
-#
 # Module parameters
 #
 
@@ -40,7 +28,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_UNIX_VERSION='2.6.0'
+  declare S64_UNIX_VERSION='2.7.0'
   declare S64_UNIX_ABOUT_MODULE='Unix OS'
   declare S64_UNIX_ABOUT_SUBMODULE_BKP='Backup and Archive'
   declare S64_UNIX_ABOUT_SUBMODULE_FS='File System'
@@ -62,7 +50,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
   declare S64_UNIX_CMD_SU=''
   declare S64_UNIX_CMD_UMOUNT=''
 
-  declare S64_UNIX_PATH_RESOLV_CONF=''
+  declare S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
+  declare S64_UNIX_PATH_HOSTS='/etc/hosts'
+  declare S64_UNIX_PATH_SERVICES='/etc/services'
 }
 
 #
@@ -89,8 +79,6 @@ function s64_unix_lib_setup() {
       S64_UNIX_CMD_SHUTDOWN='/sbin/shutdown'
       S64_UNIX_CMD_SU='/bin/su'
       S64_UNIX_CMD_UMOUNT='/bin/umount'
-
-      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
       ;;
     "$BL64_OS_FLAVOR_DEBIAN" | "$BL64_OS_FLAVOR_SUSE")
       S64_UNIX_CMD_DF='/bin/df'
@@ -106,8 +94,6 @@ function s64_unix_lib_setup() {
       S64_UNIX_CMD_SHUTDOWN='/sbin/shutdown'
       S64_UNIX_CMD_SU='/bin/su'
       S64_UNIX_CMD_UMOUNT='/bin/umount'
-
-      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
       ;;
     "$BL64_OS_FLAVOR_ARCH")
       S64_UNIX_CMD_DF='/usr/bin/df'
@@ -123,8 +109,6 @@ function s64_unix_lib_setup() {
       S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
       S64_UNIX_CMD_SU='/usr/bin/su'
       S64_UNIX_CMD_UMOUNT='/usr/bin/umount'
-
-      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
       ;;
     "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT")
       S64_UNIX_CMD_DF='/usr/bin/df'
@@ -140,8 +124,6 @@ function s64_unix_lib_setup() {
       S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
       S64_UNIX_CMD_SU='/usr/bin/su'
       S64_UNIX_CMD_UMOUNT='/usr/bin/umount'
-
-      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
       ;;
     "$BL64_OS_FLAVOR_MACOS")
       S64_UNIX_CMD_DF='/bin/df'
@@ -157,8 +139,6 @@ function s64_unix_lib_setup() {
       S64_UNIX_CMD_SHUTDOWN='/usr/sbin/shutdown'
       S64_UNIX_CMD_SU='/usr/bin/su'
       S64_UNIX_CMD_UMOUNT='/sbin/umount'
-
-      S64_UNIX_PATH_RESOLV_CONF='/etc/resolv.conf'
       ;;
     *)
       bl64_check_rise_task_unsupported

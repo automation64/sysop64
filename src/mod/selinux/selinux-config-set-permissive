@@ -32,7 +32,7 @@ bl64_msg_help_set_about 'Set SELinux on permissive mode permanently'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_txt_line_replace_sed \
+bl64_txt_modify \
   "$S64_SELINUX_PATH_CONFIG" \
   's/^SELINUX=enforcing$/SELINUX=permissive/' &&
   bl64_msg_show_attention 'System must be reboted for changes to take effect'

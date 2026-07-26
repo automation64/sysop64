@@ -19,41 +19,65 @@ source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/netm
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
 declare MY_PROFILE_NAME="${1:-}"
-declare MY_DEVICE_NAME="${2:-}"
-declare MY_IPV4_CIDR="${3:-}"
-declare MY_IPV4_GATEWAY="${4:-}"
-declare MY_IPV4_DNS="${5:-}"
+declare MY_BOND_NAME="${2:-}"
+declare MY_DEVICE_MEMBER_ONE="${3:-}"
+declare MY_DEVICE_MEMBER_TWO="${4:-}"
+
+function my_create_member() {
+  bl64_dbg_app_show_function "$@"
+  local device="$1"
+  bl64_msg_show_task "Add member to bond profile (${device})"
+  s64_netman_lib_run_nmcli \
+    connection \
+    add \
+    type ethernet \
+    port-type bond \
+    con-name "${MY_PROFILE_NAME}-${device}" \
+    ifname "$device" \
+    controller "$MY_BOND_NAME"
+}
+
+function my_create_bond() {
+  bl64_dbg_app_show_function
+  bl64_msg_show_task 'Create bond profile'
+  s64_netman_lib_run_nmcli \
+    connection \
+    add \
+    type bond \
+    con-name "$MY_PROFILE_NAME" \
+    ifname "$MY_BOND_NAME" \
+    bond.options "mode=802.3ad,miimon=100,lacp_rate=fast" \
+    ipv4.method disabled \
+    ipv6.method disabled
+}
+
+function my_create() {
+  bl64_dbg_app_show_function
+  my_create_bond &&
+  my_create_member "$MY_DEVICE_MEMBER_ONE" &&
+  my_create_member "$MY_DEVICE_MEMBER_TWO"
+}
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_netman_lib_setup &&
     bl64_check_privilege_root &&
     bl64_check_parameter 'MY_PROFILE_NAME' &&
-    bl64_check_parameter 'MY_DEVICE_NAME' &&
-    bl64_check_parameter 'MY_IPV4_CIDR' &&
+    bl64_check_parameter 'MY_BOND_NAME' &&
+    bl64_check_parameter 'MY_DEVICE_MEMBER_ONE' &&
+    bl64_check_parameter 'MY_DEVICE_MEMBER_TWO' &&
     s64_core_lib_task_show_setup \
       'MY_PROFILE_NAME' \
-      'MY_DEVICE_NAME' \
-      'MY_IPV4_CIDR' \
-      'MY_IPV4_GATEWAY' \
-      'MY_IPV4_DNS'
+      'MY_BOND_NAME' \
+      'MY_DEVICE_MEMBER_ONE' \
+      'MY_DEVICE_MEMBER_TWO'
 }
 
 bl64_lib_script_version_set '1.0.0'
-bl64_msg_help_set_about 'Create ethernet connection profile: static IPV4'
-bl64_msg_help_set_usage 'MY_PROFILE_NAME MY_DEVICE_NAME MY_IPV4_CIDR [MY_IPV4_GATEWAY] [MY_IPV4_DNS]'
+bl64_msg_help_set_about 'Create connection profile for ethernet interface bonding using LACP'
+bl64_msg_help_set_usage 'MY_PROFILE_NAME MY_BOND_NAME MY_DEVICE_MEMBER_ONE MY_DEVICE_MEMBER_TWO'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_netman_lib_run_nmcli \
-  connection \
-  add \
-  type ethernet \
-  autoconnect true \
-  ipv4.method manual \
-  con-name "$MY_PROFILE_NAME" \
-  ifname "$MY_DEVICE_NAME" \
-  ipv4.address "$MY_IPV4_CIDR" \
-  ${MY_IPV4_GATEWAY:+ipv4.gateway "$MY_IPV4_GATEWAY"} \
-  ${MY_IPV4_DNS:+ipv4.dns "$MY_IPV4_DNS"}
+my_create
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

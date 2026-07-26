@@ -18,12 +18,7 @@
 #
 
 # shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
   { s64_core_lib_check_bl64 && exit 1; }
 
 #
@@ -39,6 +34,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
   # Cluster API / Port
   declare S64_K8S_CFG_CLUSTER_API_PORT="${S64_K8S_CFG_CLUSTER_API_PORT:-6443}"
+
+  # KubeADM Global configuration file name
+  declare S64_K8S_FILE_KUBEADM_CONF="${S64_K8S_FILE_KUBEADM_CONF:-kubeadm.yaml}"
 }
 
 #
@@ -47,7 +45,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='4.4.0'
+  declare S64_K8S_VERSION='4.5.0'
   declare S64_K8S_ABOUT_MODULE='Kubernetes Platform'
   declare S64_K8S_ABOUT_SUBMODULE_CLI='KubeCTL'
   declare S64_K8S_ABOUT_SUBMODULE_CP='Control Plane'
@@ -61,18 +59,19 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
   # OS System Service name
   declare S64_K8S_SERVICE_KUBELET='kubelet'
 
-  declare S64_K8S_PATH_CFG_CLUSTER_BASE='/etc/kubernetes'
-  declare S64_K8S_PATH_CFG_CNI_BASE='/etc/cni'
-  declare S64_K8S_PATH_CFG_KUBECTL_BASE="${HOME}/.kube"
+  declare S64_K8S_PATH_ETC_CLUSTER_BASE='/etc/kubernetes'
+  declare S64_K8S_PATH_ETC_CNI_BASE='/etc/cni'
+  declare S64_K8S_PATH_HOME_KUBECTL_BASE="${HOME}/.kube"
   declare S64_K8S_PATH_VAR_CNI_BASE='/var/lib/cni'
   declare S64_K8S_PATH_VAR_ETCD_BASE='/var/lib/etcd'
   declare S64_K8S_PATH_VAR_KUBELET_BASE='/var/lib/kubelet'
 
-  declare S64_K8S_PATH_CFG_ADMINCONF="${S64_K8S_PATH_CFG_CLUSTER_BASE}/admin.conf"
-  declare S64_K8S_PATH_CFG_KUBECONFIG="${S64_K8S_PATH_CFG_KUBECTL_BASE}/config"
+  declare S64_K8S_PATH_CFG_ADMINCONF="${S64_K8S_PATH_ETC_CLUSTER_BASE}/admin.conf"
+  declare S64_K8S_PATH_CFG_KUBECONFIG="${S64_K8S_PATH_HOME_KUBECTL_BASE}/config"
   declare S64_K8S_PATH_CFG_KUBELET="${S64_K8S_PATH_VAR_KUBELET_BASE}/config.yaml"
+  declare S64_K8S_PATH_CFG_KUBEADM="${S64_K8S_PATH_ETC_CLUSTER_BASE}/${S64_K8S_FILE_KUBEADM_CONF}"
 
-  declare S64_K8S_PATH_KEY_CA="${S64_K8S_PATH_CFG_CLUSTER_BASE}/pki/ca.crt"
+  declare S64_K8S_PATH_KEY_CA="${S64_K8S_PATH_ETC_CLUSTER_BASE}/pki/ca.crt"
 
   declare S64_K8S_TAG_NAMESPACE_ALL='ALL'
   declare S64_K8S_TAG_NAMESPACE_DEFAULT='default'
@@ -106,7 +105,7 @@ function s64_k8s_lib_cli_set_ns() {
   fi
 }
 
-function s64_k8s_meta_strip_runtime() {
+function s64_k8s_lib_meta_strip_runtime() {
   bl64_dbg_app_show_function
   bl64_txt_run_awk '
     /^[ ]+creationTimestamp:/ { next }

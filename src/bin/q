@@ -35,56 +35,72 @@ declare MY_COMMAND_LS_TASK='tasks'
 declare MY_COMMAND_RUN='run'
 declare MY_COMMAND_SHOW='show'
 
-function my_check_module() {
-  bl64_dbg_app_show_function "$@"
-  local module="${1:-}"
+declare MY_SELECTOR='.'
+declare MY_MODULE=''
+declare MY_TASK=''
+declare MY_SKIP_ARGS=0
 
-  bl64_check_parameter 'module' ||
+function my_select_module() {
+  bl64_dbg_app_show_function
+  bl64_dbg_app_show_vars 'MY_MODULE'
+
+  [[ -n "$MY_MODULE" && "$MY_MODULE" != "$MY_SELECTOR" ]] && ((MY_SKIP_ARGS += 1)) && return 0
+  [[ "$MY_MODULE" == "$MY_SELECTOR" ]] && ((MY_SKIP_ARGS += 1))
+  MY_MODULE="$(bl64_ui_select_item $(my_mods))"
+}
+
+function my_select_task() {
+  bl64_dbg_app_show_function
+  bl64_dbg_app_show_vars 'MY_MODULE' 'MY_TASK'
+
+  [[ -n "$MY_TASK" && "$MY_TASK" != "$MY_SELECTOR" ]] && ((MY_SKIP_ARGS += 1)) && return 0
+  [[ "$MY_TASK" == "$MY_SELECTOR" ]] && ((MY_SKIP_ARGS += 1))
+
+  bl64_check_export 'MY_MODULE' &&
+    MY_TASK="$(bl64_ui_select_item $(my_tasks "$MY_MODULE"))"
+}
+
+function my_check_module() {
+  bl64_dbg_app_show_function
+  bl64_check_export 'MY_MODULE' ||
     return $?
 
-  [[ -d "${S64_CORE_PATH_MOD}/${module}" ]] &&
-    return 0
+  [[ -d "${S64_CORE_PATH_MOD}/${MY_MODULE}" ]] && return 0
 
-  bl64_msg_show_fatal "Module not found. Please check and try again (module=${module})"
+  bl64_msg_show_fatal "Module not found. Please check and try again (module=${MY_MODULE})"
   return "$BL64_LIB_ERROR_PARAMETER_INVALID"
 }
 
 function my_check_task() {
-  bl64_dbg_app_show_function "$@"
-  local module="${1:-}"
-  local task="${2:-}"
+  bl64_dbg_app_show_function
 
-  my_check_module "$module" &&
-    bl64_check_parameter 'task' ||
+  my_check_module &&
+    bl64_check_export 'MY_TASK' ||
     return $?
 
-  [[ -e "${S64_CORE_PATH_MOD}/${module}/${module}-${task}" ]] &&
+  [[ -e "${S64_CORE_PATH_MOD}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}" ]] &&
     return 0
 
-  bl64_msg_show_fatal "Task not found. Please check and try again (task=${module}/${task})"
+  bl64_msg_show_fatal "Task not found. Please check and try again (task=${MY_MODULE}/${MY_TASK})"
   return "$BL64_LIB_ERROR_PARAMETER_INVALID"
 }
 
 function my_show() {
-  bl64_dbg_app_show_function "$@"
-  local module="${1:-}"
-  local task="${2:-}"
-  shift 2
-  my_check_task "$module" "$task" &&
-    bl64_txt_strip_comments "${S64_CORE_PATH_MOD}/${module}/${module}-${task}"
+  bl64_dbg_app_show_function
+  my_check_task &&
+    bl64_txt_strip_comments "${S64_CORE_PATH_MOD}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}"
 }
 
 function my_run() {
-  bl64_dbg_app_show_function "$@"
-  local module="${1:-}"
-  local task="${2:-}"
-  shift 2
-  my_check_task "$module" "$task" &&
-    "${S64_CORE_PATH_MOD}/${module}/${module}-${task}" "$@"
+  bl64_dbg_app_show_function
+  bl64_dbg_app_show_vars 'MY_SKIP_ARGS'
+  shift $MY_SKIP_ARGS
+  my_check_task &&
+    "${S64_CORE_PATH_MOD}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}" "$@"
 }
 
 function my_mods() {
-  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_show_function
   cd "$S64_CORE_PATH_MOD" &&
     bl64_fs_run_ls -1 |
     bl64_txt_run_sort
@@ -92,31 +108,28 @@ function my_mods() {
 
 function my_tasks() {
   bl64_dbg_app_show_function "$@"
-  local module="${1:-}"
-  my_check_module "$module" &&
-    cd "$S64_CORE_PATH_MOD/$module" &&
+  my_check_module &&
+    cd "$S64_CORE_PATH_MOD/$MY_MODULE" &&
     bl64_fs_run_ls -1 |
-    bl64_txt_run_sed "s/${module}-//g"
+    bl64_txt_run_sed "s/${MY_MODULE}-//g"
 }
 
 function my_info() {
-  bl64_dbg_app_show_function "$@"
-  local module="${1:-}"
-  local task="${2:-}"
-  shift 2
-  my_check_task "$module" "$task" &&
-    S64_CORE_SET_TASK="$S64_CORE_TASK_MODE_HELP" "${S64_CORE_PATH_MOD}/${module}/${module}-${task}"
+  bl64_dbg_app_show_function
+  my_check_task &&
+    S64_CORE_SET_TASK="$S64_CORE_TASK_MODE_HELP" "${S64_CORE_PATH_MOD}/${MY_MODULE}/${MY_MODULE}-${MY_TASK}"
 }
 
 function my_initialize() {
-  bl64_dbg_app_show_function
+  bl64_dbg_app_show_function "$@"
   [[ -z "$MY_OPTION" || -z "$MY_COMMAND" ]] &&
     BL64_MSG_FORMAT="$BL64_MSG_FORMAT_PLAIN" bl64_msg_show_error 'missing command name' &&
     bl64_msg_help_show &&
     return 1
 
-  bl64_lib_script_minver_check "$S64_BL64_VERSION" ||
+  s64_core_lib_initialize ||
     return $?
+
   case "$MY_COMMAND" in
     'i' | "$MY_COMMAND_INFO") MY_COMMAND="$MY_COMMAND_INFO" ;;
     'm' | "$MY_COMMAND_LS_MOD") MY_COMMAND="$MY_COMMAND_LS_MOD" ;;
@@ -125,31 +138,43 @@ function my_initialize() {
     's' | "$MY_COMMAND_SHOW") MY_COMMAND="$MY_COMMAND_SHOW" ;;
     *) bl64_msg_show_error "invalid command name (${MY_COMMAND})" && return 1 ;;
   esac
+  bl64_dbg_app_show_vars 'MY_COMMAND'
+  if [[ "$MY_COMMAND" =~ ($MY_COMMAND_RUN|$MY_COMMAND_SHOW|$MY_COMMAND_INFO) ]]; then
+    MY_MODULE="${1:-}"
+    MY_TASK="${2:-}"
+    bl64_dbg_app_show_vars 'MY_MODULE' 'MY_TASK'
+    my_select_module &&
+      my_select_task
+  elif [[ "$MY_COMMAND" == "$MY_COMMAND_LS_TASK" ]]; then
+    MY_MODULE="${1:-}"
+    bl64_dbg_app_show_vars 'MY_MODULE'
+    my_select_module
+  fi
 }
 
-bl64_lib_script_version_set '2.0.2'
+bl64_lib_script_version_set '3.0.0'
 bl64_msg_help_usage_set '[-V format] [-D Debug] <COMMAND> [MODULE] [TASK] [PARAMETERS]'
 bl64_msg_help_about_set 'Run sysadmin tasks'
 bl64_msg_help_parameters_set \
   "Commands:
 
-i|${MY_COMMAND_INFO}     : Show task about.
-m|${MY_COMMAND_LS_MOD}     : List modules.
-t|${MY_COMMAND_LS_TASK}    : List tasks.
-r|${MY_COMMAND_RUN}      : Run a module/task.
-s|${MY_COMMAND_SHOW}     : Show task script content.
-h|${MY_COMMAND_HELP}     : Show this help message.
+  i|${MY_COMMAND_INFO}     : Show task about.
+  m|${MY_COMMAND_LS_MOD}     : List modules.
+  t|${MY_COMMAND_LS_TASK}    : List tasks.
+  r|${MY_COMMAND_RUN}      : Run a module/task.
+  s|${MY_COMMAND_SHOW}     : Show task script content.
+  h|${MY_COMMAND_HELP}     : Show this help message.
 
 Show & Run options:
 
-MODULE     : Module name. Required for show and run.
-TASK       : Module task name. Required for show and run.
-PARAMETERS : (Optional). Task parameters
+  MODULE     : Module name. If none or ${MY_SELECTOR} provided, select it interactively.
+  TASK       : Module task name. If none or ${MY_SELECTOR} provided, select it interactively.
+  PARAMETERS : (Optional). Task parameters
 
 Global Options:
 
--V LEVEL  : verbose message format. Format: BL64_MSG_LEVEL_*
--D DEBUG   : Enable debugging mode. Format: BL64_DBG_TARGET_*"
+  -V LEVEL  : verbose message format. Format: BL64_MSG_LEVEL_*
+  -D DEBUG   : Enable debugging mode. Format: BL64_DBG_TARGET_*"
 
 # shellcheck disable=SC2249,SC2034
 while getopts ':V:D:' MY_OPTION; do
@@ -164,6 +189,6 @@ shift $((OPTIND - 1))
 MY_COMMAND="${1:-}"
 [[ "$MY_COMMAND" =~ ($MY_COMMAND_HELP|h) ]] && bl64_msg_help_show && exit 0
 shift
-my_initialize || exit $?
 
-"my_${MY_COMMAND}" "${@:-}"
+my_initialize "${@:-}" &&
+  "my_${MY_COMMAND}" "${@:-}"

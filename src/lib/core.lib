@@ -77,7 +77,7 @@
 {
   declare S64_CORE_VERSION='3.11.2'
   # Minimal BashLib64 version required
-  declare S64_BL64_VERSION='23.4.0'
+  declare S64_BL64_VERSION='23.5.0'
 
   # Library path
   declare S64_CORE_PATH_LIB="${S64_CORE_PATH_ROOT}/lib"
@@ -97,6 +97,13 @@
   # Task mode options
   declare S64_CORE_TASK_MODE_RUN='RUN'
   declare S64_CORE_TASK_MODE_HELP='HELP'
+
+  # Public container registries
+  declare S64_CORE_REGISTRY_DOCKERHUB='docker.io'
+  declare S64_CORE_REGISTRY_QUAY='quay.io'
+  declare S64_CORE_REGISTRY_GITHUB='ghcr.io'
+  declare S64_CORE_REGISTRY_AWS='public.ecr.aws'
+  declare S64_CORE_REGISTRY_KUBERNETES='registry.k8s.io'
 }
 
 #
@@ -120,9 +127,13 @@
 function s64_core_lib_initialize() {
   bl64_dbg_set_level "$S64_CORE_SET_DEBUG"
 
+  bl64_lib_script_minver_check "$S64_BL64_VERSION" &&
+    bl64_ui_setup ||
+    return $?
+
   _s64_core_lib_harden
   # shellcheck disable=SC2154
-  [[ -z "$S64_CORE_SET_PAGER" ]] && S64_CORE_SET_PAGER="$BL64_OS_CMD_CAT"
+  [[ -z "$S64_CORE_SET_PAGER" ]] && S64_CORE_SET_PAGER="$(bl64_ui_get_command_pager)"
   if [[ -x "$S64_CORE_SET_PAGER" ]]; then
     PAGER="$S64_CORE_SET_PAGER"
   else
@@ -287,5 +298,10 @@ function s64_core_lib_module_show_setup() {
 #
 
 # shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-ui.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" ||
   { s64_core_lib_check_bl64 && exit 1; }

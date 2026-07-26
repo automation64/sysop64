@@ -26,7 +26,6 @@ function my_initialize() {
   s64_k8s_lib_setup &&
     bl64_check_privilege_root &&
     bl64_check_parameter 'MY_API_FQDN' &&
-    bl64_msg_show_doc "Reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/" &&
     bl64_msg_show_info 'Deployment options:
   - upload Certificates
   - custom control plane endpoint' &&

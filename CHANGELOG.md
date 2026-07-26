@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.0.0]
+
+### Added
+
+- Core
+  - CLI: if no module or task is provided, select it interactively
+- Modules
+  - DNF
+  - Podman
+  - Container
+  - Skopeo
+
+### Changed
+
+- Core: **breaking-change** upgraded to BashLib64 v23.5.0
+- Updated modules
+  - SystemD
+  - FirewallD
+  - Unix
+  - Bind
+  - Dig
+  - Linux
+  - K8S
+  - NetMan
+
 ## [8.0.1]
 
 ### Added

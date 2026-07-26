@@ -18,12 +18,7 @@
 #
 
 # shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-txt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-fmt.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-bsh.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" ||
   { s64_core_lib_check_bl64 && exit 1; }
 
 #
