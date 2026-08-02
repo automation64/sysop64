@@ -24,6 +24,7 @@ function my_initialize() {
   bl64_dbg_app_show_function
   s64_k8s_lib_setup &&
     bl64_check_privilege_root &&
+    bl64_check_file "$MY_KUBEADM_CONFIG" &&
     s64_core_lib_task_show_setup \
       'MY_KUBEADM_CONFIG'
 }
@@ -35,7 +36,7 @@ s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_k8s_lib_run_kubeadm \
-  ${MY_KUBEADM_CONFIG:+--config="$MY_KUBEADM_CONFIG"} \
+  --config="$MY_KUBEADM_CONFIG" \
   config \
   images \
   list

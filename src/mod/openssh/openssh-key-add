@@ -23,11 +23,10 @@ declare MY_KEY_NAME="${1:-}"
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_openssh_lib_setup &&
-    bl64_check_directory "$S64_OPENSSH_PATH_HOME_SSH" &&
+    bl64_check_directory "$S64_OPENSSH_PATH_ETC_SSH_USER" &&
     bl64_check_parameter 'MY_KEY_NAME' &&
     s64_core_lib_task_show_setup \
       'S64_OPENSSH_CFG_KEY_TYPE' \
-      'S64_OPENSSH_PATH_HOME_SSH' \
       'MY_KEY_NAME'
 }
 
@@ -40,5 +39,5 @@ bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_openssh_lib_run_ssh_keygen \
   -N '' \
   -t "$S64_OPENSSH_CFG_KEY_TYPE" \
-  -f "${S64_OPENSSH_PATH_HOME_SSH}/${MY_KEY_NAME}"
+  -f "${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_KEY_NAME}"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

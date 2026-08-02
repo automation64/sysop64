@@ -29,7 +29,7 @@ declare MY_KEY=''
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_lib_var_is_default "$MY_USER" && MY_USER="$(bl64_iam_user_get_current)"
-  [[ -f "${S64_OPENSSH_PATH_HOME_SSH}/${MY_HOST}.pub" ]] && MY_KEY="${S64_OPENSSH_PATH_HOME_SSH}/${MY_HOST}"
+  [[ -f "${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_HOST}.pub" ]] && MY_KEY="${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_HOST}"
 
   s64_openssh_lib_setup &&
     bl64_check_parameter 'MY_HOST' &&

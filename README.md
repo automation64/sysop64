@@ -73,6 +73,7 @@ q h
 - `rename`: rename component
 - `reset`: reset component or content to initial or empty value
 - `restart`: restart component
+- `rollback`: revert component to a previous state
 - `run`: run service
 - `scan`: scan component
 - `search`: search component content without query lang

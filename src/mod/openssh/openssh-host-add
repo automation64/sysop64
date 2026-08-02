@@ -23,12 +23,11 @@ declare MY_KNOWN_HOSTS=''
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  MY_KNOWN_HOSTS="${S64_OPENSSH_PATH_HOME_SSH}/${S64_OPENSSH_FILE_KNOWN_HOSTS}"
+  MY_KNOWN_HOSTS="${S64_OPENSSH_PATH_ETC_SSH_USER}/${S64_OPENSSH_FILE_KNOWN_HOSTS}"
   s64_openssh_lib_setup &&
-    bl64_check_directory "$S64_OPENSSH_PATH_HOME_SSH" &&
+    bl64_check_directory "$S64_OPENSSH_PATH_ETC_SSH_USER" &&
     bl64_check_parameter 'MY_HOST_ID' &&
     s64_core_lib_task_show_setup \
-      'S64_OPENSSH_PATH_HOME_SSH' \
       'S64_OPENSSH_FILE_KNOWN_HOSTS' \
       'MY_HOST_ID'
 }

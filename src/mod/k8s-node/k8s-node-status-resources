@@ -48,7 +48,7 @@ function my_show_defined() {
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  S64_K8S_CFG_OUTPUT_FORMAT='yaml'
+  S64_K8S_CFG_KUBECTL_FORMAT='yaml'
   s64_k8s_lib_setup &&
     bl64_xsv_setup &&
     bl64_check_parameter 'MY_TARGET_NODE' &&
@@ -56,8 +56,9 @@ function my_initialize() {
       'MY_TARGET_NODE'
 }
 
-bl64_lib_script_version_set '1.0.4'
+bl64_lib_script_version_set '1.0.5'
 bl64_msg_help_set_about 'Show cluster node resource status'
+bl64_msg_help_set_usage 'MY_TARGET_NODE'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

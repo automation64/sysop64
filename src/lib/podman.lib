@@ -39,8 +39,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-cnt.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_PODMAN_VERSION='1.0.0'
-  declare S64_PODMAN_ABOUT_MODULE='PodMan - Container Management Tool'
+  declare S64_PODMAN_VERSION='1.0.1'
+  declare S64_PODMAN_ABOUT_MODULE='Podman - Container Management Tool'
 }
 
 #
@@ -49,7 +49,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-cnt.bash" ||
 
 function s64_podman_lib_setup() {
   bl64_dbg_app_show_function
-  S64_PODMAN_REGISTRY_SERVER="${S64_PODMAN_REGISTRY_HOST}${S64_PODMAN_REGISTRY_PORT:+:${S64_PODMAN_REGISTRY_PORT}}"
+  ! bl64_lib_var_is_set "$S64_PODMAN_REGISTRY_SERVER" &&
+    S64_PODMAN_REGISTRY_SERVER="${S64_PODMAN_REGISTRY_HOST}${S64_PODMAN_REGISTRY_PORT:+:${S64_PODMAN_REGISTRY_PORT}}"
   s64_core_lib_module_show_about "$S64_PODMAN_ABOUT_MODULE" &&
     bl64_cnt_setup &&
     bl64_check_command "$BL64_CNT_CMD_PODMAN" "$BL64_VAR_DEFAULT" 'podman' &&

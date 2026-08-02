@@ -33,10 +33,11 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_SYSTEMD_VERSION='1.1.1'
+  declare S64_SYSTEMD_VERSION='1.2.0'
   declare S64_SYSTEMD_ABOUT_MODULE='Linux System Manager'
-  declare S64_SYSTEMD_ABOUT_SUBMODULE_SYS='Server'
   declare S64_SYSTEMD_ABOUT_SUBMODULE_RESOLV='Resolv Subsystem'
+  declare S64_SYSTEMD_ABOUT_SUBMODULE_SYS='Server'
+  declare S64_SYSTEMD_ABOUT_SUBMODULE_UNIT='Unit'
 
   declare S64_SYSTEMD_CMD_HOSTNAMECTL='/usr/bin/hostnamectl'
   declare S64_SYSTEMD_CMD_JOURNALCTL='/usr/bin/journalctl'

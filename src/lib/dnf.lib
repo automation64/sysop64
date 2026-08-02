@@ -19,12 +19,14 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_DNF_VERSION='1.0.0'
+  declare S64_DNF_VERSION='1.1.0'
   declare S64_DNF_ABOUT_MODULE='DNF - Linux Package Manager'
 
   declare S64_DNF_CMD_DNF='/usr/bin/dnf'
 
-  declare S64_DNF_PATH_DNF_CONF='/etc/dnf/dnf.conf'
+  declare S64_DNF_PATH_ETC='/etc/dnf'
+  declare S64_DNF_PATH_CONF_FILE="${S64_DNF_PATH_ETC}/dnf.conf"
+  declare S64_DNF_PATH_CONF_REPOS='/etc/yum.repos.d'
 }
 
 #

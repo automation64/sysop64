@@ -28,8 +28,8 @@ bl64_msg_help_set_about 'List Helm repositories configured in the local host'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_hlm_run_helm \
+s64_helm_lib_run_helm \
   repo \
   list \
-  --output "$S64_HELM_OUTPUT_FORMAT"
+  --output "$S64_HELM_CFG_OUTPUT_FORMAT"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -75,7 +75,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='3.11.2'
+  declare S64_CORE_VERSION='3.12.0'
   # Minimal BashLib64 version required
   declare S64_BL64_VERSION='23.5.0'
 
@@ -128,6 +128,7 @@ function s64_core_lib_initialize() {
   bl64_dbg_set_level "$S64_CORE_SET_DEBUG"
 
   bl64_lib_script_minver_check "$S64_BL64_VERSION" &&
+    bl64_xsv_setup &&
     bl64_ui_setup ||
     return $?
 

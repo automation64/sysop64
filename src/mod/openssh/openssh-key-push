@@ -27,7 +27,7 @@ function my_initialize() {
   s64_openssh_lib_setup &&
     bl64_check_parameter 'MY_KEY_NAME' &&
     bl64_check_parameter 'MY_HOST' &&
-    bl64_check_file "${S64_OPENSSH_PATH_HOME_SSH}/${MY_KEY_NAME}.pub" &&
+    bl64_check_file "${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_KEY_NAME}.pub" &&
     s64_core_lib_task_show_setup \
       'MY_KEY_NAME' \
       'MY_HOST' \
@@ -41,6 +41,6 @@ s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_openssh_lib_run_ssh_copy_id \
-  -i "${S64_OPENSSH_PATH_HOME_SSH}/${MY_KEY_NAME}.pub" \
+  -i "${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_KEY_NAME}.pub" \
   "${MY_USER:+${MY_USER}@}${MY_HOST}"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

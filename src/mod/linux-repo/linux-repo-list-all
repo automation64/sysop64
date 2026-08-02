@@ -22,6 +22,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-pkg.bash" &&
 function my_list_dnf4() {
   bl64_dbg_app_show_function
   bl64_pkg_run_dnf \
+    --quiet \
     repolist \
     --all
 }

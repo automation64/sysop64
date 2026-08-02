@@ -29,11 +29,19 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 {
   declare S64_K8S_CMD_KUBEADM="${S64_K8S_CMD_KUBEADM:-}"
 
-  # KubeCTL / Output format
-  declare S64_K8S_CFG_OUTPUT_FORMAT="${S64_K8S_CFG_OUTPUT_FORMAT:-yaml}"
+  # KubeCTL Options
+  declare S64_K8S_CFG_KUBECTL_FORMAT="${S64_K8S_CFG_KUBECTL_FORMAT:-yaml}"
+  declare S64_K8S_PATH_ETC_KUBECTL="${S64_K8S_PATH_ETC_KUBECTL:-${HOME}/.kube}"
+  declare S64_K8S_PATH_CFG_KUBECONFIG="${S64_K8S_PATH_CFG_KUBECONFIG:-${S64_K8S_PATH_ETC_KUBECTL}/config}"
 
-  # Cluster API / Port
-  declare S64_K8S_CFG_CLUSTER_API_PORT="${S64_K8S_CFG_CLUSTER_API_PORT:-6443}"
+  # Control Plane API
+  declare S64_K8S_CFG_API_VHOST="${S64_K8S_CFG_API_VHOST:-}"
+  declare S64_K8S_CFG_API_PORT="${S64_K8S_CFG_API_PORT:-6443}"
+  declare S64_K8S_CFG_API_ENDPOINT="${S64_K8S_CFG_API_ENDPOINT:-}"
+
+  # Cluster Join Credentials
+  declare S64_K8S_CFG_JOIN_TOKEN="${S64_K8S_CFG_JOIN_TOKEN:-}"
+  declare S64_K8S_CFG_JOIN_HASH="${S64_K8S_CFG_JOIN_HASH:-}"
 
   # KubeADM Global configuration file name
   declare S64_K8S_FILE_KUBEADM_CONF="${S64_K8S_FILE_KUBEADM_CONF:-kubeadm.yaml}"
@@ -45,10 +53,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='4.5.0'
+  declare S64_K8S_VERSION='4.6.0'
   declare S64_K8S_ABOUT_MODULE='Kubernetes Platform'
+  declare S64_K8S_ABOUT_SUBMODULE_API='API'
   declare S64_K8S_ABOUT_SUBMODULE_CLI='KubeCTL'
   declare S64_K8S_ABOUT_SUBMODULE_CP='Control Plane'
+  declare S64_K8S_ABOUT_SUBMODULE_DS='DaemonSet'
   declare S64_K8S_ABOUT_SUBMODULE_EVENT='Events'
   declare S64_K8S_ABOUT_SUBMODULE_NET='Network'
   declare S64_K8S_ABOUT_SUBMODULE_NODE='Nodes'
@@ -59,19 +69,17 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
   # OS System Service name
   declare S64_K8S_SERVICE_KUBELET='kubelet'
 
-  declare S64_K8S_PATH_ETC_CLUSTER_BASE='/etc/kubernetes'
-  declare S64_K8S_PATH_ETC_CNI_BASE='/etc/cni'
-  declare S64_K8S_PATH_HOME_KUBECTL_BASE="${HOME}/.kube"
-  declare S64_K8S_PATH_VAR_CNI_BASE='/var/lib/cni'
-  declare S64_K8S_PATH_VAR_ETCD_BASE='/var/lib/etcd'
-  declare S64_K8S_PATH_VAR_KUBELET_BASE='/var/lib/kubelet'
+  declare S64_K8S_PATH_ETC_CLUSTER='/etc/kubernetes'
+  declare S64_K8S_PATH_ETC_CNI='/etc/cni'
+  declare S64_K8S_PATH_VAR_CNI='/var/lib/cni'
+  declare S64_K8S_PATH_VAR_ETCD='/var/lib/etcd'
+  declare S64_K8S_PATH_VAR_KUBELET='/var/lib/kubelet'
 
-  declare S64_K8S_PATH_CFG_ADMINCONF="${S64_K8S_PATH_ETC_CLUSTER_BASE}/admin.conf"
-  declare S64_K8S_PATH_CFG_KUBECONFIG="${S64_K8S_PATH_HOME_KUBECTL_BASE}/config"
-  declare S64_K8S_PATH_CFG_KUBELET="${S64_K8S_PATH_VAR_KUBELET_BASE}/config.yaml"
-  declare S64_K8S_PATH_CFG_KUBEADM="${S64_K8S_PATH_ETC_CLUSTER_BASE}/${S64_K8S_FILE_KUBEADM_CONF}"
+  declare S64_K8S_PATH_CFG_ADMINCONF="${S64_K8S_PATH_ETC_CLUSTER}/admin.conf"
+  declare S64_K8S_PATH_CFG_KUBEADM="${S64_K8S_PATH_ETC_CLUSTER}/${S64_K8S_FILE_KUBEADM_CONF}"
+  declare S64_K8S_PATH_CFG_KUBELET="${S64_K8S_PATH_VAR_KUBELET}/config.yaml"
 
-  declare S64_K8S_PATH_KEY_CA="${S64_K8S_PATH_ETC_CLUSTER_BASE}/pki/ca.crt"
+  declare S64_K8S_PATH_KEY_CA="${S64_K8S_PATH_ETC_CLUSTER}/pki/ca.crt"
 
   declare S64_K8S_TAG_NAMESPACE_ALL='ALL'
   declare S64_K8S_TAG_NAMESPACE_DEFAULT='default'
@@ -84,8 +92,16 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 function s64_k8s_lib_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_module_show_about "$S64_K8S_ABOUT_MODULE"
+  if ! bl64_lib_var_is_set "$S64_K8S_CFG_API_ENDPOINT" && bl64_lib_var_is_set "$S64_K8S_CFG_API_VHOST"; then
+    S64_K8S_CFG_API_ENDPOINT="${S64_K8S_CFG_API_VHOST}:${S64_K8S_CFG_API_PORT}"
+  fi
   s64_core_lib_command_assign 'S64_K8S_CMD_KUBEADM' 'kubeadm'
-  bl64_k8s_setup
+  bl64_k8s_setup || return $?
+  [[ -f "$S64_K8S_PATH_CFG_KUBECONFIG" ]] && bl64_k8s_set_kubeconfig "$S64_K8S_PATH_CFG_KUBECONFIG"
+
+  s64_core_lib_module_show_setup \
+    'S64_K8S_CFG_API_ENDPOINT' \
+    'S64_K8S_PATH_CFG_KUBECONFIG'
 }
 
 function s64_k8s_lib_setup_secondary() {
@@ -118,9 +134,9 @@ function s64_k8s_lib_cli_set_format() {
   bl64_dbg_app_show_function "$@"
   local format="${1:-}"
   if [[ "$format" != 'yaml' ]]; then
-    S64_K8S_CFG_OUTPUT_FORMAT="$format"
+    S64_K8S_CFG_KUBECTL_FORMAT="$format"
   fi
-  printf -- '--output=%s' "${S64_K8S_CFG_OUTPUT_FORMAT}"
+  printf -- '--output=%s' "${S64_K8S_CFG_KUBECTL_FORMAT}"
 }
 
 function s64_k8s_lib_run_kubeadm() {
