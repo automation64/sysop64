@@ -18,33 +18,36 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/helm.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
-declare MY_REPO_NAME="${1:-}"
-declare MY_CHART_NAME="${2:-}"
+declare MY_CHART_NAME="${1:-}"
+declare MY_CHART_VERSION="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
   s64_helm_lib_setup &&
-    bl64_check_parameter 'MY_REPO_NAME' &&
+    bl64_check_export 'S64_HELM_CFG_REGISTRY_NAME' &&
     bl64_check_parameter 'MY_CHART_NAME' &&
     s64_core_lib_task_show_setup \
-      'MY_REPO_NAME' \
-      'MY_CHART_NAME'
+      'S64_HELM_CFG_REGISTRY_NAME' \
+      'MY_CHART_NAME' \
+      'MY_CHART_VERSION'
 }
 
-bl64_lib_script_version_set '2.0.1'
+bl64_lib_script_version_set '2.1.0'
 bl64_msg_help_set_about 'Show helm chart definition'
-bl64_msg_help_set_usage 'MY_REPO_NAME MY_CHART_NAME'
+bl64_msg_help_set_usage 'MY_CHART_NAME [MY_CHART_VERSION]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_show_separator 'Chart Definition'
-bl64_hlm_run_helm \
+s64_helm_lib_run_helm \
   show \
   chart \
-  "${MY_REPO_NAME}/${MY_CHART_NAME}"
+  "${S64_HELM_CFG_REGISTRY_NAME}/${MY_CHART_NAME}" \
+  ${MY_CHART_VERSION:+--version "$MY_CHART_VERSION"}
 bl64_msg_show_separator 'Chart Readme'
-bl64_hlm_run_helm \
+s64_helm_lib_run_helm \
   show \
   readme \
-  "${MY_REPO_NAME}/${MY_CHART_NAME}"
+  "${S64_HELM_CFG_REGISTRY_NAME}/${MY_CHART_NAME}" \
+  ${MY_CHART_VERSION:+--version "$MY_CHART_VERSION"}
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

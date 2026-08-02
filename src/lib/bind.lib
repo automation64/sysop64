@@ -19,7 +19,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_BIND_VERSION='1.1.0'
+  declare S64_BIND_VERSION='1.2.0'
   declare S64_BIND_ABOUT_MODULE='BIND - DNS Server'
 
   declare S64_BIND_SERVICE=''
@@ -37,6 +37,7 @@
   declare S64_BIND_CMD_MDIG=''
   declare S64_BIND_CMD_NAMED_CHECKCONF=''
   declare S64_BIND_CMD_NAMED_CHECKZONE=''
+  declare S64_BIND_CMD_RNDC=''
 }
 
 #
@@ -60,15 +61,13 @@ function s64_bind_lib_setup() {
       S64_BIND_CMD_NAMED_CHECKCONF='/usr/bin/named-checkconf'
       S64_BIND_CMD_NAMED_CHECKZONE='/usr/bin/named-checkzone'
       ;;
-    *)
-      bl64_check_rise_task_unsupported
-      return $?
-      ;;
+    *) bl64_check_rise_task_unsupported ;;
   esac
 
   s64_core_lib_command_require 'S64_BIND_CMD_MDIG' 'mdig' &&
     s64_core_lib_command_require 'S64_BIND_CMD_NAMED_CHECKCONF' 'named-checkconf' &&
-    s64_core_lib_command_require 'S64_BIND_CMD_NAMED_CHECKZONE' 'named-checkzone'
+    s64_core_lib_command_require 'S64_BIND_CMD_NAMED_CHECKZONE' 'named-checkzone' &&
+    s64_core_lib_command_require 'S64_BIND_CMD_RNDC' 'rndc'
 }
 
 function s64_bind_lib_run_mdig() {
@@ -91,6 +90,14 @@ function s64_bind_lib_run_named_checkzone() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_BIND_CMD_NAMED_CHECKZONE" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_bind_lib_run_rndc() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_BIND_CMD_RNDC" \
     "$@"
   bl64_dbg_app_trace_stop
 }

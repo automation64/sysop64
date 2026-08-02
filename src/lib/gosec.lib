@@ -29,7 +29,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_GOSEC_VERSION='1.1.0'
+  declare S64_GOSEC_VERSION='1.1.1'
   declare S64_GOSEC_ABOUT_MODULE='GoSec SAST'
 }
 
@@ -40,9 +40,7 @@
 function s64_gosec_lib_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_module_show_about "$S64_GOSEC_ABOUT_MODULE" &&
-    s64_core_lib_command_require 'S64_GOSEC_CMD' 'gosec' &&
-    s64_core_lib_module_show_setup \
-      'S64_GOSEC_SET_FORMAT'
+    s64_core_lib_command_require 'S64_GOSEC_CMD' 'gosec'
 }
 
 function s64_gosec_lib_run_gosec() {

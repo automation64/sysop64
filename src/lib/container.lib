@@ -29,8 +29,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_CONTAINER_REGISTRY_URL="${S64_CONTAINER_REGISTRY_URL:-}"
-  declare S64_CONTAINER_REGISTRY_PORT="${S64_CONTAINER_REGISTRY_PORT:-5000}"
+  declare S64_CONTAINER_REGISTRY_HOST="${S64_CONTAINER_REGISTRY_HOST:-}"
+  declare S64_CONTAINER_REGISTRY_PORT="${S64_CONTAINER_REGISTRY_PORT:-}"
+  declare S64_CONTAINER_REGISTRY_SERVER="${S64_CONTAINER_REGISTRY_SERVER:-}"
 }
 
 #
@@ -39,7 +40,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_CONTAINER_VERSION='1.0.0'
+  declare S64_CONTAINER_VERSION='1.1.0'
   declare S64_CONTAINER_ABOUT_MODULE='Container - Open Container Initiative Tools'
 
 }
@@ -50,5 +51,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
 
 function s64_container_lib_setup() {
   bl64_dbg_app_show_function
+  if ! bl64_lib_var_is_set "$S64_CONTAINER_REGISTRY_SERVER"; then
+    S64_CONTAINER_REGISTRY_SERVER="${S64_CONTAINER_REGISTRY_HOST:-localhost}:${S64_CONTAINER_REGISTRY_PORT:-5000}"
+  fi
   s64_core_lib_module_show_about "$S64_CONTAINER_ABOUT_MODULE"
+  s64_core_lib_module_show_setup \
+    'S64_CONTAINER_REGISTRY_HOST' \
+    'S64_CONTAINER_REGISTRY_PORT' \
+    'S64_CONTAINER_REGISTRY_SERVER'
 }

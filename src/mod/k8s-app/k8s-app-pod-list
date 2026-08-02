@@ -33,9 +33,10 @@ bl64_msg_help_set_usage '[MY_NAMESPACE]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+# shellcheck disable=SC2046
 bl64_k8s_run_kubectl \
   get \
-  "$(s64_k8s_lib_cli_set_format 'wide')" \
+  $(s64_k8s_lib_cli_set_format 'wide') \
   $(s64_k8s_lib_cli_set_ns "$MY_NAMESPACE") \
   pods
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

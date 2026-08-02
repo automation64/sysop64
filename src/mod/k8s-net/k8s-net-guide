@@ -28,8 +28,9 @@ bl64_msg_help_set_about 'Show technical reference information'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_msg_show_doc 'Cluster Networking:
+bl64_msg_show_doc 'Documentation:
 - Overview: https://kubernetes.io/docs/concepts/cluster-administration/networking/
-- Services, Load Balancing, and Networking: https://kubernetes.io/docs/concepts/services-networking/
+- Services, Load Balancing, and Networking: https://kubernetes.io/docs/concepts/services-networking/'
+bl64_msg_show_doc 'CNI Reference:
 - CNI plugins: https://kubernetes.io/docs/concepts/cluster-administration/addons/#networking-and-network-policy'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

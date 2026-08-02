@@ -27,7 +27,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_PATH_HOME_SSH="${S64_OPENSSH_PATH_HOME_SSH:-${HOME}/.ssh}"
+  declare S64_OPENSSH_PATH_ETC_SSH_USER="${S64_OPENSSH_PATH_ETC_SSH_USER:-${HOME}/.ssh}"
+  declare S64_OPENSSH_PATH_KEY_SSH_USER="${S64_OPENSSH_PATH_KEY_SSH_USER:-}"
 
   declare S64_OPENSSH_FILE_CLIENT_CONFIG="${S64_OPENSSH_FILE_CLIENT_CONFIG:-config}"
   declare S64_OPENSSH_FILE_KNOWN_HOSTS="${S64_OPENSSH_FILE_KNOWN_HOSTS:-known_hosts}"
@@ -41,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_VERSION='3.4.0'
+  declare S64_OPENSSH_VERSION='3.5.0'
   declare S64_OPENSSH_ABOUT_MODULE='OpenSSH - Secure Remote Shell'
 
   declare S64_OPENSSH_CMD_SCP='/usr/bin/scp'
@@ -61,21 +62,31 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" ||
 function s64_openssh_lib_setup() {
   bl64_dbg_app_show_function
 
-  # shellcheck disable=SC2249
+  s64_core_lib_module_show_about "$S64_OPENSSH_ABOUT_MODULE"
+
   case "$BL64_OS_FLAVOR" in
     "$BL64_OS_FLAVOR_ALPINE") S64_OPENSSH_SERVICE='sshd' ;;
     "$BL64_OS_FLAVOR_DEBIAN") S64_OPENSSH_SERVICE='ssh' ;;
     "$BL64_OS_FLAVOR_FEDORA" | "$BL64_OS_FLAVOR_REDHAT") S64_OPENSSH_SERVICE='sshd' ;;
     "$BL64_OS_FLAVOR_SUSE") S64_OPENSSH_SERVICE='sshd' ;;
     "$BL64_OS_FLAVOR_ARCH") S64_OPENSSH_SERVICE='sshd' ;;
+    *) bl64_check_rise_task_unsupported ;;
   esac
-  s64_core_lib_module_show_about "$S64_OPENSSH_ABOUT_MODULE" &&
-    s64_core_lib_command_require 'S64_OPENSSH_CMD_SCP' 'scp' &&
+
+  if bl64_lib_var_is_set "$S64_OPENSSH_PATH_KEY_SSH_USER"; then
+    bl64_check_file "$S64_OPENSSH_PATH_KEY_SSH_USER" ||
+      return $?
+  fi
+
+  s64_core_lib_command_require 'S64_OPENSSH_CMD_SCP' 'scp' &&
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH' 'ssh' &&
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_ADD' 'ssh-add' &&
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_COPY_ID' 'ssh-copy-id' &&
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYGEN' 'ssh-keygen' &&
-    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYSCAN' 'ssh-keyscan'
+    s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYSCAN' 'ssh-keyscan' &&
+    s64_core_lib_module_show_setup \
+      'S64_OPENSSH_PATH_ETC_SSH_USER' \
+      'S64_OPENSSH_PATH_KEY_SSH_USER'
 }
 
 function s64_openssh_lib_run_ssh_keygen() {
@@ -90,6 +101,7 @@ function s64_openssh_lib_run_ssh() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_OPENSSH_CMD_SSH" \
+    ${S64_OPENSSH_PATH_KEY_SSH_USER:+-i "$S64_OPENSSH_PATH_KEY_SSH_USER"} \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -106,6 +118,7 @@ function s64_openssh_lib_run_scp() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_OPENSSH_CMD_SCP" \
+    ${S64_OPENSSH_PATH_KEY_SSH_USER:+-i "$S64_OPENSSH_PATH_KEY_SSH_USER"} \
     "$@"
   bl64_dbg_app_trace_stop
 }

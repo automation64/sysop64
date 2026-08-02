@@ -20,8 +20,6 @@
 # shellcheck disable=SC2034
 {
   declare S64_CILIUM_CMD="${S64_CILIUM_CMD:-}"
-
-  declare S64_CILIUM_SET_VERSION="${S64_CILIUM_SET_VERSION:-1.19.4}"
 }
 
 #
@@ -30,8 +28,10 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CILIUM_VERSION='1.0.0'
+  declare S64_CILIUM_VERSION='2.0.0'
   declare S64_CILIUM_ABOUT_MODULE='Cilium - eBPF-based Networking'
+
+  declare S64_CILIUM_CFG_NAMESPACE='kube-system'
 }
 
 #

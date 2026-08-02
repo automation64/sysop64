@@ -29,7 +29,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_KUBESCAPE_VERSION='1.1.0'
+  declare S64_KUBESCAPE_VERSION='1.1.1'
   declare S64_KUBESCAPE_ABOUT_MODULE='Kubescape Security Platform'
 }
 
@@ -40,9 +40,7 @@
 function s64_kubescape_lib_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_module_show_about "$S64_KUBESCAPE_ABOUT_MODULE" &&
-    s64_core_lib_command_require 'S64_KUBESCAPE_CMD' 'kubescape' &&
-    s64_core_lib_module_show_setup \
-      'S64_KUBESCAPE_SET_FORMAT'
+    s64_core_lib_command_require 'S64_KUBESCAPE_CMD' 'kubescape'
 }
 
 function s64_kubescape_lib_run_kubescape() {

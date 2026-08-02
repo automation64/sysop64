@@ -31,8 +31,9 @@ function my_initialize() {
       'MY_LABEL'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_set_about 'Add a K8S label to a node'
+bl64_msg_help_set_usage 'MY_TARGET_NODE MY_LABEL'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

@@ -24,7 +24,7 @@ function my_initialize() {
   bl64_dbg_app_show_function
   s64_openssh_lib_setup &&
     bl64_check_parameter 'MY_KEY_NAME' &&
-    bl64_check_file "${S64_OPENSSH_PATH_HOME_SSH}/${MY_KEY_NAME}.pub" &&
+    bl64_check_file "${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_KEY_NAME}.pub" &&
     s64_core_lib_task_show_setup \
       'MY_KEY_NAME' &&
     bl64_ui_ask_proceed 'Do you want to permanently delete the key pair?'
@@ -37,6 +37,6 @@ s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_fs_file_remove \
-  "${S64_OPENSSH_PATH_HOME_SSH}/${MY_KEY_NAME}" \
-  "${S64_OPENSSH_PATH_HOME_SSH}/${MY_KEY_NAME}.pub"
+  "${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_KEY_NAME}" \
+  "${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_KEY_NAME}.pub"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

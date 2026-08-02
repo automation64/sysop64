@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# template-one: 3.3.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+[[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/cilium.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
+
+function my_initialize() {
+  bl64_dbg_app_show_function
+  s64_cilium_lib_setup
+}
+
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_set_about 'Show technical reference information'
+s64_core_lib_initialize && my_initialize || exit $?
+
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+bl64_msg_show_doc 'Documentation:
+  - Manual: https://docs.cilium.io/en/latest/
+  - Networking: https://docs.cilium.io/en/latest/network/concepts/
+  - Configuration: https://docs.cilium.io/en/latest/configuration/
+  - Helm Chart Values: https://docs.cilium.io/en/latest/helm-reference/
+  - System Requirements: https://docs.cilium.io/en/stable/operations/system_requirements
+  - CLI Manual: https://docs.cilium.io/en/latest/cmdref/'
+bl64_msg_show_doc 'Guides:
+  - Deploy K8S Default: https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/
+  - Deploy K8S replacing Kube-Proxy: https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/
+  - Deploy K8S replacing L2: https://docs.cilium.io/en/stable/network/l2-announcements/
+  - Deploy K8S with GatewayAPI: https://docs.cilium.io/en/stable/network/servicemesh/gateway-api/gateway-api/'
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

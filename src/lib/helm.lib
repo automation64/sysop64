@@ -27,7 +27,10 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-hlm.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_HELM_OUTPUT_FORMAT="${S64_HELM_OUTPUT_FORMAT:-table}"
+  declare S64_HELM_CFG_OUTPUT_FORMAT="${S64_HELM_CFG_OUTPUT_FORMAT:-table}"
+
+  declare S64_HELM_CFG_REGISTRY_NAME="${S64_HELM_CFG_REGISTRY_NAME:-}"
+  declare S64_HELM_CFG_REGISTRY_USE_HTTP="${S64_HELM_CFG_REGISTRY_USE_HTTP:-}"
 }
 
 #
@@ -36,8 +39,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-hlm.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_HELM_VERSION='2.1.0'
-  declare S64_HELM_ABOUT_MODULE='Helm Package Manager'
+  declare S64_HELM_VERSION='2.2.0'
+  declare S64_HELM_ABOUT_MODULE='Helm - Kubernetes Package Manager'
 }
 
 #
@@ -49,5 +52,22 @@ function s64_helm_lib_setup() {
   s64_core_lib_module_show_about "$S64_HELM_ABOUT_MODULE" &&
     bl64_hlm_setup &&
     s64_core_lib_module_show_setup \
-      'S64_HELM_OUTPUT_FORMAT'
+      'S64_HELM_CFG_REGISTRY_NAME' \
+      'S64_HELM_CFG_REGISTRY_USE_HTTP'
+}
+
+function s64_helm_lib_cli_set_http() {
+  bl64_dbg_app_show_function
+  if bl64_lib_flag_is_enabled "$S64_HELM_CFG_REGISTRY_USE_HTTP"; then
+    printf -- '--plain-http'
+  fi
+}
+
+function s64_helm_lib_run_helm() {
+  bl64_dbg_app_show_function "$@"
+  # shellcheck disable=SC2046
+  bl64_hlm_run_helm \
+    $(s64_helm_lib_cli_set_http) \
+    ${S64_K8S_PATH_CFG_KUBECONFIG:+--kubeconfig "$S64_K8S_PATH_CFG_KUBECONFIG"} \
+    "$@"
 }

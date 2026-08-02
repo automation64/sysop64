@@ -32,7 +32,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_SKOPEO_VERSION='1.0.0'
+  declare S64_SKOPEO_VERSION='1.1.0'
   declare S64_SKOPEO_ABOUT_MODULE='Skopeo - Container Registry Management'
 
 }
@@ -43,7 +43,8 @@
 
 function s64_skopeo_lib_setup() {
   bl64_dbg_app_show_function
-  S64_SKOPEO_REGISTRY_SERVER="${S64_SKOPEO_REGISTRY_HOST}${S64_SKOPEO_REGISTRY_PORT:+:${S64_SKOPEO_REGISTRY_PORT}}"
+  ! bl64_lib_var_is_set "$S64_SKOPEO_REGISTRY_SERVER" &&
+    S64_SKOPEO_REGISTRY_SERVER="${S64_SKOPEO_REGISTRY_HOST}${S64_SKOPEO_REGISTRY_PORT:+:${S64_SKOPEO_REGISTRY_PORT}}"
   s64_core_lib_module_show_about "$S64_SKOPEO_ABOUT_MODULE" &&
     s64_core_lib_command_require 'S64_SKOPEO_CMD' 'skopeo' &&
     s64_core_lib_module_show_setup \
