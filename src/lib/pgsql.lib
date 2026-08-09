@@ -48,7 +48,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-cnt.bash" ||
 # shellcheck disable=SC2034
 {
   declare S64_PGSQL_VERSION='3.2.2'
-  declare S64_PGSQL_ABOUT_MODULE='PostgreSQL Database'
+  declare S64_PGSQL_ABOUT_MODULE='PGSQL - PostgreSQL Database'
 }
 
 #

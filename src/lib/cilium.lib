@@ -20,6 +20,16 @@
 # shellcheck disable=SC2034
 {
   declare S64_CILIUM_CMD="${S64_CILIUM_CMD:-}"
+
+  declare S64_CILIUM_IMAGE_NETWORK_PERF="${S64_CILIUM_IMAGE_NETWORK_PERF:-}"
+
+  declare S64_CILIUM_IMAGE_ALPINE_CURL="${S64_CILIUM_IMAGE_ALPINE_CURL:-}"
+  declare S64_CILIUM_IMAGE_CORE_DNS="${S64_CILIUM_IMAGE_CORE_DNS:-}"
+  declare S64_CILIUM_IMAGE_ECHO_ADVANCED="${S64_CILIUM_IMAGE_ECHO_ADVANCED:-}"
+  declare S64_CILIUM_IMAGE_FRR="${S64_CILIUM_IMAGE_FRR:-}"
+  declare S64_CILIUM_IMAGE_JSON_MOCK="${S64_CILIUM_IMAGE_JSON_MOCK:-}"
+  declare S64_CILIUM_IMAGE_SOCAT="${S64_CILIUM_IMAGE_SOCAT:-}"
+  declare S64_CILIUM_IMAGE_TEST_CONNECTION_DISRUPTION="${S64_CILIUM_IMAGE_TEST_CONNECTION_DISRUPTION:-}"
 }
 
 #
@@ -41,7 +51,16 @@
 function s64_cilium_lib_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_module_show_about "$S64_CILIUM_ABOUT_MODULE" &&
-    s64_core_lib_command_require 'S64_CILIUM_CMD' 'cilium'
+    s64_core_lib_command_require 'S64_CILIUM_CMD' 'cilium' &&
+    s64_core_lib_module_show_setup \
+      'S64_CILIUM_IMAGE_NETWORK_PERF' \
+      'S64_CILIUM_IMAGE_ALPINE_CURL' \
+      'S64_CILIUM_IMAGE_CORE_DNS' \
+      'S64_CILIUM_IMAGE_ECHO_ADVANCED' \
+      'S64_CILIUM_IMAGE_FRR' \
+      'S64_CILIUM_IMAGE_JSON_MOCK' \
+      'S64_CILIUM_IMAGE_SOCAT' \
+      'S64_CILIUM_IMAGE_TEST_CONNECTION_DISRUPTION'
 }
 
 function s64_cilium_lib_run_cilium() {

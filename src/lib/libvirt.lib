@@ -29,7 +29,7 @@
 # shellcheck disable=SC2034
 {
   declare S64_LIBVIRT_VERSION='1.4.0'
-  declare S64_LIBVIRT_ABOUT_MODULE='LibVirt Virtual Machine Manager'
+  declare S64_LIBVIRT_ABOUT_MODULE='LibVirt - Virtual Machine Manager'
   declare S64_LIBVIRT_ABOUT_SUBMODULE_SYS='System'
   declare S64_LIBVIRT_ABOUT_SUBMODULE_QEMU='QEMU'
   declare S64_LIBVIRT_ABOUT_SUBMODULE_LXC='LXC'

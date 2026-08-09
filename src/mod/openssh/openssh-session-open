@@ -21,19 +21,22 @@ source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 
 declare MY_HOST="${1:-}"
 declare MY_USER="${2:-}"
 declare MY_KEY=''
+declare MY_FORWARD='-x'
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  [[ -f "${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_HOST}.pub" ]] && MY_KEY="${S64_OPENSSH_PATH_ETC_SSH_USER}/${MY_HOST}"
+  [[ -f "${S64_OPENSSH_PATH_ETC_USER}/${MY_HOST}.pub" ]] && MY_KEY="${S64_OPENSSH_PATH_ETC_USER}/${MY_HOST}"
+  bl64_lib_flag_is_enabled "$S64_OPENSSH_CFG_FORWARD_X11" && MY_FORWARD='-X'
   s64_openssh_lib_setup &&
     bl64_check_parameter 'MY_HOST' &&
     s64_core_lib_task_show_setup \
+      'S64_OPENSSH_CFG_FORWARD_X11' \
       'MY_HOST' \
       'MY_USER' \
       'MY_KEY'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_set_about 'Login to a remote host with pseudo-terminal'
 bl64_msg_help_set_usage 'MY_HOST [MY_USER]'
 s64_core_lib_initialize && my_initialize || exit $?
@@ -43,7 +46,7 @@ s64_openssh_lib_run_ssh \
   -a \
   -C \
   -t \
-  -x \
+  "${MY_FORWARD}" \
   ${MY_KEY:+-i "$MY_KEY"} \
   "${MY_USER:+$MY_USER@}$MY_HOST"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

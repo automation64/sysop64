@@ -36,7 +36,7 @@
 # shellcheck disable=SC2034
 {
   declare S64_OCI_VERSION='1.2.1'
-  declare S64_OCI_ABOUT_MODULE='Oracle Cloud Infrastructure'
+  declare S64_OCI_ABOUT_MODULE='OCI - Oracle Cloud Infrastructure'
   declare S64_OCI_ABOUT_SUBMODULE_DC='Data Centers and Regions'
   declare S64_OCI_ABOUT_SUBMODULE_SSO='Single Sign-On'
 }

@@ -63,6 +63,7 @@ q h
 - `debug`: debug component
 - `dump`: show component content as-is
 - `edit`: edit content, using interactive text editor
+- `generate`: generate content based on template and optional parameters
 - `guide`: show technical documentation about the module or task
 - `init`: initialize component content
 - `list`: generate a simple list of components or attributes
@@ -71,6 +72,7 @@ q h
 - `query`: query component or content using query lang
 - `monitor`: show component runtime metrics
 - `rename`: rename component
+- `repair`: fix a broken component
 - `reset`: reset component or content to initial or empty value
 - `restart`: restart component
 - `rollback`: revert component to a previous state
@@ -78,6 +80,7 @@ q h
 - `scan`: scan component
 - `search`: search component content without query lang
 - `setup`: setup component
+- `simulate`: simulate service execution. The service will not run nor modify anything
 - `show`: show component details
 - `status`: show component status
 - `sync`: synchronize component or content against another component or content

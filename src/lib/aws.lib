@@ -41,7 +41,7 @@
 # shellcheck disable=SC2034
 {
   declare S64_AWS_VERSION='3.2.1'
-  declare S64_AWS_ABOUT_MODULE='AWS Platform'
+  declare S64_AWS_ABOUT_MODULE='AWS - Amazon Web Services'
   declare S64_AWS_ABOUT_SUBMODULE_AUR='Aurora Database'
   declare S64_AWS_ABOUT_SUBMODULE_CF='CloudFormation'
   declare S64_AWS_ABOUT_SUBMODULE_CLI='AWS CLI'

@@ -28,6 +28,8 @@ bl64_msg_help_set_about 'Show technical reference information'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_msg_show_doc 'Documentation for /proc subsystems:
-- /proc/sys/vm/: https://www.kernel.org/doc/Documentation/sysctl/vm.txt'
+bl64_msg_show_doc 'Kernel Documentation:
+  - /proc/sys/vm/: https://www.kernel.org/doc/Documentation/sysctl/vm.txt'
+bl64_msg_show_doc 'Kernel Packages:
+  - Oracle Linux: https://blogs.oracle.com/scoter/manage-the-number-of-installed-kernels-for-oracle-linux'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

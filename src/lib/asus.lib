@@ -29,7 +29,7 @@
 # shellcheck disable=SC2034
 {
   declare S64_ASUS_VERSION='1.1.0'
-  declare S64_ASUS_ABOUT_MODULE='Asus Tools'
+  declare S64_ASUS_ABOUT_MODULE='Asus - Tools'
 }
 
 #

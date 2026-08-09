@@ -14,12 +14,22 @@
 #######################################
 
 #
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_SQUID_CMD_SQUID="${S64_SQUID_CMD_SQUID:-}"
+  declare S64_SQUID_CMD_SQUIDCLIENT="${S64_SQUID_CMD_SQUIDCLIENT:-}"
+}
+
+#
 # Globals
 #
 
 # shellcheck disable=SC2034
 {
-  declare S64_SQUID_VERSION='1.0.0'
+  declare S64_SQUID_VERSION='1.1.0'
   declare S64_SQUID_ABOUT_MODULE='Squid - Web Proxy'
 
   declare S64_SQUID_PATH_ETC='/etc/squid'
@@ -27,6 +37,7 @@
   declare S64_SQUID_PATH_SQUID_CONF="${S64_SQUID_PATH_ETC}/squid.conf"
   declare S64_SQUID_PATH_ACCESS_LOG="${S64_SQUID_PATH_LOG}/access.log"
   declare S64_SQUID_PATH_CACHE_LOG="${S64_SQUID_PATH_LOG}/cache.log"
+  declare S64_SQUID_PATH_STORE_LOG="${S64_SQUID_PATH_LOG}/store.log"
   declare S64_SQUID_SERVICE='squid'
 }
 
@@ -37,4 +48,22 @@
 function s64_squid_lib_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_module_show_about "$S64_SQUID_ABOUT_MODULE"
+  s64_core_lib_command_require 'S64_SQUID_CMD_SQUID' 'squid' &&
+    s64_core_lib_command_require 'S64_SQUID_CMD_SQUIDCLIENT' 'squidclient'
+}
+
+function s64_squid_lib_run_squid() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SQUID_CMD_SQUID" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_squid_lib_run_squidclient() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SQUID_CMD_SQUIDCLIENT" \
+    "$@"
+  bl64_dbg_app_trace_stop
 }

@@ -27,13 +27,16 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_PATH_ETC_SSH_USER="${S64_OPENSSH_PATH_ETC_SSH_USER:-${HOME}/.ssh}"
-  declare S64_OPENSSH_PATH_KEY_SSH_USER="${S64_OPENSSH_PATH_KEY_SSH_USER:-}"
-
   declare S64_OPENSSH_FILE_CLIENT_CONFIG="${S64_OPENSSH_FILE_CLIENT_CONFIG:-config}"
   declare S64_OPENSSH_FILE_KNOWN_HOSTS="${S64_OPENSSH_FILE_KNOWN_HOSTS:-known_hosts}"
 
   declare S64_OPENSSH_CFG_KEY_TYPE="${S64_OPENSSH_CFG_KEY_TYPE:-ed25519}"
+  declare S64_OPENSSH_CFG_FORWARD_X11="${S64_OPENSSH_CFG_FORWARD_X11:-NO}"
+
+  declare S64_OPENSSH_PATH_ETC_USER="${S64_OPENSSH_PATH_ETC_USER:-${HOME}/.ssh}"
+  declare S64_OPENSSH_PATH_KEY_USER="${S64_OPENSSH_PATH_KEY_USER:-}"
+  declare S64_OPENSSH_PATH_KNOWN_HOSTS_USER="${S64_OPENSSH_PATH_KNOWN_HOSTS_USER:-${S64_OPENSSH_PATH_ETC_USER}/${S64_OPENSSH_FILE_KNOWN_HOSTS}}"
+  declare S64_OPENSSH_PATH_CONFIG_USER="${S64_OPENSSH_PATH_CONFIG_USER:-${S64_OPENSSH_PATH_ETC_USER}/${S64_OPENSSH_FILE_CLIENT_CONFIG}}"
 }
 
 #
@@ -42,7 +45,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_OPENSSH_VERSION='3.5.0'
+  declare S64_OPENSSH_VERSION='3.6.0'
   declare S64_OPENSSH_ABOUT_MODULE='OpenSSH - Secure Remote Shell'
 
   declare S64_OPENSSH_CMD_SCP='/usr/bin/scp'
@@ -73,8 +76,8 @@ function s64_openssh_lib_setup() {
     *) bl64_check_rise_task_unsupported ;;
   esac
 
-  if bl64_lib_var_is_set "$S64_OPENSSH_PATH_KEY_SSH_USER"; then
-    bl64_check_file "$S64_OPENSSH_PATH_KEY_SSH_USER" ||
+  if bl64_lib_var_is_set "$S64_OPENSSH_PATH_KEY_USER"; then
+    bl64_check_file "$S64_OPENSSH_PATH_KEY_USER" ||
       return $?
   fi
 
@@ -85,8 +88,10 @@ function s64_openssh_lib_setup() {
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYGEN' 'ssh-keygen' &&
     s64_core_lib_command_require 'S64_OPENSSH_CMD_SSH_KEYSCAN' 'ssh-keyscan' &&
     s64_core_lib_module_show_setup \
-      'S64_OPENSSH_PATH_ETC_SSH_USER' \
-      'S64_OPENSSH_PATH_KEY_SSH_USER'
+      'S64_OPENSSH_PATH_ETC_USER' \
+      'S64_OPENSSH_PATH_KEY_USER' \
+      'S64_OPENSSH_PATH_KNOWN_HOSTS_USER' \
+      'S64_OPENSSH_PATH_CONFIG_USER'
 }
 
 function s64_openssh_lib_run_ssh_keygen() {
@@ -101,7 +106,7 @@ function s64_openssh_lib_run_ssh() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_OPENSSH_CMD_SSH" \
-    ${S64_OPENSSH_PATH_KEY_SSH_USER:+-i "$S64_OPENSSH_PATH_KEY_SSH_USER"} \
+    ${S64_OPENSSH_PATH_KEY_USER:+-i "$S64_OPENSSH_PATH_KEY_USER"} \
     "$@"
   bl64_dbg_app_trace_stop
 }
@@ -118,7 +123,7 @@ function s64_openssh_lib_run_scp() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_OPENSSH_CMD_SCP" \
-    ${S64_OPENSSH_PATH_KEY_SSH_USER:+-i "$S64_OPENSSH_PATH_KEY_SSH_USER"} \
+    ${S64_OPENSSH_PATH_KEY_USER:+-i "$S64_OPENSSH_PATH_KEY_USER"} \
     "$@"
   bl64_dbg_app_trace_stop
 }

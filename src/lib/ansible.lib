@@ -32,6 +32,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-py.bash" &&
 
   declare S64_ANSIBLE_PATH_INVENTORY="${S64_ANSIBLE_PATH_INVENTORY:-}"
   declare S64_ANSIBLE_PATH_CONFIG="${S64_ANSIBLE_PATH_CONFIG:-$BL64_VAR_DEFAULT}"
+  declare S64_ANSIBLE_PATH_REQUIREMENTS="${S64_ANSIBLE_PATH_REQUIREMENTS:-}"
 
   declare S64_ANSIBLE_SET_OUTPUT_PLUGIN="${S64_ANSIBLE_SET_OUTPUT_PLUGIN:-default}"
 }
@@ -42,8 +43,8 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-py.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_ANSIBLE_VERSION='2.0.0'
-  declare S64_ANSIBLE_ABOUT_MODULE='Ansible Platform'
+  declare S64_ANSIBLE_VERSION='2.1.0'
+  declare S64_ANSIBLE_ABOUT_MODULE='Ansible - Automation Platform'
   declare S64_ANSIBLE_CMD_CONFIG=''
   declare S64_ANSIBLE_CMD_DOC=''
   declare S64_ANSIBLE_CMD_INVENTORY=''
@@ -65,7 +66,8 @@ function s64_ansible_lib_setup() {
     s64_core_lib_command_require 'S64_ANSIBLE_CMD_INVENTORY' 'ansible-inventory' "$S64_ANSIBLE_PATH_BIN" &&
     s64_core_lib_module_show_setup \
       'S64_ANSIBLE_PATH_INVENTORY' \
-      'S64_ANSIBLE_PATH_CONFIG'
+      'S64_ANSIBLE_PATH_CONFIG' \
+      'S64_ANSIBLE_PATH_REQUIREMENTS'
 }
 
 function s64_ansible_lib_run_doc() {

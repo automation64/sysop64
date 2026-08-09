@@ -27,7 +27,7 @@ function my_initialize() {
       'S64_DNF_PATH_DNF_CONF'
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
 bl64_msg_help_set_about 'Show DNF configuration file content'
 s64_core_lib_initialize && my_initialize || exit $?
 

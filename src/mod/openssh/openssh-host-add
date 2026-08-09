@@ -19,25 +19,22 @@ source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/open
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
 declare MY_HOST_ID="${1:-}"
-declare MY_KNOWN_HOSTS=''
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  MY_KNOWN_HOSTS="${S64_OPENSSH_PATH_ETC_SSH_USER}/${S64_OPENSSH_FILE_KNOWN_HOSTS}"
   s64_openssh_lib_setup &&
-    bl64_check_directory "$S64_OPENSSH_PATH_ETC_SSH_USER" &&
+    bl64_check_directory "$S64_OPENSSH_PATH_ETC_USER" &&
     bl64_check_parameter 'MY_HOST_ID' &&
     s64_core_lib_task_show_setup \
-      'S64_OPENSSH_FILE_KNOWN_HOSTS' \
       'MY_HOST_ID'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_set_about 'Add a new host key to the local known hosts file'
 bl64_msg_help_set_usage 'MY_HOST_ID'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 s64_openssh_lib_run_ssh_keyscan \
-  -H "$MY_HOST_ID" >>"$MY_KNOWN_HOSTS"
+  -H "$MY_HOST_ID" >>"$S64_OPENSSH_PATH_KNOWN_HOSTS_USER"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

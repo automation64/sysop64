@@ -28,7 +28,7 @@ bl64_msg_help_set_about 'Show technical reference information'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_msg_show_doc 'Configuration
+bl64_msg_show_doc 'Configuration Reference
 - Configuration Settings: https://docs.ansible.com/projects/ansible/latest/reference_appendices/config.html
 - Core Environment Variables: https://docs.ansible.com/projects/ansible/latest/reference_appendices/config.html#environment-variables
 - Collection Environment Variables: https://docs.ansible.com/projects/ansible/latest/collections/environment_variables.html

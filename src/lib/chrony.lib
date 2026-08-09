@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.3.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_CHRONY_CMD_CHRONYC="${S64_CHRONY_CMD_CHRONYC:-}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_CHRONY_VERSION='1.0.0'
+  declare S64_CHRONY_ABOUT_MODULE='Chrony - NTP client and server'
+
+  declare S64_CHRONY_SERVICE='chronyd'
+}
+
+#
+# Functions
+#
+
+function s64_chrony_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_module_show_about "$S64_CHRONY_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_CHRONY_CMD_CHRONYC' 'chronyc'
+}
+
+function s64_chrony_lib_run_chronyc() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_CHRONY_CMD_CHRONYC" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}

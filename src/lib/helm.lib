@@ -68,6 +68,6 @@ function s64_helm_lib_run_helm() {
   # shellcheck disable=SC2046
   bl64_hlm_run_helm \
     $(s64_helm_lib_cli_set_http) \
-    ${S64_K8S_PATH_CFG_KUBECONFIG:+--kubeconfig "$S64_K8S_PATH_CFG_KUBECONFIG"} \
+    $(s64_k8s_lib_cli_set_kubeconfig) \
     "$@"
 }

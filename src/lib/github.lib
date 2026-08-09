@@ -14,6 +14,16 @@
 #######################################
 
 #
+# Imports
+#
+
+# shellcheck disable=SC2154,SC2015
+source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" ||
+  { s64_core_lib_check_bl64 && exit 1; }
+
+#
 # Module parameters
 #
 
@@ -30,8 +40,10 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_GITHUB_VERSION='3.3.1'
+  declare S64_GITHUB_VERSION='3.4.0'
   declare S64_GITHUB_ABOUT_MODULE='GitHub CLI'
+
+  declare S64_GITHUB_API_URL='https://api.github.com'
 }
 
 #
@@ -56,16 +68,16 @@
 
 function s64_github_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_GITHUB_ABOUT_MODULE" &&
-    s64_core_lib_command_require 'S64_GITHUB_CMD' 'gh'
+  s64_core_lib_module_show_about "$S64_GITHUB_ABOUT_MODULE"
+  return 0
 }
 
 function s64_github_lib_run_gh() {
   bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_GITHUB_CMD' 'gh' ||
+    return $?
   _s64_github_lib_harden
-  bl64_msg_app_detail_is_enabled && GH_VERBOSE='1'
   bl64_dbg_app_trace_start
-  GH_PAGER="$S64_CORE_SET_PAGER"
   "$S64_GITHUB_CMD" \
     "$@"
   bl64_dbg_app_trace_stop
@@ -82,5 +94,7 @@ function _s64_github_lib_harden() {
   unset GH_PATH
   unset GH_REPO
   unset GH_VERBOSE
+  bl64_msg_app_detail_is_enabled && GH_VERBOSE='1'
+  GH_PAGER="$S64_CORE_SET_PAGER"
   bl64_dbg_app_trace_stop
 }

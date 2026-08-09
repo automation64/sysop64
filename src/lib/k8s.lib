@@ -42,6 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
   # Cluster Join Credentials
   declare S64_K8S_CFG_JOIN_TOKEN="${S64_K8S_CFG_JOIN_TOKEN:-}"
   declare S64_K8S_CFG_JOIN_HASH="${S64_K8S_CFG_JOIN_HASH:-}"
+  declare S64_K8S_CFG_JOIN_KEY="${S64_K8S_CFG_JOIN_KEY:-}"
 
   # KubeADM Global configuration file name
   declare S64_K8S_FILE_KUBEADM_CONF="${S64_K8S_FILE_KUBEADM_CONF:-kubeadm.yaml}"
@@ -83,6 +84,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 
   declare S64_K8S_TAG_NAMESPACE_ALL='ALL'
   declare S64_K8S_TAG_NAMESPACE_DEFAULT='default'
+  declare S64_K8S_TAG_NAMESPACE_KUBE_SYSTEM='kube-system'
 }
 
 #
@@ -137,6 +139,11 @@ function s64_k8s_lib_cli_set_format() {
     S64_K8S_CFG_KUBECTL_FORMAT="$format"
   fi
   printf -- '--output=%s' "${S64_K8S_CFG_KUBECTL_FORMAT}"
+}
+
+function s64_k8s_lib_cli_set_kubeconfig() {
+  bl64_dbg_app_show_function "$@"
+  printf -- '--kubeconfig=%s' "${S64_K8S_PATH_CFG_KUBECONFIG}"
 }
 
 function s64_k8s_lib_run_kubeadm() {

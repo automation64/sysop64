@@ -42,7 +42,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_AUTH0_VERSION='1.1.1'
+  declare S64_AUTH0_VERSION='1.1.2'
   declare S64_AUTH0_ABOUT_MODULE='Auth0 Platform'
 
   declare S64_AUTH0_SCOPES_CLIENT_GRANTS_CREATE='create:client_grants'
@@ -66,7 +66,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-xsv.bash" ||
 function s64_auth0_lib_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_module_show_about "$S64_AUTH0_ABOUT_MODULE" &&
-    bl64_xsv_setup &&
     s64_core_lib_command_require 'S64_AUTH0_CMD_AUTH0' 'auth0' &&
     s64_core_lib_command_require 'S64_AUTH0_CMD_A0DEPLOY' 'a0deploy' &&
     s64_core_lib_module_show_setup \

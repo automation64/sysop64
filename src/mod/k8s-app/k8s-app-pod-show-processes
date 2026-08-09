@@ -23,15 +23,15 @@ declare MY_TARGET_POD="${2:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_parameter 'MY_NAMESPACE' &&
+  s64_k8s_lib_setup &&
+    bl64_check_parameter 'MY_NAMESPACE' &&
     bl64_check_parameter 'MY_TARGET_POD' &&
-    s64_k8s_lib_setup &&
     s64_core_lib_task_show_setup \
       'MY_NAMESPACE' \
       'MY_TARGET_POD'
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
 bl64_msg_help_set_about 'Show pod processes'
 bl64_msg_help_set_usage 'MY_NAMESPACE MY_TARGET_POD'
 s64_core_lib_initialize && my_initialize || exit $?

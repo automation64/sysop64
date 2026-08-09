@@ -26,14 +26,14 @@ function my_initialize() {
   s64_dnf_lib_setup &&
     bl64_check_privilege_root &&
     bl64_check_parameter 'MY_REPO_FILE_BASENAME' &&
-    MY_REPO_FILE_PATH="${S64_DNF_PATH_CONF_REPOS}/${MY_REPO_FILE_BASENAME}.repo" &&
+    MY_REPO_FILE_PATH="${S64_DNF_PATH_YUM_REPOS_D}/${MY_REPO_FILE_BASENAME}.repo" &&
     bl64_check_file "$MY_REPO_FILE_PATH" &&
     s64_core_lib_task_show_setup \
       'MY_REPO_FILE_BASENAME' \
       'MY_REPO_FILE_PATH'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_set_about 'Show YUM repository configuration file content'
 bl64_msg_help_set_usage 'MY_REPO_FILE_BASENAME'
 s64_core_lib_initialize && my_initialize || exit $?

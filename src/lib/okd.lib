@@ -32,7 +32,7 @@
 # shellcheck disable=SC2034
 {
   declare S64_OKD_VERSION='1.1.0'
-  declare S64_OKD_ABOUT_MODULE='OpenShift Community Edition'
+  declare S64_OKD_ABOUT_MODULE='OKD - OpenShift Community Edition'
 
   declare S64_OKD_PATH_CRC_HOME="${HOME}/.crc"
   declare S64_OKD_PATH_CRC_LOG_CLI="${S64_OKD_PATH_CRC_HOME}/crc.log"

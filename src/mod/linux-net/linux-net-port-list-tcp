@@ -23,13 +23,17 @@ function my_initialize() {
   s64_linux_lib_setup
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_set_about 'List currently open TCP ports'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+echo 'State  Recv-Q Send-Q  Local Address:Port Peer Address:Port'
 s64_linux_lib_run_ss \
+  --no-header \
   --numeric \
   --listening \
-  --tcp
+  --tcp |
+bl64_txt_run_sort |
+bl64_txt_run_uniq
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

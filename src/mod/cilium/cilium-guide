@@ -29,15 +29,16 @@ s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_show_doc 'Documentation:
-  - Manual: https://docs.cilium.io/en/latest/
-  - Networking: https://docs.cilium.io/en/latest/network/concepts/
-  - Configuration: https://docs.cilium.io/en/latest/configuration/
-  - Helm Chart Values: https://docs.cilium.io/en/latest/helm-reference/
+  - Manual: https://docs.cilium.io/en/latest
+  - Networking: https://docs.cilium.io/en/latest/network/concepts
+  - Configuration: https://docs.cilium.io/en/latest/configuration
+  - Helm Chart Values: https://docs.cilium.io/en/latest/helm-reference
   - System Requirements: https://docs.cilium.io/en/stable/operations/system_requirements
-  - CLI Manual: https://docs.cilium.io/en/latest/cmdref/'
+  - CLI Manual: https://docs.cilium.io/en/latest/cmdref'
 bl64_msg_show_doc 'Guides:
-  - Deploy K8S Default: https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/
-  - Deploy K8S replacing Kube-Proxy: https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/
-  - Deploy K8S replacing L2: https://docs.cilium.io/en/stable/network/l2-announcements/
-  - Deploy K8S with GatewayAPI: https://docs.cilium.io/en/stable/network/servicemesh/gateway-api/gateway-api/'
+  - Deploy K8S Default: https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default
+  - Deploy K8S replacing Kube-Proxy: https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free
+  - Deploy K8S with L2 cast: https://docs.cilium.io/en/stable/network/l2-announcements
+  - Deploy K8S with GatewayAPI: https://docs.cilium.io/en/stable/network/servicemesh/gateway-api/gateway-api
+  - Setting up Hubble Observability: https://docs.cilium.io/en/stable/observability/hubble/setup/#hubble-setup'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

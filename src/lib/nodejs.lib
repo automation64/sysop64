@@ -30,7 +30,7 @@
 # shellcheck disable=SC2034
 {
   declare S64_NODEJS_VERSION='1.1.0'
-  declare S64_NODEJS_ABOUT_MODULE='Node.JS JavaScript Runtime'
+  declare S64_NODEJS_ABOUT_MODULE='NodeJS - JavaScript Runtime'
 }
 
 #

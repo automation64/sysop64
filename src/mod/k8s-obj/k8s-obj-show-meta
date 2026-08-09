@@ -26,7 +26,6 @@ function my_initialize() {
   bl64_dbg_app_show_function
   S64_K8S_CFG_KUBECTL_FORMAT='yaml'
   s64_k8s_lib_setup &&
-    bl64_xsv_setup &&
     bl64_check_parameter 'MY_NAMESPACE' &&
     bl64_check_parameter 'MY_TYPE' &&
     bl64_check_parameter 'MY_OBJECT' &&
@@ -36,7 +35,7 @@ function my_initialize() {
       'MY_OBJECT'
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
 bl64_msg_help_set_about 'Show deployed Kubernetes objects manifest metadata'
 bl64_msg_help_set_usage 'MY_NAMESPACE MY_TYPE MY_OBJECT'
 s64_core_lib_initialize && my_initialize || exit $?
