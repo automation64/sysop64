@@ -15,36 +15,26 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
-source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/linux.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/libvirt.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
-function my_check_arch() {
-  bl64_dbg_app_show_function
-
-  bl64_msg_show_task 'check package database'
-  bl64_pkg_run_pacman \
-    --database \
-    --check
-
-  bl64_msg_show_task 'check package database sync'
-  bl64_pkg_run_pacman \
-    --database \
-    --check \
-    --check
-}
+declare MY_POOL="${1:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_privilege_root
+  s64_libvirt_lib_setup &&
+    bl64_check_parameter 'MY_POOL' &&
+    s64_core_lib_task_show_setup \
+      'MY_POOL'
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_set_about 'Check operating system packages'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_set_about 'Dump storage pool configuration'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-case "$BL64_OS_FLAVOR" in
-  "$BL64_OS_FLAVOR_ARCH") my_check_arch ;;
-  *) bl64_check_rise_task_unsupported ;;
-esac
+s64_libvirt_lib_run_virsh \
+  --connect="$S64_LIBVIRT_URI_QEMU_SYSTEM" \
+  pool-dumpxml \
+  "$MY_POOL"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

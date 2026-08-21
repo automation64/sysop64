@@ -24,25 +24,19 @@ function my_fix_debian() {
   bl64_pkg_run_apt --fix-broken install
 }
 
-function my_fix() {
-  bl64_dbg_app_show_function
-  case "$BL64_OS_FLAVOR" in
-    "$BL64_OS_FLAVOR_DEBIAN") my_fix_debian ;;
-    *) bl64_check_rise_task_unsupported ;;
-  esac
-}
-
 function my_initialize() {
   bl64_dbg_app_show_function
   bl64_check_privilege_root &&
-    bl64_msg_show_warning 'the fix operation can break the system' &&
-    bl64_ui_ask_confirmation 'ensure there is backup and recovery media'
+    bl64_ui_ask_confirmation 'the fix operation can break the system. Ensure there is backup and recovery media'
 }
 
-bl64_lib_script_version_set '1.0.1'
+bl64_lib_script_version_set '1.0.2'
 bl64_msg_help_set_about 'Fix operating system packages'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-my_fix
+case "$BL64_OS_FLAVOR" in
+  "$BL64_OS_FLAVOR_DEBIAN") my_fix_debian ;;
+  *) bl64_check_rise_task_unsupported ;;
+esac
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

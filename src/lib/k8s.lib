@@ -39,6 +39,9 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
   declare S64_K8S_CFG_API_PORT="${S64_K8S_CFG_API_PORT:-6443}"
   declare S64_K8S_CFG_API_ENDPOINT="${S64_K8S_CFG_API_ENDPOINT:-}"
 
+  # Timeouts
+  declare S64_K8S_CFG_TIMEOUT_DELETE="${S64_K8S_CFG_TIMEOUT_DELETE:-}"
+
   # Cluster Join Credentials
   declare S64_K8S_CFG_JOIN_TOKEN="${S64_K8S_CFG_JOIN_TOKEN:-}"
   declare S64_K8S_CFG_JOIN_HASH="${S64_K8S_CFG_JOIN_HASH:-}"
@@ -54,7 +57,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='4.6.0'
+  declare S64_K8S_VERSION='4.7.0'
   declare S64_K8S_ABOUT_MODULE='Kubernetes Platform'
   declare S64_K8S_ABOUT_SUBMODULE_API='API'
   declare S64_K8S_ABOUT_SUBMODULE_CLI='KubeCTL'
@@ -103,6 +106,7 @@ function s64_k8s_lib_setup() {
 
   s64_core_lib_module_show_setup \
     'S64_K8S_CFG_API_ENDPOINT' \
+    'S64_K8S_CFG_TIMEOUT_DELETE' \
     'S64_K8S_PATH_CFG_KUBECONFIG'
 }
 

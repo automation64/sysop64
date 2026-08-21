@@ -15,36 +15,31 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
-source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/linux.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/cilium.lib" && source "${S64_CORE_PATH_LIB}/k8s.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
-
-function my_check_arch() {
-  bl64_dbg_app_show_function
-
-  bl64_msg_show_task 'check package database'
-  bl64_pkg_run_pacman \
-    --database \
-    --check
-
-  bl64_msg_show_task 'check package database sync'
-  bl64_pkg_run_pacman \
-    --database \
-    --check \
-    --check
-}
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  bl64_check_privilege_root
+  s64_cilium_lib_setup &&
+    s64_k8s_lib_setup_secondary
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_set_about 'Check operating system packages'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_set_about 'Start connectivity test for Cilium components: isolated profile (no internet connection)'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-case "$BL64_OS_FLAVOR" in
-  "$BL64_OS_FLAVOR_ARCH") my_check_arch ;;
-  *) bl64_check_rise_task_unsupported ;;
-esac
+# shellcheck disable=SC2046
+s64_cilium_lib_run_cilium \
+  $(s64_k8s_lib_cli_set_kubeconfig) \
+  connectivity \
+  test \
+  --test '!pod-to-world,!pod-to-external-target,!fqdn' \
+  ${S64_CILIUM_IMAGE_ALPINE_CURL:+--curl-image "$S64_CILIUM_IMAGE_ALPINE_CURL"} \
+  ${S64_CILIUM_IMAGE_CORE_DNS:+--dns-test-server-image "$S64_CILIUM_IMAGE_CORE_DNS"} \
+  ${S64_CILIUM_IMAGE_ECHO_ADVANCED:+--echo-image "$S64_CILIUM_IMAGE_ECHO_ADVANCED"} \
+  ${S64_CILIUM_IMAGE_FRR:+--frr-image "$S64_CILIUM_IMAGE_FRR"} \
+  ${S64_CILIUM_IMAGE_JSON_MOCK:+--json-mock-image "$S64_CILIUM_IMAGE_JSON_MOCK"} \
+  ${S64_CILIUM_IMAGE_SOCAT:+--socat-image "$S64_CILIUM_IMAGE_SOCAT"} \
+  ${S64_CILIUM_IMAGE_TEST_CONNECTION_DISRUPTION:+--test-conn-disrupt-image "$S64_CILIUM_IMAGE_TEST_CONNECTION_DISRUPTION"}
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
