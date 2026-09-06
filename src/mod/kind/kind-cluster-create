@@ -29,8 +29,9 @@ function my_initialize() {
       'MY_KUBERNETES_IMAGE'
 }
 
-bl64_lib_script_version_set '2.1.0'
+bl64_lib_script_version_set '2.1.1'
 bl64_msg_help_set_about 'Create cluster'
+bl64_msg_help_set_usage '[MY_KUBERNETES_VERSION] [MY_KUBERNETES_IMAGE]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"

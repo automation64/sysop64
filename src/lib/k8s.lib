@@ -57,17 +57,20 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='4.7.0'
+  declare S64_K8S_VERSION='4.8.0'
   declare S64_K8S_ABOUT_MODULE='Kubernetes Platform'
   declare S64_K8S_ABOUT_SUBMODULE_API='API'
   declare S64_K8S_ABOUT_SUBMODULE_CLI='KubeCTL'
+  declare S64_K8S_ABOUT_SUBMODULE_CNT='Container'
   declare S64_K8S_ABOUT_SUBMODULE_CP='Control Plane'
   declare S64_K8S_ABOUT_SUBMODULE_DS='DaemonSet'
   declare S64_K8S_ABOUT_SUBMODULE_EVENT='Events'
   declare S64_K8S_ABOUT_SUBMODULE_NET='Network'
   declare S64_K8S_ABOUT_SUBMODULE_NODE='Nodes'
   declare S64_K8S_ABOUT_SUBMODULE_OBJ='Objects'
+  declare S64_K8S_ABOUT_SUBMODULE_POD='Pod'
   declare S64_K8S_ABOUT_SUBMODULE_SECRET='Secrets'
+  declare S64_K8S_ABOUT_SUBMODULE_STG='Storage'
   declare S64_K8S_ABOUT_SUBMODULE_WKL='Workloads'
 
   # OS System Service name

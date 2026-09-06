@@ -15,31 +15,28 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
-source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/k8s.lib" || { s64_core_lib_module_check && exit 1; }
-source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
-  source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/libvirt.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
+
+declare MY_VM="${1:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_k8s_lib_setup &&
-    bl64_cryp_setup &&
-    bl64_check_privilege_root &&
-    bl64_check_file "$S64_K8S_PATH_KEY_CA" &&
+  s64_libvirt_lib_setup &&
+    bl64_check_parameter 'MY_VM' &&
     s64_core_lib_task_show_setup \
-      'S64_K8S_PATH_KEY_CA'
+      'MY_VM' &&
+    bl64_ui_ask_proceed "request a normal reboot to the VM operating system?"
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_set_about 'Show cluster CA certificate token'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_set_about 'Restart running VM'
+bl64_msg_help_set_usage 'MY_VM'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-bl64_txt_dump "$S64_K8S_PATH_KEY_CA" |
-  bl64_cryp_run_openssl x509 -pubkey |
-  bl64_cryp_run_openssl rsa -pubin -outform der 2>/dev/null |
-  bl64_cryp_run_openssl dgst -sha256 -hex |
-  bl64_txt_run_sed 's/^.* //'
+s64_libvirt_lib_run_virsh \
+  --connect="$S64_LIBVIRT_URI_QEMU_SYSTEM" \
+  reboot \
+  "$MY_VM"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

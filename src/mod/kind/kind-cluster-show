@@ -18,14 +18,14 @@ declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/kind.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
-function show_k8s_show() {
+function my_show_k8s_show() {
   bl64_dbg_app_show_function
   bl64_msg_show_info 'cluster configuration'
   bl64_k8s_run_kubectl \
     cluster-info
 }
 
-function show_kind_ip_show() {
+function my_show_kind_ip_show() {
   bl64_dbg_app_show_function
   bl64_msg_show_info 'kubernetes nodes IP range'
   printf '\nIPAM.Config: %s\n' \
@@ -43,11 +43,11 @@ function my_initialize() {
   s64_kind_lib_setup
 }
 
-bl64_lib_script_version_set '2.0.1'
+bl64_lib_script_version_set '2.0.2'
 bl64_msg_help_set_about 'Show cluster information'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-show_k8s_show &&
-  show_kind_ip_show
+my_show_k8s_show &&
+  my_show_kind_ip_show
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
