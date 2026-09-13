@@ -53,7 +53,7 @@ function my_shell_run() {
 function my_initialize() {
   bl64_dbg_app_show_function
   [[ -n "$MY_OPTION" ]] &&
-    bl64_check_parameter 'MY_TARGET_POD' ||
+    bl64_check_parameter 'MY_POD' ||
     { bl64_msg_help_show && return 1; }
 
   s64_k8s_lib_setup ||
@@ -63,7 +63,7 @@ function my_initialize() {
   bl64_lib_var_is_default "$MY_CONTAINER_IMAGE" && MY_CONTAINER_IMAGE='alpine'
   s64_core_lib_task_show_setup \
     'MY_NAMESPACE' \
-    'MY_TARGET_POD' \
+    'MY_POD' \
     'MY_TARGET_CONTAINER' \
     'MY_CONTAINER_IMAGE' \
     'MY_CONTAINER_ENTRYPOINT'
@@ -78,7 +78,7 @@ declare MY_OPTION=''
 declare MY_NAMESPACE='default'
 declare MY_CONTAINER_IMAGE="$BL64_VAR_DEFAULT"
 declare MY_CONTAINER_ENTRYPOINT="$BL64_VAR_DEFAULT"
-declare MY_TARGET_POD=''
+declare MY_POD=''
 declare MY_TARGET_CONTAINER='NONE'
 
 bl64_lib_script_version_set '1.0.0'
@@ -101,7 +101,7 @@ while getopts ':sp:c:i:n:e:V:D:h' MY_OPTION; do
   case "$MY_OPTION" in
     s) MY_COMMAND='shell_run' ;;
     n) MY_NAMESPACE="$OPTARG" ;;
-    p) MY_TARGET_POD="$OPTARG" ;;
+    p) MY_POD="$OPTARG" ;;
     c) MY_TARGET_CONTAINER="$OPTARG" ;;
     i) MY_CONTAINER_IMAGE="$OPTARG" ;;
     e) MY_CONTAINER_ENTRYPOINT="$OPTARG" ;;
@@ -114,5 +114,5 @@ done
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "${BL64_SCRIPT_ID}:$MY_COMMAND"
-"my_${MY_COMMAND}" "$MY_NAMESPACE" "$MY_CONTAINER_IMAGE" "$MY_CONTAINER_ENTRYPOINT" "$MY_TARGET_POD" "$MY_TARGET_CONTAINER"
+"my_${MY_COMMAND}" "$MY_NAMESPACE" "$MY_CONTAINER_IMAGE" "$MY_CONTAINER_ENTRYPOINT" "$MY_POD" "$MY_TARGET_CONTAINER"
 bl64_msg_show_batch_finish $? "${BL64_SCRIPT_ID}:$MY_COMMAND"

@@ -31,7 +31,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='4.4.0'
+  declare S64_LINUX_VERSION='4.4.1'
   declare S64_LINUX_ABOUT_MODULE='Linux OS'
   declare S64_LINUX_ABOUT_SUBMODULE_APP='Applications'
   declare S64_LINUX_ABOUT_SUBMODULE_BOOT='Boot Manager'
@@ -111,6 +111,12 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
   declare S64_LINUX_PATH_SUBID='/etc/subuid'
 
   declare S64_LINUX_PATH_OS_RELEASE='/etc/os-release'
+
+  declare S64_LINUX_PATH_PROC_NET_FIB_TRIE='/proc/net/fib_trie'
+  declare S64_LINUX_PATH_PROC_NET_DEV='/proc/net/dev'
+  declare S64_LINUX_PATH_PROC_SWAPS='/proc/swaps'
+
+  declare S64_LINUX_PATH_SYS_CLASS_NET='/sys/class/net'
 }
 
 #
@@ -253,7 +259,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_LDD='/usr/bin/ldd'
       S64_LINUX_CMD_LSBLK='/usr/bin/lsblk'
       S64_LINUX_CMD_LSHW='/usr/sbin/lshw'
-      S64_LINUX_CMD_LSMOD='/usr/bin/lsmod'
+      S64_LINUX_CMD_LSMOD='/usr/sbin/lsmod'
       S64_LINUX_CMD_LSPCI='/usr/bin/lspci'
       S64_LINUX_CMD_LSUSB='/usr/bin/lsusb'
       S64_LINUX_CMD_LVS='/usr/sbin/lvs'
@@ -261,8 +267,8 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_MKFS_EXT4='/usr/sbin/mkfs.ext4'
       S64_LINUX_CMD_MKFS_XFS='/usr/sbin/mkfs.xfs'
       S64_LINUX_CMD_MKFS='/usr/sbin/mkfs'
-      S64_LINUX_CMD_MODINFO='/usr/bin/modinfo'
-      S64_LINUX_CMD_MODPROBE='/usr/bin/modprobe'
+      S64_LINUX_CMD_MODINFO='/usr/sbin/modinfo'
+      S64_LINUX_CMD_MODPROBE='/usr/sbin/modprobe'
       S64_LINUX_CMD_MOUNT='/usr/bin/mount'
       S64_LINUX_CMD_NFT='/usr/sbin/nft'
       S64_LINUX_CMD_PACMAN_CONF="$BL64_VAR_INCOMPATIBLE"

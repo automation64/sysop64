@@ -23,7 +23,7 @@ function my_initialize() {
   s64_cilium_lib_setup
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_set_about 'Show technical reference information'
 s64_core_lib_initialize && my_initialize || exit $?
 
@@ -31,11 +31,13 @@ bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_show_doc 'Documentation:
   - Manual: https://docs.cilium.io/en/latest
   - Networking: https://docs.cilium.io/en/latest/network/concepts
+  - Routing: https://docs.cilium.io/en/latest/network/concepts/routing/
+  - Multicast: https://docs.cilium.io/en/stable/network/multicast/'
+bl64_msg_show_doc 'Configuration:
   - Configuration: https://docs.cilium.io/en/latest/configuration
   - Helm Chart Values: https://docs.cilium.io/en/latest/helm-reference
-  - System Requirements: https://docs.cilium.io/en/stable/operations/system_requirements
-  - CLI Manual: https://docs.cilium.io/en/latest/cmdref'
-bl64_msg_show_doc 'Guides:
+  - System Requirements: https://docs.cilium.io/en/stable/operations/system_requirements'
+bl64_msg_show_doc 'Deployment:
   - Deploy K8S Default: https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default
   - Deploy K8S replacing Kube-Proxy: https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free
   - Deploy K8S with L2 cast: https://docs.cilium.io/en/stable/network/l2-announcements

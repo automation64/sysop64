@@ -66,22 +66,22 @@ q h
 - `generate`: generate content based on template and optional parameters
 - `guide`: show technical documentation about the module or task
 - `init`: initialize component content
-- `list`: generate a simple list of components or attributes
+- `list`: list components and optionally associated attributes
 - `login`: login to service
 - `migrate`: migrate component or content
 - `query`: query component or content using query lang
-- `monitor`: show component runtime metrics
 - `rename`: rename component
 - `repair`: fix a broken component
 - `reset`: reset component or content to initial or empty value
 - `restart`: restart component
 - `rollback`: revert component to a previous state
 - `run`: run service
-- `scan`: scan component
+- `scan`: detect component or component changes
 - `search`: search component content without query lang
 - `setup`: setup component
 - `simulate`: simulate service execution. The service will not run nor modify anything
 - `show`: show component details
+- `stats`: show component runtime metrics
 - `status`: show component status
 - `sync`: synchronize component or content against another component or content
 - `test`: test component
