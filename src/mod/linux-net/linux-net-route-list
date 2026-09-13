@@ -23,12 +23,16 @@ function my_initialize() {
   s64_linux_lib_setup
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.1.0'
 bl64_msg_help_set_about 'List IP routes'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_linux_lib_run_ip \
-  route \
-  show
+if bl64_bsh_command_is_executable "$S64_LINUX_CMD_IP"; then
+  s64_linux_lib_run_ip \
+    route \
+    show
+else
+  bl64_txt_dump "$S64_LINUX_PATH_PROC_NET_FIB_TRIE"
+fi
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

@@ -15,31 +15,33 @@
 
 declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
 [[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
-source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/linux.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/socat.lib" || { s64_core_lib_module_check && exit 1; }
 source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
 
-declare MY_SUBNET="${1:-}"
-declare MY_INTERFACE="${2:-any}"
+declare MY_BROADCAST_INTERFACE="${1:-}"
+declare MY_BROADCAST_IP="${2:-239.255.0.10}"
+declare MY_BROADCAST_PORT="${3:-23900}"
+declare MY_PAYLOAD="${4:-hello-world}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_linux_lib_setup &&
-    bl64_check_privilege_root &&
-    bl64_check_parameter 'MY_SUBNET' &&
+  s64_socat_lib_setup &&
+    bl64_check_parameter 'MY_BROADCAST_INTERFACE' &&
     s64_core_lib_task_show_setup \
-      'MY_HOST' \
-      'MY_INTERFACE'
+      'MY_BROADCAST_INTERFACE' \
+      'MY_BROADCAST_IP' \
+      'MY_BROADCAST_PORT' \
+      'MY_PAYLOAD'
 }
 
-bl64_lib_script_version_set '1.0.1'
-bl64_msg_help_set_about 'Trace network connections: to or from subnet'
-bl64_msg_help_set_usage 'MY_SUBNET'
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_set_about 'Send a string using UDP multicast'
+bl64_msg_help_set_usage 'MY_BROADCAST_INTERFACE [MY_BROADCAST_IP] [MY_BROADCAST_PORT] [MY_PAYLOAD]'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_linux_lib_run_tcpdump \
-  -v \
-  ${MY_INTERFACE:+-i "$MY_INTERFACE"} \
-  net \
-  "$MY_SUBNET"
+echo "$MY_PAYLOAD" |
+  s64_socat_lib_run_socat \
+    STDIN \
+    "UDP4-DATAGRAM:${MY_BROADCAST_IP}:${MY_BROADCAST_PORT},ip-multicast-loop=1,ip-multicast-if=${MY_BROADCAST_INTERFACE}"
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"
