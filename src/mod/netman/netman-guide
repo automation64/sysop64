@@ -30,5 +30,11 @@ s64_core_lib_initialize && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_show_doc 'Documentation:
 - Manual: https://networkmanager.dev/docs/man-pages/
-- Reference: https://networkmanager.dev/docs/admins/'
+'
+bl64_msg_show_doc 'Reference:
+- NetworkManager.conf: https://networkmanager.dev/docs/api/latest/NetworkManager.conf.html
+- Network Configuration Setting Specification: https://networkmanager.dev/docs/api/latest/ref-settings.html
+- NetworkManager for administrators: https://networkmanager.dev/docs/admins/
+- NetworkManager connection profiles in keyfile format: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10/html/configuring_and_managing_networking/networkmanager-connection-profiles-in-keyfile-format
+'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

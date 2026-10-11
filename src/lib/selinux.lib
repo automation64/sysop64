@@ -19,7 +19,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_SELINUX_VERSION='1.1.0'
+  declare S64_SELINUX_VERSION='1.2.0'
   declare S64_SELINUX_ABOUT_MODULE='SELinux - Mandatory Access Control System'
 
   # Core commands
@@ -28,6 +28,7 @@
   declare S64_SELINUX_CMD_AUREPORT='/usr/sbin/aureport'
   declare S64_SELINUX_CMD_AUSEARCH='/usr/sbin/ausearch'
   declare S64_SELINUX_CMD_AUSYSCALL='/usr/bin/ausyscall'
+  declare S64_SELINUX_CMD_RESTORECON='/usr/sbin/restorecon'
   declare S64_SELINUX_CMD_SEMODULE='/usr/sbin/semodule'
   declare S64_SELINUX_CMD_SESTATUS='/usr/sbin/sestatus'
   declare S64_SELINUX_CMD_SETENFORCE='/usr/sbin/setenforce'
@@ -131,6 +132,14 @@ function s64_selinux_lib_run_setenforce() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_SELINUX_CMD_SETENFORCE" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_selinux_lib_run_restorecon() {
+  bl64_dbg_app_show_function "$@"
+  bl64_dbg_app_trace_start
+  "$S64_SELINUX_CMD_RESTORECON" \
     "$@"
   bl64_dbg_app_trace_stop
 }

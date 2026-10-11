@@ -14,6 +14,16 @@
 #######################################
 
 #
+# Imports
+#
+
+# shellcheck disable=SC2154,SC2015
+source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" ||
+  { s64_core_lib_check_bl64 && exit 1; }
+
+#
 # Module parameters
 #
 
@@ -28,7 +38,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_UNIX_VERSION='2.7.0'
+  declare S64_UNIX_VERSION='2.8.0'
   declare S64_UNIX_ABOUT_MODULE='Unix OS'
   declare S64_UNIX_ABOUT_SUBMODULE_BKP='Backup and Archive'
   declare S64_UNIX_ABOUT_SUBMODULE_FS='File System'
@@ -144,6 +154,12 @@ function s64_unix_lib_setup() {
       bl64_check_rise_task_unsupported
       ;;
   esac
+}
+
+function s64_unix_lib_setup_secondary() {
+  bl64_dbg_app_show_function
+  bl64_dbg_app_show_comments 'use this function instead of s64_unix_lib_setup when not the primary module'
+  S64_CORE_SET_MODULE_PRIMARY='NO' s64_unix_lib_setup
 }
 
 function s64_unix_lib_run_ps() {

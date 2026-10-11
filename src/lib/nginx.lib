@@ -21,7 +21,6 @@
 {
   declare S64_NGINX_LAB_IMAGE_TAG="${S64_NGINX_LAB_IMAGE_TAG:-latest}"
   declare S64_NGINX_LAB_HOST_NGINX_CONF="${S64_NGINX_LAB_HOST_NGINX_CONF:-}"
-  declare S64_NGINX_CMD="${S64_NGINX_CMD:-/usr/sbin/nginx}"
 }
 
 #
@@ -30,15 +29,18 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_NGINX_VERSION='1.2.1'
+  declare S64_NGINX_VERSION='2.0.0'
   declare S64_NGINX_ABOUT_MODULE='NGINX Web Server'
 
-  declare S64_NGINX_PATH_ETC_NGINX='/etc/nginx'
-  declare S64_NGINX_PATH_VAR_NGINX='/var/lib/nginx'
-  declare S64_NGINX_PATH_CFG_NGINX="${S64_NGINX_PATH_ETC_NGINX}/nginx.conf"
-  declare S64_NGINX_PATH_LOG_NGINX='/var/log/nginx'
-  declare S64_NGINX_PATH_LOG_ERROR="${S64_NGINX_PATH_LOG_NGINX}/error.log"
-  declare S64_NGINX_PATH_LOG_ACCESS="${S64_NGINX_PATH_LOG_NGINX}/access.log"
+  declare S64_NGINX_CMD=''
+  declare S64_NGINX_PATH_ETC=''
+  declare S64_NGINX_PATH_VAR=''
+  declare S64_NGINX_PATH_CONFIG=''
+  declare S64_NGINX_PATH_LOG_NGINX=''
+  declare S64_NGINX_PATH_LOG_ERROR=''
+  declare S64_NGINX_PATH_LOG_ACCESS=''
+
+  declare S64_NGINX_SERVICE='X_SERVICE_NAME_X'
 
   declare S64_NGINX_LAB_IMAGE_NAME='nginx'
   declare S64_NGINX_LAB_CONTAINER_NAME='lab-nginx'
@@ -50,8 +52,24 @@
 
 function s64_nginx_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_NGINX_ABOUT_MODULE" &&
-    bl64_check_command "$S64_NGINX_CMD" "$BL64_VAR_DEFAULT" 'S64_NGINX_CMD'
+  s64_core_lib_module_show_about "$S64_NGINX_ABOUT_MODULE" ||
+    return $?
+
+  case "$BL64_OS_FLAVOR" in
+    "$BL64_OS_FLAVOR_REDHAT" | "$BL64_OS_FLAVOR_FEDORA")
+      S64_NGINX_CMD='/usr/sbin/nginx'
+      S64_NGINX_PATH_ETC='/etc/nginx'
+      S64_NGINX_PATH_VAR='/var/lib/nginx'
+      S64_NGINX_PATH_CONFIG="${S64_NGINX_PATH_ETC}/nginx.conf"
+      S64_NGINX_PATH_LOG_NGINX='/var/log/nginx'
+      S64_NGINX_PATH_LOG_ERROR="${S64_NGINX_PATH_LOG_NGINX}/error.log"
+      S64_NGINX_PATH_LOG_ACCESS="${S64_NGINX_PATH_LOG_NGINX}/access.log"
+      S64_NGINX_SERVICE='nginx'
+      ;;
+    *) bl64_check_rise_task_unsupported ;;
+  esac
+
+  s64_core_lib_command_require 'S64_NGINX_CMD' 'nginx'
 }
 
 function s64_nginx_lib_run_nginx() {

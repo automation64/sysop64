@@ -30,6 +30,7 @@ s64_core_lib_initialize && my_initialize || exit $?
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
 bl64_msg_show_doc 'Reference:
   - Manual: https://www.haproxy.com/documentation/haproxy-configuration-manual/latest/'
-bl64_msg_show_doc 'Logging:
-  - Introduction to HAProxy logging: https://www.haproxy.com/blog/introduction-to-haproxy-logging'
+bl64_msg_show_doc 'Guides:
+  - HAProxy Runtime API: https://www.haproxy.com/documentation/haproxy-runtime-api/installation/
+  - HAProxy logging: https://www.haproxy.com/blog/introduction-to-haproxy-logging'
 bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

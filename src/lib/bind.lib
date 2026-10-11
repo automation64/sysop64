@@ -19,13 +19,14 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_BIND_VERSION='1.2.0'
+  declare S64_BIND_VERSION='1.4.0'
   declare S64_BIND_ABOUT_MODULE='BIND - DNS Server'
 
   declare S64_BIND_SERVICE=''
 
   declare S64_BIND_PATH_ETC=''
   declare S64_BIND_PATH_VAR=''
+  declare S64_BIND_PATH_VAR_DATA=''
   declare S64_BIND_PATH_LOG=''
   declare S64_BIND_PATH_NAMED_CONF=''
   declare S64_BIND_PATH_NAMED_LOG=''
@@ -33,11 +34,13 @@
   declare S64_BIND_PREFIX_NAMED_CONF='named.'
   declare S64_BIND_SUFFIX_NAMED_CONF='.zones'
   declare S64_BIND_SUFFIX_NAMED_DB='.db'
+  declare S64_BIND_SUFFIX_LOG='.log'
 
   declare S64_BIND_CMD_MDIG=''
   declare S64_BIND_CMD_NAMED_CHECKCONF=''
   declare S64_BIND_CMD_NAMED_CHECKZONE=''
   declare S64_BIND_CMD_RNDC=''
+  declare S64_BIND_CMD_HOST=''
 }
 
 #
@@ -55,8 +58,11 @@ function s64_bind_lib_setup() {
       S64_BIND_PATH_VAR='/var/named'
       S64_BIND_PATH_ETC_NAMED='/etc/named'
       S64_BIND_PATH_NAMED_CONF='/etc/named.conf'
+      S64_BIND_PATH_VAR_DATA="${S64_BIND_PATH_VAR}/data"
+
       S64_BIND_SERVICE='named'
 
+      S64_BIND_CMD_HOST='/usr/bin/host'
       S64_BIND_CMD_MDIG='/usr/bin/mdig'
       S64_BIND_CMD_NAMED_CHECKCONF='/usr/bin/named-checkconf'
       S64_BIND_CMD_NAMED_CHECKZONE='/usr/bin/named-checkzone'
@@ -64,7 +70,8 @@ function s64_bind_lib_setup() {
     *) bl64_check_rise_task_unsupported ;;
   esac
 
-  s64_core_lib_command_require 'S64_BIND_CMD_MDIG' 'mdig' &&
+  s64_core_lib_command_require 'S64_BIND_CMD_HOST' 'host' &&
+    s64_core_lib_command_require 'S64_BIND_CMD_MDIG' 'mdig' &&
     s64_core_lib_command_require 'S64_BIND_CMD_NAMED_CHECKCONF' 'named-checkconf' &&
     s64_core_lib_command_require 'S64_BIND_CMD_NAMED_CHECKZONE' 'named-checkzone' &&
     s64_core_lib_command_require 'S64_BIND_CMD_RNDC' 'rndc'
@@ -98,6 +105,16 @@ function s64_bind_lib_run_rndc() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
   "$S64_BIND_CMD_RNDC" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_bind_lib_run_host() {
+  bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_BIND_CMD_HOST' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_BIND_CMD_HOST" \
     "$@"
   bl64_dbg_app_trace_stop
 }

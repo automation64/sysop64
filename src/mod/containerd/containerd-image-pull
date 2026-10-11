@@ -22,7 +22,7 @@ declare MY_IMAGE="${1:-}"
 
 function my_initialize() {
   bl64_dbg_app_show_function
-  s64_containerd_lib_setup &&
+  s64_opencid_lib_setup &&
     bl64_check_privilege_root &&
     bl64_check_parameter 'MY_IMAGE' &&
     s64_core_lib_task_show_setup \
@@ -35,7 +35,7 @@ bl64_msg_help_set_usage 'MY_IMAGE'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
-s64_containerd_lib_run_nerdctl \
+s64_opencid_lib_run_nerdctl \
   image \
   pull \
   "$MY_IMAGE"

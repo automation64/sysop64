@@ -36,9 +36,9 @@ function my_initialize() {
       'MY_IPV4_DNS'
 }
 
-bl64_lib_script_version_set '1.0.0'
+bl64_lib_script_version_set '1.0.1'
 bl64_msg_help_set_about 'Configure static IPV4 on the target connection profile'
-bl64_msg_help_set_usage 'MY_PROFILE'
+bl64_msg_help_set_usage 'MY_PROFILE MY_IPV4_CIDR MY_IPV4_GATEWAY MY_IPV4_DNS'
 s64_core_lib_initialize && my_initialize || exit $?
 
 bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
