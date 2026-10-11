@@ -28,7 +28,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_NETMAN_VERSION='1.0.1'
+  declare S64_NETMAN_VERSION='1.1.0'
   declare S64_NETMAN_ABOUT_MODULE='NetMan - Linux Network Manager'
 
   # SystemD service name
@@ -36,6 +36,10 @@
 
   declare S64_NETMAN_CMD_NMCLI='/usr/bin/nmcli'
   declare S64_NETMAN_CMD_NETMAN='/usr/sbin/NetworkManager'
+
+  declare S64_NETMAN_PATH_ETC_SYSTEM_CONNECTIONS='/etc/NetworkManager/system-connections'
+
+  declare S64_NETMAN_SUFFIX_PROFILE_FILE='.nmconnection'
 }
 
 #

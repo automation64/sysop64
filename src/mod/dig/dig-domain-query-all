@@ -30,7 +30,8 @@ function my_query() {
     s64_dig_lib_run_dig \
       +noall \
       +answer \
-      "$type" "$MY_DOMAIN"
+      "$type" \
+      "$MY_DOMAIN"
   done
 }
 

@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# template-module-lib: 2.2.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+#
+# Module parameters
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_OCP_CMD_CRC="${S64_OCP_CMD_CRC:-}"
+  declare S64_OCP_CMD_OC="${S64_OCP_CMD_OC:-}"
+}
+
+#
+# Globals
+#
+
+# shellcheck disable=SC2034
+{
+  declare S64_OCP_VERSION='2.0.0'
+  declare S64_OCP_ABOUT_MODULE='OpenShift Container Platform'
+  declare S64_OCP_ABOUT_SUBMODULE_CRC='Code Ready Container'
+
+  # WARNING: hardcoded path
+  declare S64_OCP_PATH_CFG_CRC="${HOME}/.crc"
+}
+
+#
+# Functions
+#
+
+function s64_ocp_lib_setup() {
+  bl64_dbg_app_show_function
+  s64_core_lib_module_show_about "$S64_OCP_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_OCP_CMD_CRC' 'crc' &&
+    s64_core_lib_command_require 'S64_OCP_CMD_OC' 'oc'
+}
+
+function s64_ocp_lib_run_crc() {
+  bl64_dbg_app_show_function "$@"
+  local verbose_flag='--log-level=error'
+
+  bl64_msg_app_detail_is_enabled && verbose_flag='--log-level=info'
+  bl64_dbg_app_command_is_enabled && verbose_flag='--log-level=debug'
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_OCP_CMD_CRC" \
+    $verbose_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_ocp_lib_run_oc() {
+  bl64_dbg_app_show_function "$@"
+  local verbose_flag='--v=1'
+  bl64_msg_app_detail_is_enabled || verbose_flag=' '
+  bl64_dbg_app_trace_start
+  # shellcheck disable=SC2086
+  "$S64_OCP_CMD_OC" \
+    $verbose_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}

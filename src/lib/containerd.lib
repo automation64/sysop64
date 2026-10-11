@@ -19,9 +19,9 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CONTAINERD_CMD_CTR="${S64_CONTAINERD_CMD_CTR:-}"
-  declare S64_CONTAINERD_CMD_CONTAINERD="${S64_CONTAINERD_CMD_CONTAINERD:-}"
-  declare S64_CONTAINERD_CMD_NERDCTL="${S64_CONTAINERD_CMD_NERDCTL:-}"
+  declare S64_OPENCID_CMD_CTR="${S64_OPENCID_CMD_CTR:-}"
+  declare S64_OPENCID_CMD_CONTAINERD="${S64_OPENCID_CMD_CONTAINERD:-}"
+  declare S64_OPENCID_CMD_NERDCTL="${S64_OPENCID_CMD_NERDCTL:-}"
 }
 
 #
@@ -30,45 +30,45 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CONTAINERD_VERSION='1.0.0'
-  declare S64_CONTAINERD_ABOUT_MODULE='ContainerD - Container Runtime'
+  declare S64_OPENCID_VERSION='1.0.0'
+  declare S64_OPENCID_ABOUT_MODULE='ContainerD - Container Runtime'
 
-  declare S64_CONTAINERD_PATH_CFG_BASE='/etc/containerd'
-  declare S64_CONTAINERD_PATH_CFG_SERVER="${S64_CONTAINERD_PATH_CFG_BASE}/config.toml"
+  declare S64_OPENCID_PATH_CFG_BASE='/etc/containerd'
+  declare S64_OPENCID_PATH_CFG_SERVER="${S64_OPENCID_PATH_CFG_BASE}/config.toml"
 }
 
 #
 # Functions
 #
 
-function s64_containerd_lib_setup() {
+function s64_opencid_lib_setup() {
   bl64_dbg_app_show_function
-  s64_core_lib_module_show_about "$S64_CONTAINERD_ABOUT_MODULE" &&
-    s64_core_lib_command_require 'S64_CONTAINERD_CMD_CTR' 'ctr' &&
-    s64_core_lib_command_require 'S64_CONTAINERD_CMD_CONTAINERD' 'containerd' &&
-    s64_core_lib_command_require 'S64_CONTAINERD_CMD_NERDCTL' 'nerdctl'
+  s64_core_lib_module_show_about "$S64_OPENCID_ABOUT_MODULE" &&
+    s64_core_lib_command_require 'S64_OPENCID_CMD_CTR' 'ctr' &&
+    s64_core_lib_command_require 'S64_OPENCID_CMD_CONTAINERD' 'containerd' &&
+    s64_core_lib_command_require 'S64_OPENCID_CMD_NERDCTL' 'nerdctl'
 }
 
-function s64_containerd_lib_run_ctr() {
+function s64_opencid_lib_run_ctr() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_CONTAINERD_CMD_CTR" \
+  "$S64_OPENCID_CMD_CTR" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function s64_containerd_lib_run_containerd() {
+function s64_opencid_lib_run_containerd() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_CONTAINERD_CMD_CONTAINERD" \
+  "$S64_OPENCID_CMD_CONTAINERD" \
     "$@"
   bl64_dbg_app_trace_stop
 }
 
-function s64_containerd_lib_run_nerdctl() {
+function s64_opencid_lib_run_nerdctl() {
   bl64_dbg_app_show_function "$@"
   bl64_dbg_app_trace_start
-  "$S64_CONTAINERD_CMD_NERDCTL" \
+  "$S64_OPENCID_CMD_NERDCTL" \
     "$@"
   bl64_dbg_app_trace_stop
 }

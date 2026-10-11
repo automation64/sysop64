@@ -21,8 +21,18 @@
 {
   declare S64_OKD_CMD_CRC="${S64_OKD_CMD_CRC:-}"
   declare S64_OKD_CMD_OC="${S64_OKD_CMD_OC:-}"
+  declare S64_OKD_CMD_OPENSHIFT_INSTALL="${S64_OKD_CMD_OPENSHIFT_INSTALL:-}"
 
+  declare S64_OKD_PATH_INST_VAR_ROOT="${S64_OKD_PATH_INST_VAR_ROOT:-/var/opt/okd-inst}"
+  declare S64_OKD_PATH_INST_SSH_KEY="${S64_OKD_PATH_INST_SSH_KEY:-}"
+
+  declare S64_OKD_SET_INST_LOG_LEVEL="${S64_OKD_SET_INST_LOG_LEVEL:-debug}"
   declare S64_OKD_SET_CRC_LOG_LEVEL="${S64_OKD_SET_CRC_LOG_LEVEL:-info}"
+
+  declare S64_OKD_IP_INST_BOOTSTRAP="${S64_OKD_IP_INST_BOOTSTRAP:-}"
+  declare S64_OKD_IP_INST_MASTER_1="${S64_OKD_IP_INST_MASTER_1:-}"
+  declare S64_OKD_IP_INST_MASTER_2="${S64_OKD_IP_INST_MASTER_2:-}"
+  declare S64_OKD_IP_INST_MASTER_3="${S64_OKD_IP_INST_MASTER_3:-}"
 }
 
 #
@@ -31,12 +41,30 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_OKD_VERSION='1.1.0'
+  declare S64_OKD_VERSION='2.0.0'
   declare S64_OKD_ABOUT_MODULE='OKD - OpenShift Community Edition'
+  declare S64_OKD_ABOUT_SUBMODULE_CRC='Code Ready Container'
+  declare S64_OKD_ABOUT_SUBMODULE_INST='Openshift Installer'
+  declare S64_OKD_ABOUT_SUBMODULE_NET='Network'
+  declare S64_OKD_ABOUT_SUBMODULE_OP='Operator'
+  declare S64_OKD_ABOUT_SUBMODULE_RG='Registry'
 
   declare S64_OKD_PATH_CRC_HOME="${HOME}/.crc"
   declare S64_OKD_PATH_CRC_LOG_CLI="${S64_OKD_PATH_CRC_HOME}/crc.log"
   declare S64_OKD_PATH_CRC_LOG_LIBVIRT='/var/log/libvirt/qemu/crc.log'
+
+  declare S64_OKD_PATH_INST_VAR_CONFIG="${S64_OKD_PATH_INST_VAR_ROOT}/config"
+  declare S64_OKD_PATH_INST_VAR_IGNITE="${S64_OKD_PATH_INST_VAR_ROOT}/ignite"
+  declare S64_OKD_PATH_INST_VAR_MANIFEST="${S64_OKD_PATH_INST_VAR_ROOT}/manifest"
+  declare S64_OKD_PATH_INST_VAR_CONTAINERS='/var/log/containers/'
+  declare S64_OKD_PATH_INST_INSTALL_CONFIG="${S64_OKD_PATH_INST_VAR_CONFIG}/install-config.yaml"
+  declare S64_OKD_PATH_INST_VAR_AUTH="${S64_OKD_PATH_INST_VAR_IGNITE}/auth"
+  declare S64_OKD_PATH_INST_VAR_KUBECONFIG="${S64_OKD_PATH_INST_VAR_AUTH}/kubeconfig"
+  declare S64_OKD_PATH_INST_VAR_KUBEADMIN="${S64_OKD_PATH_INST_VAR_AUTH}/kubeadmin-password"
+
+  declare S64_OKD_FILE_INST_OPENSHIFT_INSTALL_LOG='.openshift_install.log'
+
+  declare S64_OKD_IAM_COS_USER='core'
 }
 
 #
@@ -46,12 +74,17 @@
 function s64_okd_lib_setup() {
   bl64_dbg_app_show_function
   s64_core_lib_module_show_about "$S64_OKD_ABOUT_MODULE" &&
-    s64_core_lib_command_require 'S64_OKD_CMD_CRC' 'crc' &&
-    s64_core_lib_command_require 'S64_OKD_CMD_OC' 'oc'
+    s64_core_lib_module_show_setup \
+      'S64_OKD_IP_INST_BOOTSTRAP' \
+      'S64_OKD_IP_INST_MASTER_1' \
+      'S64_OKD_IP_INST_MASTER_2' \
+      'S64_OKD_IP_INST_MASTER_3'
 }
 
 function s64_okd_lib_run_crc() {
   bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_OKD_CMD_CRC' 'crc' ||
+    return $?
   bl64_dbg_app_trace_start
   "$S64_OKD_CMD_CRC" \
     --log-level "${S64_OKD_SET_CRC_LOG_LEVEL}" \
@@ -61,8 +94,21 @@ function s64_okd_lib_run_crc() {
 
 function s64_okd_lib_run_oc() {
   bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_OKD_CMD_OC' 'oc' ||
+    return $?
   bl64_dbg_app_trace_start
   "$S64_OKD_CMD_OC" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_okd_lib_run_openshift_install() {
+  bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_OKD_CMD_OPENSHIFT_INSTALL' 'openshift-install' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_OKD_CMD_OPENSHIFT_INSTALL" \
+    --log-level "${S64_OKD_SET_INST_LOG_LEVEL}" \
     "$@"
   bl64_dbg_app_trace_stop
 }

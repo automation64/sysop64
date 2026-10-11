@@ -31,22 +31,23 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
 
 # shellcheck disable=SC2034
 {
-  declare S64_LINUX_VERSION='4.4.1'
+  declare S64_LINUX_VERSION='5.0.0'
   declare S64_LINUX_ABOUT_MODULE='Linux OS'
   declare S64_LINUX_ABOUT_SUBMODULE_APP='Applications'
   declare S64_LINUX_ABOUT_SUBMODULE_BOOT='Boot Manager'
-  declare S64_LINUX_ABOUT_SUBMODULE_DEV='Development Tools'
+  declare S64_LINUX_ABOUT_SUBMODULE_DEV='Device'
   declare S64_LINUX_ABOUT_SUBMODULE_DISTRO='Distribution'
+  declare S64_LINUX_ABOUT_SUBMODULE_FILE='Files and Directories'
   declare S64_LINUX_ABOUT_SUBMODULE_FS='File System'
   declare S64_LINUX_ABOUT_SUBMODULE_FW='Firewall'
   declare S64_LINUX_ABOUT_SUBMODULE_GUI='Graphical Interface'
   declare S64_LINUX_ABOUT_SUBMODULE_HW='Hardware'
-  declare S64_LINUX_ABOUT_SUBMODULE_IAM='Identity and Access Management'
+  declare S64_LINUX_ABOUT_SUBMODULE_IAM='Identity and Access'
   declare S64_LINUX_ABOUT_SUBMODULE_KRN='Kernel'
   declare S64_LINUX_ABOUT_SUBMODULE_LVM='Logical Volume Manager'
   declare S64_LINUX_ABOUT_SUBMODULE_NET='Networking'
-  declare S64_LINUX_ABOUT_SUBMODULE_PKG='Package Management'
-  declare S64_LINUX_ABOUT_SUBMODULE_REPO='Repository Management'
+  declare S64_LINUX_ABOUT_SUBMODULE_PKG='OS Package'
+  declare S64_LINUX_ABOUT_SUBMODULE_REPO='OS Package Repository'
   declare S64_LINUX_ABOUT_SUBMODULE_SVC='Services'
   declare S64_LINUX_ABOUT_SUBMODULE_STG='Storage'
   declare S64_LINUX_ABOUT_SUBMODULE_SYS='System'
@@ -65,7 +66,6 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
   declare S64_LINUX_CMD_FSCK="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_GETENT="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_GRUB2MKCONFIG="$$BL64_VAR_INCOMPATIBLE"
-  declare S64_LINUX_CMD_HOST="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_IP="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_IPTABLES="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_LDD="$$BL64_VAR_INCOMPATIBLE"
@@ -82,6 +82,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
   declare S64_LINUX_CMD_MODPROBE="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_MODINFO="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_MOUNT="$$BL64_VAR_INCOMPATIBLE"
+  declare S64_LINUX_CMD_NAMEI="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_NFT="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_PACMAN_CONF="$$BL64_VAR_INCOMPATIBLE"
   declare S64_LINUX_CMD_PACMAN_KEY="$$BL64_VAR_INCOMPATIBLE"
@@ -143,7 +144,6 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_FSCK='/usr/bin/fsck'
       S64_LINUX_CMD_GETENT='/usr/bin/getent'
       S64_LINUX_CMD_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
-      S64_LINUX_CMD_HOST='/usr/bin/host'
       S64_LINUX_CMD_IP='/usr/bin/ip'
       S64_LINUX_CMD_IPTABLES='/usr/bin/iptables'
       S64_LINUX_CMD_LDD='/usr/bin/ldd'
@@ -160,6 +160,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_MODINFO='/usr/bin/modinfo'
       S64_LINUX_CMD_MODPROBE='/usr/bin/modprobe'
       S64_LINUX_CMD_MOUNT='/usr/bin/mount'
+      S64_LINUX_CMD_NAMEI='/usr/bin/namei'
       S64_LINUX_CMD_NFT='/usr/bin/nft'
       S64_LINUX_CMD_PACMAN_CONF='/usr/bin/pacman-conf'
       S64_LINUX_CMD_PACMAN_KEY='/usr/sbin/pacman-key'
@@ -198,7 +199,6 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_FSCK='/usr/sbin/fsck'
       S64_LINUX_CMD_GETENT='/usr/bin/getent'
       S64_LINUX_CMD_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
-      S64_LINUX_CMD_HOST='/usr/bin/host'
       S64_LINUX_CMD_IP='/usr/sbin/ip'
       S64_LINUX_CMD_IPTABLES='/usr/sbin/iptables'
       S64_LINUX_CMD_LDD='/usr/bin/ldd'
@@ -215,6 +215,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_MODINFO='/bin/modinfo'
       S64_LINUX_CMD_MODPROBE='/bin/modprobe'
       S64_LINUX_CMD_MOUNT='/bin/mount'
+      S64_LINUX_CMD_NAMEI='/usr/bin/namei'
       S64_LINUX_CMD_NFT='/usr/sbin/nft'
       S64_LINUX_CMD_PACMAN_CONF="$BL64_VAR_INCOMPATIBLE"
       S64_LINUX_CMD_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
@@ -253,7 +254,6 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_FSCK='/usr/sbin/fsck'
       S64_LINUX_CMD_GETENT='/usr/bin/getent'
       S64_LINUX_CMD_GRUB2MKCONFIG='/usr/bin/grub2-mkconfig'
-      S64_LINUX_CMD_HOST='/usr/bin/host'
       S64_LINUX_CMD_IP='/usr/sbin/ip'
       S64_LINUX_CMD_IPTABLES='/usr/sbin/iptables'
       S64_LINUX_CMD_LDD='/usr/bin/ldd'
@@ -270,6 +270,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_MODINFO='/usr/sbin/modinfo'
       S64_LINUX_CMD_MODPROBE='/usr/sbin/modprobe'
       S64_LINUX_CMD_MOUNT='/usr/bin/mount'
+      S64_LINUX_CMD_NAMEI='/usr/bin/namei'
       S64_LINUX_CMD_NFT='/usr/sbin/nft'
       S64_LINUX_CMD_PACMAN_CONF="$BL64_VAR_INCOMPATIBLE"
       S64_LINUX_CMD_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
@@ -308,7 +309,6 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_FSCK='/sbin/fsck'
       S64_LINUX_CMD_GETENT='/usr/bin/getent'
       S64_LINUX_CMD_GRUB2MKCONFIG='/usr/sbin/grub-mkconfig'
-      S64_LINUX_CMD_HOST='/usr/bin/host'
       S64_LINUX_CMD_IP='/sbin/ip'
       S64_LINUX_CMD_IPTABLES='/sbin/iptables'
       S64_LINUX_CMD_LDD='/usr/bin/ldd'
@@ -325,6 +325,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_MODINFO='/bin/modinfo'
       S64_LINUX_CMD_MODPROBE='/bin/modprobe'
       S64_LINUX_CMD_MOUNT='/bin/mount'
+      S64_LINUX_CMD_NAMEI='/usr/bin/namei'
       S64_LINUX_CMD_NFT='/usr/sbin/nft'
       S64_LINUX_CMD_PACMAN_CONF="$BL64_VAR_INCOMPATIBLE"
       S64_LINUX_CMD_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
@@ -363,7 +364,6 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_FSCK='/usr/sbin/fsck'
       S64_LINUX_CMD_GETENT='/usr/bin/getent'
       S64_LINUX_CMD_GRUB2MKCONFIG='/usr/sbin/grub2-mkconfig'
-      S64_LINUX_CMD_HOST='/usr/bin/host'
       S64_LINUX_CMD_IP='/usr/sbin/ip'
       S64_LINUX_CMD_IPTABLES='/usr/sbin/iptables'
       S64_LINUX_CMD_LDD='/usr/bin/ldd'
@@ -380,6 +380,7 @@ function s64_linux_lib_setup() {
       S64_LINUX_CMD_MODINFO='/usr/bin/modinfo'
       S64_LINUX_CMD_MODPROBE='/usr/bin/modprobe'
       S64_LINUX_CMD_MOUNT='/usr/bin/mount'
+      S64_LINUX_CMD_NAMEI='/usr/bin/namei'
       S64_LINUX_CMD_NFT='/usr/sbin/nft'
       S64_LINUX_CMD_PACMAN_CONF="$BL64_VAR_INCOMPATIBLE"
       S64_LINUX_CMD_PACMAN_KEY="$BL64_VAR_INCOMPATIBLE"
@@ -898,16 +899,6 @@ function s64_linux_lib_run_ss() {
   bl64_dbg_app_trace_stop
 }
 
-function s64_linux_lib_run_host() {
-  bl64_dbg_app_show_function "$@"
-  s64_core_lib_command_require 'S64_LINUX_CMD_HOST' ||
-    return $?
-  bl64_dbg_app_trace_start
-  "$S64_LINUX_CMD_HOST" \
-    "$@"
-  bl64_dbg_app_trace_stop
-}
-
 function s64_linux_lib_run_tcpdump() {
   bl64_dbg_app_show_function "$@"
   s64_core_lib_command_require 'S64_LINUX_CMD_TCPDUMP' ||
@@ -986,6 +977,16 @@ function s64_linux_lib_run_ethtool() {
     return $?
   bl64_dbg_app_trace_start
   "$S64_LINUX_CMD_ETHTOOL" \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_linux_lib_run_namei() {
+  bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_LINUX_CMD_NAMEI' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_LINUX_CMD_NAMEI" \
     "$@"
   bl64_dbg_app_trace_stop
 }

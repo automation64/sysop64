@@ -21,9 +21,16 @@
 {
   declare S64_FIREWALLD_VERSION='2.0.0'
   declare S64_FIREWALLD_ABOUT_MODULE='FirewallD'
-  declare S64_SQUID_SERVICE='firewalld'
+  declare S64_FIREWALLD_SERVICE='firewalld'
 
   declare S64_FIREWALLD_CMD='/usr/bin/firewall-cmd'
+
+  declare S64_FIREWALLD_ZONE_PUBLIC='public'
+  declare S64_FIREWALLD_ZONE_INTERNAL='internal'
+  declare S64_FIREWALLD_ZONE_EXTERNAL='external'
+  declare S64_FIREWALLD_ZONE_TRUSTED='trusted'
+
+  declare S64_FIREWALLD_POLICY_INTERNAL_TO_EXTERNAL="${S64_CORE_PREFIX_SYSOP64}-${S64_FIREWALLD_ZONE_INTERNAL}-to-${S64_FIREWALLD_ZONE_EXTERNAL}"
 }
 
 #

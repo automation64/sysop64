@@ -109,15 +109,15 @@ q h
 
 ### Global Variables
 
-- `S64_<MODULE>_ABOUT_MODULE`: module brief description
-- `S64_<MODULE>_ABOUT_SUBMODULE_<NAME>`: generic tag-value pair
 - `S64_<MODULE>_CFG_<NAME>`: command configuration setting
 - `S64_<MODULE>_CMD_<NAME>`: full path to command
 - `S64_<MODULE>_FILE_<NAME>`: file or directory name, without any path
+- `S64_<MODULE>_IAM_<NAME>`: users and permissions
 - `S64_<MODULE>_PATH_<NAME>`: full path to file or directory
 - `S64_<MODULE>_SET_<NAME>`: command line option
 - `S64_<MODULE>_TAG_<NAME>`: generic tag-value pair
-- `S64_<MODULE>_VERSION`: module version
+- `S64_<MODULE>_URL_<NAME>`: URL or IP address
+- `S64_<MODULE>_<TYPE>_<NAME>`: additional variables grouped by type
 
 ---
 

@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# template-one: 3.3.0
+#######################################
+# Copyright SerDigital64 - https://github.com/serdigital64
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#######################################
+
+declare S64_CORE_PATH_ROOT="${S64_CORE_PATH_ROOT:-/opt/sysop64}"
+[[ ! -d "$S64_CORE_PATH_ROOT" ]] && S64_CORE_PATH_ROOT="${HOME}/at64/sysop64"
+source "${S64_CORE_PATH_ROOT}/lib/core.lib" && source "${S64_CORE_PATH_LIB}/okd.lib" || { s64_core_lib_module_check && exit 1; }
+source "${S64_CORE_PATH_BL64}/bashlib64-core.bash" || { s64_core_lib_check_bl64 && exit 1; }
+
+function my_initialize() {
+  bl64_dbg_app_show_function
+  s64_okd_lib_setup
+}
+
+bl64_lib_script_version_set '1.0.0'
+bl64_msg_help_set_about 'Show technical reference information'
+s64_core_lib_initialize && my_initialize || exit $?
+
+bl64_msg_show_batch_start "$BL64_SCRIPT_ID"
+bl64_msg_show_doc 'Guides:
+  - Configuring a private cluster: https://docs.okd.io/4.22/post_installation_configuration/configuring-private-cluster.html
+  - Customizing CoreOS: https://www.redhat.com/en/blog/red-hat-enterprise-linux-coreos-customization
+  - Customizing Nodes: https://docs.okd.io/4.22/installing/install_config/installing-customizing.html
+  - Installing a cluster in a disconnected environment: https://docs.okd.io/latest/disconnected/installing.html
+  - Installing a cluster on any platform: https://docs.okd.io/latest/installing/installing_platform_agnostic/installing-platform-agnostic.html
+  - Installing a user-provisioned bare metal cluster with network customizations: https://docs.okd.io/latest/installing/installing_bare_metal/upi/installing-bare-metal-network-customizations.html
+  - Installing OpenShift on a single node: https://docs.okd.io/4.22/installing/installing_sno/install-sno-installing-sno.html
+  - Troubleshooting installation issues: https://docs.okd.io/4.22/installing/validation_and_troubleshooting/installing-troubleshooting.html
+  - Troubleshooting installations: https://docs.okd.io/4.22/support/troubleshooting/troubleshooting-installations.html
+'
+bl64_msg_show_doc 'Reference:
+  - Sample install-config.yaml file for other platforms: https://docs.okd.io/latest/installing/installing_platform_agnostic/installing-platform-agnostic.html
+  - Installation configuration parameters: https://docs.okd.io/latest/installing/install_config/installation-config-parameters-generic.html
+'
+bl64_msg_show_doc 'Support Tools:
+  - Install Config Pull Secret: https://console.redhat.com/openshift/install/pull-secret
+  - Red Hat OpenShift Network Calculator: https://access.redhat.com/labs/ocpnc/
+'
+bl64_msg_show_batch_finish $? "$BL64_SCRIPT_ID"

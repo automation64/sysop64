@@ -75,7 +75,7 @@
 
 # shellcheck disable=SC2034
 {
-  declare S64_CORE_VERSION='3.12.0'
+  declare S64_CORE_VERSION='3.13.0'
   # Minimal BashLib64 version required
   declare S64_BL64_VERSION='23.5.0'
 
@@ -98,12 +98,20 @@
   declare S64_CORE_TASK_MODE_RUN='RUN'
   declare S64_CORE_TASK_MODE_HELP='HELP'
 
+  # Shared prefixes
+  declare S64_CORE_PREFIX_SYSOP64='so64'
+
   # Public container registries
   declare S64_CORE_REGISTRY_DOCKERHUB='docker.io'
   declare S64_CORE_REGISTRY_QUAY='quay.io'
   declare S64_CORE_REGISTRY_GITHUB='ghcr.io'
   declare S64_CORE_REGISTRY_AWS='public.ecr.aws'
   declare S64_CORE_REGISTRY_KUBERNETES='registry.k8s.io'
+
+  # Network Standards
+  declare S64_CORE_URL_HTTPBIN='http://httpbin.org/ip'
+  declare S64_CORE_FQDN_EXAMPLE_ORG='example.org'
+  declare S64_CORE_IP_DNS_GOOGLE='8.8.8.8'
 }
 
 #

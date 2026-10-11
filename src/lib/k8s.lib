@@ -18,7 +18,14 @@
 #
 
 # shellcheck disable=SC2154,SC2015
-source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
+source "${S64_CORE_PATH_BL64}/bashlib64-module-cryp.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-iam.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-rbac.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-rxtx.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-vcs.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-api.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-rnd.bash" &&
+  source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
   { s64_core_lib_check_bl64 && exit 1; }
 
 #
@@ -28,6 +35,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 # shellcheck disable=SC2034
 {
   declare S64_K8S_CMD_KUBEADM="${S64_K8S_CMD_KUBEADM:-}"
+  declare S64_K8S_CMD_CRICTL="${S64_K8S_CMD_CRICTL:-}"
 
   # KubeCTL Options
   declare S64_K8S_CFG_KUBECTL_FORMAT="${S64_K8S_CFG_KUBECTL_FORMAT:-yaml}"
@@ -57,14 +65,16 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 
 # shellcheck disable=SC2034
 {
-  declare S64_K8S_VERSION='4.8.0'
+  declare S64_K8S_VERSION='5.0.0'
   declare S64_K8S_ABOUT_MODULE='Kubernetes Platform'
   declare S64_K8S_ABOUT_SUBMODULE_API='API'
   declare S64_K8S_ABOUT_SUBMODULE_CLI='KubeCTL'
   declare S64_K8S_ABOUT_SUBMODULE_CNT='Container'
   declare S64_K8S_ABOUT_SUBMODULE_CP='Control Plane'
+  declare S64_K8S_ABOUT_SUBMODULE_CRI='Container Runtime Interface'
   declare S64_K8S_ABOUT_SUBMODULE_DS='DaemonSet'
   declare S64_K8S_ABOUT_SUBMODULE_EVENT='Events'
+  declare S64_K8S_ABOUT_SUBMODULE_KA='KubeAdm'
   declare S64_K8S_ABOUT_SUBMODULE_NET='Network'
   declare S64_K8S_ABOUT_SUBMODULE_NODE='Nodes'
   declare S64_K8S_ABOUT_SUBMODULE_OBJ='Objects'
@@ -75,6 +85,7 @@ source "${S64_CORE_PATH_BL64}/bashlib64-module-k8s.bash" ||
 
   # OS System Service name
   declare S64_K8S_SERVICE_KUBELET='kubelet'
+  declare S64_K8S_SERVICE_CRIO='crio'
 
   declare S64_K8S_PATH_ETC_CLUSTER='/etc/kubernetes'
   declare S64_K8S_PATH_ETC_CNI='/etc/cni'
@@ -103,7 +114,6 @@ function s64_k8s_lib_setup() {
   if ! bl64_lib_var_is_set "$S64_K8S_CFG_API_ENDPOINT" && bl64_lib_var_is_set "$S64_K8S_CFG_API_VHOST"; then
     S64_K8S_CFG_API_ENDPOINT="${S64_K8S_CFG_API_VHOST}:${S64_K8S_CFG_API_PORT}"
   fi
-  s64_core_lib_command_assign 'S64_K8S_CMD_KUBEADM' 'kubeadm'
   bl64_k8s_setup || return $?
   [[ -f "$S64_K8S_PATH_CFG_KUBECONFIG" ]] && bl64_k8s_set_kubeconfig "$S64_K8S_PATH_CFG_KUBECONFIG"
 
@@ -157,12 +167,22 @@ function s64_k8s_lib_run_kubeadm() {
   bl64_dbg_app_show_function "$@"
   local debug_flag='--v 2'
   bl64_dbg_app_command_is_enabled || debug_flag=' '
-  bl64_check_command "$S64_K8S_CMD_KUBEADM" "$BL64_VAR_DEFAULT" 'S64_K8S_CMD_KUBEADM' ||
+  s64_core_lib_command_require 'S64_K8S_CMD_KUBEADM' 'kubeadm' ||
     return $?
   bl64_dbg_app_trace_start
   # shellcheck disable=SC2086
   "$S64_K8S_CMD_KUBEADM" \
     $debug_flag \
+    "$@"
+  bl64_dbg_app_trace_stop
+}
+
+function s64_k8s_lib_run_crictl() {
+  bl64_dbg_app_show_function "$@"
+  s64_core_lib_command_require 'S64_K8S_CMD_CRICTL' 'crictl' ||
+    return $?
+  bl64_dbg_app_trace_start
+  "$S64_K8S_CMD_CRICTL" \
     "$@"
   bl64_dbg_app_trace_stop
 }
